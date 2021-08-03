@@ -7,8 +7,11 @@ function CreateArea(props){
         title: "",
         content: ""
     })
+    let noteContext = React.createContext(note)
  
     function handleChange(event){
+        //name is either title or content. value is the 
+        //string value for text or content, whichever is being edited
         const {name,value} = event.target;
         setNote(prevNote=> {
             return {
@@ -16,6 +19,8 @@ function CreateArea(props){
                 [name]: value
             }
         })
+        console.log(name)
+        console.log(value)
     }
 
     function submitNote(event){
@@ -25,6 +30,7 @@ function CreateArea(props){
             title:"",
             content: ""
         })
+       
         event.preventDefault();  //stops reload on submission of form
     }
    
