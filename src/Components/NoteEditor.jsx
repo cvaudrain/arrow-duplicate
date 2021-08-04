@@ -1,19 +1,20 @@
 import {useState} from "react"
 import React from "react"
-
+import Header from "./Header";
 
 function NoteEditor(props){
+    // const selectedContext = React.createContext(props.context)
+
     // import App, {id,title,content} from "./App";
     const [editedNote,setEditedNote] = useState({
-        id: id,
-        title: title,
-        content: content
+        title: props.populateTitle,
+        content: props.populateContent
     })
- console.log(editedNote) //did we import successfully?
+ 
 //set fullscreen
  const editorStyle = {
-    height: "100vh",
-    width: "100vw"
+    height: "60vh",
+    width: "90vw"
     }
 
     function handleEdit(event){
@@ -29,6 +30,8 @@ function NoteEditor(props){
                 [name]: value
             }
         })
+        console.log(name)
+        console.log(value)
     }
 
     function submitEditedNote(event){
@@ -44,8 +47,9 @@ function NoteEditor(props){
     }
     //return FULLSCREEN Note or darken background and enlarge editor
     return(
-        <div style={editorStyle}>
-            <form>
+        <div >
+        
+            <form style={editorStyle}>
                 <input onChange={handleEdit} name="title" value={editedNote.title} placeholder="Title"/>
                 <textarea onChange={handleEdit} name="content" value={editedNote.content} placeholder="Take a Note" row="3"/>
                 <button onClick={submitEditedNote}>Add</button>

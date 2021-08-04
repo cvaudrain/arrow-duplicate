@@ -1,13 +1,13 @@
 import {useState} from "react"
 import React from "react"
-
+let noteValue;
 function CreateArea(props){
 
     const [note,setNote] = useState({
         title: "",
         content: ""
     })
-    let noteContext = React.createContext(note)
+   
  
     function handleChange(event){
         //name is either title or content. value is the 
@@ -25,7 +25,7 @@ function CreateArea(props){
 
     function submitNote(event){
         props.onAdd(note)
-       
+       noteValue = note;
         setNote({
             title:"",
             content: ""
@@ -47,3 +47,4 @@ function CreateArea(props){
 }
 
 export default CreateArea
+export {noteValue}

@@ -6,7 +6,7 @@ import {useState} from "react"
 function Note(props) {
   const [inputTitle,setInputTitle] = useState("")
   const [inputText,setInputText] = useState("")
-
+const [editState, setEditState] = useState(false)
   function handleClick(){
     props.onDelete(props.id)
   }
@@ -19,18 +19,28 @@ function Note(props) {
 //   setInputText(props.content)
 // } 
   }
-  function handleEditClick(){
-    props.editNote(props.id)
+  function handleEditClick(event){
+    
+    const {name,value} = event.target;
+    setNote(prevNote=> {
+        return {
+            ...prevNote,
+            [name]: value
+        }
+    })
+    console.log(name)
+    console.log(value)
+    
   }
  
-  function test(){
-    console.log(props.content)
-  }
   return (
-   
+    
     <div className="note">
+    
       <h1 onClick={handleEdit} >{props.title}</h1>
       <p onClick={handleEdit} >{props.content}</p>
+    
+    
       <button onClick={handleClick}>DELETE</button>
     </div>
    
