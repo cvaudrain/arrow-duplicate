@@ -12,16 +12,18 @@ function App() {
   //State Declarations
  
   const [editModeStatus,setEditModeStatus] = useState(false)
-  const [selectedNote, setSelectedNote] = useState({
-    selectedTitle: "",
-    selectedContent: ""
-  })
- 
-  const[notes,setNotes] = useState([]) 
+  // const [selectedNote, setSelectedNote] = useState({
+  //   selectedTitle: "",
+  //   selectedContent: ""
+  // })
+  const [selectedNoteTitle, setSelectedNoteTitle] = useState("")
+  const [selectedNoteContent, setSelectedNoteContent] = useState("")
+ const [selectedNoteId, setSelectedNoteId] = useState("")
+  const [notes,setNotes] = useState([]) 
 
  
   function addNote(newNote){
-    console.log("test")
+    
   setNotes(prevNotes=>{
     return [...prevNotes, newNote]
   });
@@ -36,74 +38,87 @@ function App() {
   }
 
   
-//called when note is clicked
+//called when NOTE is clicked- look in <Note /> not NoteEditor
 function editNote(id,title,content){
-  
-    console.log(title)
+  console.log("editNote called")
+    console.log(title) //these ARE logging successfully when editor opens...
     console.log(content)
     console.log(id)
-    setSelectedNote((previousValue)=>{
-      return {
-      selectedTitle: title,
-      selectedContent: content
-    }
-  }
-    )
-    console.log(selectedNote) 
+    
+    setSelectedNoteTitle(title)
+    setSelectedNoteContent(content) //THESE can't set their states. Why?
+    setSelectedNoteId(id)
+    console.log("selectedNote values are now: ")  //returning blank
+    console.log(selectedNoteTitle)
+    console.log(selectedNoteContent)
     setEditModeStatus(true)
      
   }
-  function editComplete(edited){
-    console.log(edited)
+//called when <NotedEditor add button is pressed.
+  function editComplete(edited){ //edited here will be 
+    console.log(edited) //edited IS logging and shows changes made in editor
+    console.log("editComplete called")
+    console.log(edited.id) //IS now capturing id value
     setNotes(prevNotes =>{
-     notes.map(function(entry,index){
+      let tempNotesArr = prevNotes
+      return tempNotesArr.map(function(entry,index){ //NOT UPDATING NOTES STATE SUCCESSFULLY.
 if(index === edited.id){
-notes[index] = entry
+tempNotesArr[index] = edited
+}else{
+  return entry
 }
       })
-
     })
+    setEditModeStatus(false)
+    console.log(notes) //THIS IS NOW UPDATING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 //Functional Components rendering
 
-function conditionalRender(){
-  if(editModeStatus){
-    console.log("edit mode switched on")
-    return <div>
-    <Header
-      headerText="Edit Note"
-    />
-    <NoteEditor 
-    context={selectedNote}
-    populateTitle={selectedNote.selectedTitle}
-    populateContent={selectedNote.selectedContent}
+
+
+  return <div>
+
+  {editModeStatus &&
+  <div>
+  <Header
+    headerText="Edit Note"
   />
-  </div>
-  }else{
-return <div>
+  <NoteEditor 
+  // context={selectedNote}
+  // populateTitle={selectedNote.selectedTitle}
+  // populateContent={selectedNote.selectedContent}
+  populateId= {selectedNoteId} //THIS wasn't included before, causing map function to fail.
+  populateTitle={selectedNoteTitle}
+  populateContent={selectedNoteContent} //THESE are getting pulled from the editedNote state via props from NoteEditor
+  onEditSubmit={editComplete} // this calls editComplete, passing in the context from NoteEditor
+/>
+</div>
+  }
+
+{!editModeStatus &&
+<div>
 <Header 
-  headerText="React Notes"
+headerText="React Notes"
 />
 <CreateArea 
 onAdd={addNote} 
 /> 
 {notes.map((noteItem,index)=>{
-  return <Note 
-  key={index}
-  id={index}
-  title={noteItem.title}
-   content={noteItem.content}
-   onDelete={deleteNote}
-   onEdit={editNote}
-   />
+  console.log(notes)
+return <Note 
+key={index}
+id={index}
+title={noteItem.title}
+ content={noteItem.content}
+ onDelete={deleteNote}
+ onEdit={editNote}
+ />
 })
 }
 <Footer />
 </div>
-  }
 }
-
-return conditionalRender()
+</div>
 
 }
 

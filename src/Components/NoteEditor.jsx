@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useContext, useState} from "react"
 import React from "react"
 import Header from "./Header";
 
@@ -7,6 +7,7 @@ function NoteEditor(props){
 
     // import App, {id,title,content} from "./App";
     const [editedNote,setEditedNote] = useState({
+        id: props.populateId,
         title: props.populateTitle,
         content: props.populateContent
     })
@@ -34,12 +35,16 @@ function NoteEditor(props){
         console.log(value)
     }
 
-    function submitEditedNote(event){
-        props.onEditSubmit(editedNote)
+    function submitEditedNote(event){ //THIS won't work bc it's relying on editNote in App.jsx
+        
+        props.onEditSubmit(editedNote) //handleEdit on the other hand DOES work bc it is here. 
+//editedNote is the right value,  but we're treating this like a controlled component,
+//and it is not
 
        //below resets the setEdited Note to empty, so thisstate can be
        //used to edit other noptes in future. 
         setEditedNote({
+            id: "",
             title:"",
             content: ""
         })
