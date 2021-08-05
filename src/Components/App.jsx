@@ -7,7 +7,6 @@ import noteValue from "./CreateArea";
 import NoteEditor from "./NoteEditor";
 
 
-
 function App() {
   //State Declarations
  
@@ -21,6 +20,9 @@ function App() {
  const [selectedNoteId, setSelectedNoteId] = useState("")
   const [notes,setNotes] = useState([]) 
 
+  let temporaryId
+  let temporaryTitle
+  let temporaryContent
  
   function addNote(newNote){
     
@@ -61,7 +63,7 @@ function editNote(id,title,content){
     console.log(edited.id) //IS now capturing id value
     setNotes(prevNotes =>{
       let tempNotesArr = prevNotes
-      return tempNotesArr.map(function(entry,index){ //NOT UPDATING NOTES STATE SUCCESSFULLY.
+      return tempNotesArr.map(function(entry,index){ //UPDATING SUCCESSFULLY
 if(index === edited.id){
 tempNotesArr[index] = edited
 }else{
@@ -96,7 +98,11 @@ tempNotesArr[index] = edited
   }
 
 {!editModeStatus &&
+
 <div>
+{console.log("notes array looks like this before rendering, after submitting edit:")}
+{console.log(notes)}
+
 <Header 
 headerText="React Notes"
 />
@@ -104,15 +110,16 @@ headerText="React Notes"
 onAdd={addNote} 
 /> 
 {notes.map((noteItem,index)=>{
-  console.log(notes)
+  console.log(notes) //The notes array is updated successfully....
+  
 return <Note 
 key={index}
-id={index}
-title={noteItem.title}
- content={noteItem.content}
- onDelete={deleteNote}
- onEdit={editNote}
- />
+id={index} //SO ANY NOTE THAT WAS EDITED will now render as the most recently edited note. Hm..
+title={!noteItem ? "edit value didn't carry over" : noteItem.title} //see notes learned about asynchronous population of arrays in react
+content={!noteItem ? "something wrong w/ notes array" : noteItem.content}//if noteItem.title/content not yet populated, this lets the app nopt crash before it finishes rendering bc it's asynchronous.
+onDelete={deleteNote}
+onEdit={editNote}
+/>
 })
 }
 <Footer />
@@ -123,3 +130,4 @@ title={noteItem.title}
 }
 
 export default App;
+
