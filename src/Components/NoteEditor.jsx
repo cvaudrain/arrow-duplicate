@@ -55,13 +55,17 @@ function NoteEditor(props){
         })
         event.preventDefault();  //stops reload on submission of form
     }
+
+    function submitOnEnter(event){
+        event.keyCode === 13 && document.getElementById("updateButton").click()
+    }
     return(
         <div>
         
             <form style={editorStyle} >
-                <input onChange={handleEdit} name="title" value={editedNote.title} placeholder="Title"/>
-                <textarea style={textAreaStyle} onChange={handleEdit} name="content" value={editedNote.content} placeholder="Take a Note" row="3"/>
-                <button onClick={submitEditedNote}>Add</button>
+                <input onChange={handleEdit} name="title" value={editedNote.title} placeholder="Title" autoComplete="off"/>
+                <textarea onKeyDown={submitOnEnter} type="submit" style={textAreaStyle} onChange={handleEdit} name="content" value={editedNote.content} placeholder="Take a Note" row="3" autoComplete="off"/>
+                <button id="updateButton"onClick={submitEditedNote}>Save</button>
             </form>
         </div>
     )

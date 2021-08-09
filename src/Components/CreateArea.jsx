@@ -33,14 +33,18 @@ function CreateArea(props){
        
         event.preventDefault();  //stops reload on submission of form
     }
+
+    function submitOnEnter(event){
+        event.keyCode === 13 && document.getElementById("submitButton").click()
+    }
    
     
     return (
         <div>
             <form>
-                <input onChange={handleChange} name="title" value={note.title} placeholder="Title"/>
-                <textarea onChange={handleChange} name="content" value={note.content} placeholder="Take a Note" row="3"/>
-                <button onClick={submitNote}>Add</button>
+                <input onChange={handleChange} name="title" value={note.title} placeholder="Title" autocomplete="off"/>
+                <textarea onKeyDown= {submitOnEnter} type="submit" onChange={handleChange} name="content" value={note.content} placeholder="Take a Note" row="3" autocomplete="off"/>
+                <button id="submitButton" onClick={submitNote}>Add</button>
             </form>
         </div>
     )

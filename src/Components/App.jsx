@@ -11,23 +11,14 @@ function App() {
   //State Declarations
  
   const [editModeStatus,setEditModeStatus] = useState(false)
-  // const [selectedNote, setSelectedNote] = useState({
-  //   selectedTitle: "",
-  //   selectedContent: ""
-  // })
+  
   const [selectedNote, setSelectedNote] = useState({
     Id: "",
     Title: "",
     Content: ""
   })
-//   const [selectedNoteTitle, setSelectedNoteTitle] = useState("")
-//   const [selectedNoteContent, setSelectedNoteContent] = useState("")
-//  const [selectedNoteId, setSelectedNoteId] = useState("")
-  const [notes,setNotes] = useState([]) 
 
-  let temporaryId
-  let temporaryTitle
-  let temporaryContent
+  const [notes,setNotes] = useState([]) 
  
   function addNote(newNote){
     
@@ -56,9 +47,7 @@ function editNote(id,title,content){
       Title: title,
       Content: content
     })
-    // setSelectedNoteTitle(title)
-    // setSelectedNoteContent(content) //THESE can't set their states. Why?
-    // setSelectedNoteId(id)
+ 
     console.log("selectedNote values are now: ")  //returning blank
     console.log(selectedNote.Title)
     console.log(selectedNote.Content)
@@ -99,9 +88,7 @@ shallowCopy[index] = edited
     headerText="Edit Note"
   />
   <NoteEditor 
-  // context={selectedNote}
-  // populateTitle={selectedNote.selectedTitle}
-  // populateContent={selectedNote.selectedContent}
+  
   populateId= {selectedNote.Id} //THIS wasn't included before, causing map function to fail.
   populateTitle={selectedNote.Title}
   populateContent={selectedNote.Content} //THESE are getting pulled from the editedNote state via props from NoteEditor
