@@ -57,21 +57,24 @@ function editNote(id,title,content){
      
   }
 //called when <NotedEditor add button is pressed.
-  function editComplete(edited){ //edited here will be 
+  function editComplete(edited){ //edited is from NoteEditor onEditSubmit
     console.log(edited) //edited IS logging and shows changes made in editor
     console.log("editComplete called")
     console.log(edited.id) //IS now capturing id value
-    setNotes(prevNotes =>{
-      let tempNotesArr = prevNotes
-      return tempNotesArr.map(function(entry,index){ //UPDATING SUCCESSFULLY
+    
+      let shallowCopy = notes
+
+      shallowCopy = shallowCopy.map(function(entry,index){ //UPDATING SUCCESSFULLY
 if(index === edited.id){
-tempNotesArr[index] = edited
+shallowCopy[index] = edited
 }else{
   return entry
 }
       })
-    })
+    
     setEditModeStatus(false)
+    // console.log(shallowCopy)
+    //notes array is the mutated one with an undefined....
     console.log(notes) //THIS IS NOW UPDATING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 //Functional Components rendering
@@ -92,7 +95,7 @@ tempNotesArr[index] = edited
   populateId= {selectedNoteId} //THIS wasn't included before, causing map function to fail.
   populateTitle={selectedNoteTitle}
   populateContent={selectedNoteContent} //THESE are getting pulled from the editedNote state via props from NoteEditor
-  onEditSubmit={editComplete} // this calls editComplete, passing in the context from NoteEditor
+  onEditSubmit={editComplete} // this calls editComplete, passing in the arg from NoteEditor
 />
 </div>
   }
@@ -122,6 +125,8 @@ onEdit={editNote}
 />
 })
 }
+{console.log("Finished Render/map. Notes array is:")}
+{console.log(notes)} 
 <Footer />
 </div>
 }

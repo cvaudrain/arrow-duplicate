@@ -17,6 +17,10 @@ function NoteEditor(props){
     height: "60vh",
     width: "90vw"
     }
+    const textAreaStyle = {
+        height: "50vh",
+        width: "80vw"
+        }
 
     function handleEdit(event){
 
@@ -35,7 +39,7 @@ function NoteEditor(props){
         console.log(value)
     }
 
-    function submitEditedNote(event){ //THIS won't work bc it's relying on editNote in App.jsx
+    function submitEditedNote(event){ 
         
         props.onEditSubmit(editedNote) //handleEdit on the other hand DOES work bc it is here. 
 //editedNote is the right value,  but we're treating this like a controlled component,
@@ -52,11 +56,11 @@ function NoteEditor(props){
     }
     //return FULLSCREEN Note or darken background and enlarge editor
     return(
-        <div >
+        <div>
         
-            <form style={editorStyle}>
+            <form style={editorStyle} >
                 <input onChange={handleEdit} name="title" value={editedNote.title} placeholder="Title"/>
-                <textarea onChange={handleEdit} name="content" value={editedNote.content} placeholder="Take a Note" row="3"/>
+                <textarea style={textAreaStyle} onChange={handleEdit} name="content" value={editedNote.content} placeholder="Take a Note" row="3"/>
                 <button onClick={submitEditedNote}>Add</button>
             </form>
         </div>
