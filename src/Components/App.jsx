@@ -15,9 +15,14 @@ function App() {
   //   selectedTitle: "",
   //   selectedContent: ""
   // })
-  const [selectedNoteTitle, setSelectedNoteTitle] = useState("")
-  const [selectedNoteContent, setSelectedNoteContent] = useState("")
- const [selectedNoteId, setSelectedNoteId] = useState("")
+  const [selectedNote, setSelectedNote] = useState({
+    Id: "",
+    Title: "",
+    Content: ""
+  })
+//   const [selectedNoteTitle, setSelectedNoteTitle] = useState("")
+//   const [selectedNoteContent, setSelectedNoteContent] = useState("")
+//  const [selectedNoteId, setSelectedNoteId] = useState("")
   const [notes,setNotes] = useState([]) 
 
   let temporaryId
@@ -46,13 +51,17 @@ function editNote(id,title,content){
     console.log(title) //these ARE logging successfully when editor opens...
     console.log(content)
     console.log(id)
-    
-    setSelectedNoteTitle(title)
-    setSelectedNoteContent(content) //THESE can't set their states. Why?
-    setSelectedNoteId(id)
+    setSelectedNote({
+      Id: id,
+      Title: title,
+      Content: content
+    })
+    // setSelectedNoteTitle(title)
+    // setSelectedNoteContent(content) //THESE can't set their states. Why?
+    // setSelectedNoteId(id)
     console.log("selectedNote values are now: ")  //returning blank
-    console.log(selectedNoteTitle)
-    console.log(selectedNoteContent)
+    console.log(selectedNote.Title)
+    console.log(selectedNote.Content)
     setEditModeStatus(true)
      
   }
@@ -71,7 +80,8 @@ shallowCopy[index] = edited
   return entry
 }
       })
-    
+    /* setNotes(shallowCopy)
+     if you setNotes HERE, it DOESN'T WORK */
     setEditModeStatus(false)
     // console.log(shallowCopy)
     //notes array is the mutated one with an undefined....
@@ -92,9 +102,9 @@ shallowCopy[index] = edited
   // context={selectedNote}
   // populateTitle={selectedNote.selectedTitle}
   // populateContent={selectedNote.selectedContent}
-  populateId= {selectedNoteId} //THIS wasn't included before, causing map function to fail.
-  populateTitle={selectedNoteTitle}
-  populateContent={selectedNoteContent} //THESE are getting pulled from the editedNote state via props from NoteEditor
+  populateId= {selectedNote.Id} //THIS wasn't included before, causing map function to fail.
+  populateTitle={selectedNote.Title}
+  populateContent={selectedNote.Content} //THESE are getting pulled from the editedNote state via props from NoteEditor
   onEditSubmit={editComplete} // this calls editComplete, passing in the arg from NoteEditor
 />
 </div>

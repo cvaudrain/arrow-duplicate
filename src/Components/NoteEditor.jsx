@@ -22,6 +22,7 @@ function NoteEditor(props){
         width: "80vw"
         }
 
+        //UPDATE editedNote with every change to input
     function handleEdit(event){
 
         //name is either title or content. value is the 
@@ -39,13 +40,13 @@ function NoteEditor(props){
         console.log(value)
     }
 
+    //SUBMIT editedNote to app.js for array map, update, and render
     function submitEditedNote(event){ 
         
-        props.onEditSubmit(editedNote) //handleEdit on the other hand DOES work bc it is here. 
-//editedNote is the right value,  but we're treating this like a controlled component,
-//and it is not
+        props.onEditSubmit(editedNote) //passes editedNote into editComplete
+        //inside App.js via this prop, which brings editedNote as arg here
 
-       //below resets the setEdited Note to empty, so thisstate can be
+       //below RESETS setEdited Note to empty, so thisstate can be
        //used to edit other noptes in future. 
         setEditedNote({
             id: "",
@@ -54,7 +55,6 @@ function NoteEditor(props){
         })
         event.preventDefault();  //stops reload on submission of form
     }
-    //return FULLSCREEN Note or darken background and enlarge editor
     return(
         <div>
         
