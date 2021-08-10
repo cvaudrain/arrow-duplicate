@@ -1,13 +1,17 @@
 import {useState} from "react"
 import React from "react"
 let noteValue;
+
+
 function CreateArea(props){
 
     const [note,setNote] = useState({
+        id: "",
         title: "",
         content: ""
     })
    
+
  
     function handleChange(event){
         //name is either title or content. value is the 
@@ -19,14 +23,15 @@ function CreateArea(props){
                 [name]: value
             }
         })
-        console.log(name)
         console.log(value)
+      
     }
 
     function submitNote(event){
         props.onAdd(note)
        noteValue = note;
         setNote({
+            id: "",
             title:"",
             content: ""
         })
@@ -42,8 +47,8 @@ function CreateArea(props){
     return (
         <div>
             <form>
-                <input onChange={handleChange} name="title" value={note.title} placeholder="Title" autocomplete="off"/>
-                <textarea onKeyDown= {submitOnEnter} type="submit" onChange={handleChange} name="content" value={note.content} placeholder="Take a Note" row="3" autocomplete="off"/>
+                <input onChange={handleChange} name="title" value={note.title} placeholder="Title" autoComplete="off"/>
+                <textarea onKeyDown= {submitOnEnter} type="submit" onChange={handleChange} name="content" value={note.content} placeholder="Take a Note" row="3" autoComplete="off"/>
                 <button id="submitButton" onClick={submitNote}>Add</button>
             </form>
         </div>

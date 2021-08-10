@@ -66,15 +66,14 @@ function editNote(id,title,content){
 if(index === edited.id){
 shallowCopy[index] = edited
 }else{
-  return entry
-}
-      })
+    return entry
+  }
+  
+})
     /* setNotes(shallowCopy)
      if you setNotes HERE, it DOESN'T WORK */
     setEditModeStatus(false)
-    // console.log(shallowCopy)
-    //notes array is the mutated one with an undefined....
-    console.log(notes) //THIS IS NOW UPDATING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    console.log(notes) //THIS IS NOW UPDATING!!!!
   }
 //Functional Components rendering
 
