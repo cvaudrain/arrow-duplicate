@@ -9,7 +9,7 @@ const app      = express();
 const PORT     = process.env.PORT || 4747;
 const DB_URI   = "mongodb://localhost:27017/"; // recall that mongo runs locally on port 27017 by default
 const DB       = "NotesDB";
-const PRACTICEDB = "PracticeDB" 
+const PRACTICEDB = "practiceDB" 
 // const serverAddress = "http://localhost:4747/api/notes"
 const serverAddress = "http://localhost:4747/api/practiceNotes"
 const addNoteAddress = "http://localhost:4747/api/addNotes"
@@ -29,16 +29,14 @@ mongoose.connect(DB_URI + PRACTICEDB, {
 });
  
 const db = mongoose.connection; //the currently specified db in mongoose.connect()
- db.on("error",(error)=>console.log(error))
+ db.on("error",(error)=>{console.log(error)})
 // Event listeners
 db.once('open', () => console.log(`Connected to ${PRACTICEDB} database`));
  
 //PRACTICE requests
-let PracticeSchema = new mongoose.Schema(
+const PracticeSchema = new mongoose.Schema(
    {
-      cloudId: Number,
-      cloudTitle: String,
-      cloudNotes: String
+      allNotes: Array
    },
    {collection: "practiceCollection"} //THE COLLECTION
 )
@@ -46,12 +44,21 @@ let PracticeModel = db.model("PracticeModel",PracticeSchema)
 //so based on schema, PracticeModel.cloudNotes = [the notes array]
 
 app.get("/api/practiceNotes", (req, res) => { //REQ to client for res (notes arr)
-  
-PracticeModel.find({}, /*{__v: 0},*/ (err, docs) => { //_v:0 is a second search param meaning versionKey=0 i.e, first version of document. Not necessary but good practice with complex collections
-      
+ 
+PracticeModel.find({}, {__v: 0}, (err, docs) => { //_v:0 is a second search param meaning versionKey=0 i.e, first version of document. Not necessary but good practice with complex collections
+      // find ALL, and put them all into an array before sending back
       if (!err) {
-         console.log(docs)
-         res.json(docs.cloudNotes); //DOCS IS THE RETURNED QUERY
+         console.log("GET req:")
+         console.log(docs[0])
+         res.json(docs[0])
+         // res.json(docs.map((entry)=>{
+         //    console.log(entry.cloudTitle)
+         //    return {
+         //       id: entry.cloudId,
+         //       title: entry.cloudTitle,
+         //       content: entry.cloudContent
+         //    }
+         // })); //DOCS IS THE RETURNED QUERY
       } else {
          res.status(400).json({"error": err});
       }
@@ -59,20 +66,47 @@ PracticeModel.find({}, /*{__v: 0},*/ (err, docs) => { //_v:0 is a second search 
 })
 
 app.post("/api/addNotes",(req, res) => {
+  
+   console.log("req.body is:")
    console.log(req.body)
+   let notes = req.body //this is an array of objects. This is correct
+  PracticeModel.deleteMany({},(err,data)=>{
+     err && console.log(err)
+  })
+  .then(function(){
+   let updated = new PracticeModel({
+      allNotes: notes
+   })
+   console.log("updated:")
+   console.log(updated)
+   updated.save()
+
+  })
+ 
+  })
+// PracticeModel.replaceOne({},{allNotes: notes})
    
-let notes = new PracticeModel(req.body); //receive updated array &
-   console.log(notes)
+//    if(PracticeModel.find({}).length > 0) {
+//       notes.map((indNote)=>{
+//        indNote = new PracticeModel({
+//          cloudId: indNote.id,
+//          cloudTitle: indNote.title,
+//          cloudContent: indNote.content
+//       })
+//       PracticeModel.replaceOne({cloudId: id},(err)=>{
+//          if(err){
+//             console.log(err)
+//          }
+//       })
+//    })
+// } else {
+//     let firstNote = new PracticeModel(req.body)
+//    firstNote.save()
+// }
+
               // create new db model for insertion as doc
-   notes.save((err, result) => {
-      if (!err) { //!false simle query bc this practice only holds one doc
-         delete result._doc.__v;
-         //res.json(result._doc); //returns array, not entire doc obj
-      } else {
-         res.status(400).json({"error": err});
-      }
-   });
-})
+   
+
 
 
 

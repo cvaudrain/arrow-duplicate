@@ -26,7 +26,7 @@ const notes = [
     {
       key: 5,
       title: "Shopping List",
-      content: `Ice cream, Vegetable, Lube`
+      content: `Ice cream, Vegetable`
     }
   ];
   
