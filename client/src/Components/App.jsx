@@ -147,7 +147,9 @@ shallowCopy[index] = edited
     /* setNotes(shallowCopy)
      if you setNotes HERE, it DOESN'T WORK */
     setEditModeStatus(false)
-    console.log(notes) //THIS IS NOW UPDATING!!!!
+    console.log("testtest 54321.. notes state = ")
+    console.log(notes) //THIS IS NOW UPDATED to match shallowCopy. try axios.post here
+    axios.post("/api/addNotes",notes) 
   }
 //Functional Components rendering
 
@@ -196,7 +198,7 @@ onEdit={editNote}
 })
 }
 {console.log("Finished Render/map. Notes array is:")}
-{console.log(notes)} 
+{console.log(notes) /*axios.post here to handle ALL add,edit,delete?*/} 
 <Footer />
 </div>
 }
