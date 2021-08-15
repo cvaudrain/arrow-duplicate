@@ -1,10 +1,13 @@
 import React, {useState, useContext, useEffect} from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
 import noteValue from "./CreateArea";
 import NoteEditor from "./NoteEditor";
+import Auth from "./Auth"
 import axios from "axios";
 
 
