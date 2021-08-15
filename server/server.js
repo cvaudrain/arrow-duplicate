@@ -50,9 +50,7 @@ PracticeModel.find({}, {__v: 0}, (err, docs) => { //_v:0 is a second search para
       if (!err) {
          console.log("GET req:")
          console.log(docs[0]) 
-         res.json(docs[0]) //sometimes returns undefined, causing app crash
-               //let's put this res.json OUTSIDE the conditional with a 
-         // .then promise, to make sure we get a value before axios response
+         
          // res.json(docs.map((entry)=>{
          //    console.log(entry.cloudTitle)
          //    return {
@@ -64,7 +62,14 @@ PracticeModel.find({}, {__v: 0}, (err, docs) => { //_v:0 is a second search para
       } else {
          res.status(400).json({"error": err});
       }
-   });
+   })
+   .then((docs)=>{
+      console.log("promise docs[0]: ")
+      console.log(docs[0])
+      res.json(docs[0]) //sometimes returns undefined, causing app crash
+               //let's put this res.json OUTSIDE the conditional with a 
+         // .then promise, to make sure we get a value before axios response
+   })
 })
 
 app.post("/api/addNotes",(req, res) => {

@@ -60,12 +60,14 @@ function App() {
   // axios.post() to the server api endpoint on every setNotes() call? <<<<<<<<
   //Yes we can:
 
-  useEffect(()=>{
+  useEffect(()=>{ //FIX: W/ conditional, initial GET w/ setNotes will NOT trigger this post.
+    if(notes.length > 0 && notes){ //i.e don't post on initial load when GET req calls setNotes.
     axios.post("/api/addNotes",notes)
   // .then((res)=>setNotes(res.data)) 
   // .catch((err)=> console.log(err))
   console.log("useEffect detected setNotes update to notes. axios.post to server notes:")
   console.log(notes)
+    }
   }, [notes]) 
   /*passing the state variable notes into the useEffect 2nd arg will call this function
               // every time notes has a new state change in client (from add, delete, or edit)*/
