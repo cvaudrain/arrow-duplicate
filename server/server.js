@@ -49,8 +49,10 @@ PracticeModel.find({}, {__v: 0}, (err, docs) => { //_v:0 is a second search para
       // find ALL, and put them all into an array before sending back
       if (!err) {
          console.log("GET req:")
-         console.log(docs[0])
-         res.json(docs[0])
+         console.log(docs[0]) 
+         res.json(docs[0]) //sometimes returns undefined, causing app crash
+               //let's put this res.json OUTSIDE the conditional with a 
+         // .then promise, to make sure we get a value before axios response
          // res.json(docs.map((entry)=>{
          //    console.log(entry.cloudTitle)
          //    return {

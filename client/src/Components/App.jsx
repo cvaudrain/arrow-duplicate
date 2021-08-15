@@ -60,13 +60,13 @@ function App() {
   // axios.post() to the server api endpoint on every setNotes() call? <<<<<<<<
   //Yes we can:
 
-  // useEffect((notes)=>{
-  //   axios.post("/api/addNotes",notes)
-  // .then((res)=>setNotes(res.data)) //don't setState here, state is updated already
+  useEffect(()=>{
+    axios.post("/api/addNotes",notes)
+  // .then((res)=>setNotes(res.data)) 
   // .catch((err)=> console.log(err))
-  // console.log("useEffect detected setNotes update to notes. axios.post to server notes:")
-  // console.log(notes)
-  // }, []) 
+  console.log("useEffect detected setNotes update to notes. axios.post to server notes:")
+  console.log(notes)
+  }, [notes]) 
   /*passing the state variable notes into the useEffect 2nd arg will call this function
               // every time notes has a new state change in client (from add, delete, or edit)*/
   
@@ -83,10 +83,11 @@ function App() {
   })
   console.log("tempArr")
   console.log(tempArr)
-  axios.post("/api/addNotes",tempArr)
-  .catch((err)=>console.log(err))
-  console.log("on addNote, we send the following via post from client to server:")
-  console.log(notes) //is adding old version of notes prior to this setNotes call.
+  // axios.post("/api/addNotes",tempArr)         //AXIOS CALL
+  // .catch((err)=>console.log(err))
+  // console.log("on addNote, we send the following via post from client to server:")
+  // console.log(notes) 
+  //is adding old version of notes prior to this setNotes call.
   // So, the useState is BEHIND. Bc of async....
   }
 
@@ -98,8 +99,8 @@ function App() {
      return index !== id
    })
   })
-  axios.post("/api/addNotes",notes)
-  .catch((err)=>console.log(err))
+  // axios.post("/api/addNotes",notes)         //AXIOS CALL
+  // .catch((err)=>console.log(err))
   }
 
   
@@ -127,8 +128,8 @@ function editNote(id,title,content){
     console.log("editComplete called")
     console.log(edited.id) //IS now capturing id value
 
-    axios.post("/api/addNotes",notes)
-    .catch((err)=>console.log(err))   //AXIOS POST 
+    // axios.post("/api/addNotes",notes)         //AXIOS CALL
+    // .catch((err)=>console.log(err))    
 
       let shallowCopy = notes
 
@@ -140,6 +141,7 @@ shallowCopy[index] = edited
   }
   
 })
+
     /* setNotes(shallowCopy)
      if you setNotes HERE, it DOESN'T WORK */
     setEditModeStatus(false)
