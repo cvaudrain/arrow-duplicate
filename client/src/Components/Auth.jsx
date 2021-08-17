@@ -11,22 +11,26 @@ const [credentials, setCredentials] = useState({
     
     
 
-    function handleChange(e){
-        const {fieldType,fieldValue} = e.target;
+    function handleChange(event){
+        const {name,value} = event.target; //name/value are the html keys name = and value =
 setCredentials(preVal=>{
     return {
         ...preVal,
-        [fieldType]: fieldValue
+        [name]: value
     }
 })
-console.log(fieldValue)
+console.log(credentials)
     }
-    function submission(){
-        props.onAuthSubmit(credentials)
+    function submission(event){
+        
+        console.log(credentials)
+        axios.post("api/authenticate",credentials)
+        // props.onAuthSubmit(credentials)
         setCredentials({ //reset field values on submit
             email:"",
             password: ""
         })
+        event.preventDefault()
     }
 
 //kb event listener to submit credentials on enter 
@@ -34,14 +38,34 @@ console.log(fieldValue)
         event.keyCode === 13 && document.getElementById("submitButton").click()
     }
 
+
+
     return (
         <div>
-        <form>
-            <h1>Welcome to Notes</h1>
-            <h2>Login Here</h2>
-            <input onChange={handleChange} type="email" name="email" value={credentials.email} placeholder="Email" autoComplete="off"/>
-            <input onChange={handleChange} type="password" onKeyDown= {keydownListener} name="password" value={credentials.password} placeholder="Password" autoComplete="off"/>
-            <button id="submitButton" onClick={submission}>Submit</button>
+        <header class="auth-header">
+        <h1 class = "auth-header-text">Welcome to Notes</h1>
+        </header>
+        <h2>Login Here</h2>
+        <form class="">
+            
+            
+            <input onChange={handleChange}
+            type="email"
+            name="email"
+            placeholder="Email"
+             autoComplete="off"/>
+            
+            <input onChange={handleChange}
+            type="password"
+            onKeyDown= {keydownListener}
+            name="password"
+            placeholder="Password" 
+            autoComplete="off"/>
+
+            <button class="auth-login-btn" 
+            id="submitButton" 
+            onClick={submission}>Submit
+            </button>
         </form>
         </div>
     )

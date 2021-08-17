@@ -43,6 +43,16 @@ const PracticeSchema = new mongoose.Schema(
 let PracticeModel = db.model("PracticeModel",PracticeSchema)
 //so based on schema, PracticeModel.cloudNotes = [the notes array]
 
+//AUTH GET/POST Req
+app.get("/api/authenticate",(req,res)=>{
+   console.log("redirect to login")
+   res.redirect("/api/authenticate")
+})
+app.post("/api/authenticate", (req,res)=>{
+   console.log(req.body)
+})
+
+//MAIN APP GET/POST
 app.get("/api/practiceNotes", (req, res) => { //REQ to client for res (notes arr)
  
 PracticeModel.find({}, {__v: 0}, (err, docs) => { //_v:0 is a second search param meaning versionKey=0 i.e, first version of document. Not necessary but good practice with complex collections

@@ -47,8 +47,16 @@ function CreateArea(props){
     return (
         <div>
             <form>
-                <input onChange={handleChange} name="title" value={note.title} placeholder="Title" autoComplete="off"/>
-                <textarea onKeyDown= {submitOnEnter} type="submit" onChange={handleChange} name="content" value={note.content} placeholder="Take a Note" row="3" autoComplete="off"/>
+                <input onChange={handleChange}
+                 name="title" value={note.title}
+                  placeholder="Title"
+                   autoComplete="off"/>
+                <textarea onKeyDown= {submitOnEnter} 
+                type="submit" onChange={handleChange}
+                 name="content" value={note.content}
+                  placeholder="Take a Note"
+                   row="3"
+                    autoComplete="off"/>
                 <button id="submitButton" onClick={submitNote}>Add</button>
             </form>
         </div>

@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 
 import Header from "./Header";
 import Footer from "./Footer";
@@ -9,6 +9,7 @@ import noteValue from "./CreateArea";
 import NoteEditor from "./NoteEditor";
 import Auth from "./Auth"
 import axios from "axios";
+
 
 
 function App() {
@@ -23,7 +24,8 @@ function App() {
   })
 
   const [notes,setNotes] = useState([]) 
- 
+  let authStatus = false; //uses react-router <Redirect /> to redirect to login if not logged in
+
   //handle GET/POST with Axios between client and server AXIOS EXPLAINED HERE:
   //one url communicates with the server get request, the other with the post request
   //the get request in server contains a DB query to return notes, which is caught by Axios here
@@ -39,8 +41,9 @@ function App() {
    then in App.jsx we set state to a user object, and have a new Axios useEffect that will send that to our server for 
    DB CRUD Ops*/
   //AXIOS useEffect calls and function calls to communicate between client and server:
-
+if(authStatus==true){
   useEffect(()=>{ //every render gets notes list from server, handles initial render on app load.
+   
     axios.get("/api/practiceNotes") //added ternary to handle empty array received from server
     .then((res)=>{
       /*res.data.length>0 && */ setNotes(res.data.allNotes)
@@ -72,6 +75,9 @@ function App() {
   console.log(notes)
     }
   }, [notes]) 
+
+} //conditional authStatus
+else{ console.log("not logged in, axios not get/posting to server yet")}
   /*passing the state variable notes into the useEffect 2nd arg will call this function
               // every time notes has a new state change in client (from add, delete, or edit)*/
   
@@ -158,8 +164,19 @@ shallowCopy[index] = edited
 
 
 
-  return <div>
+  return (
+    <Router>
+  <div>
 
+<Switch>
+
+<Route path="/authenticate">
+  <Auth
+  onAuthSubmit />
+</Route>
+
+<Route path= "/">
+{!authStatus && <Redirect to="/authenticate" />}
   {editModeStatus &&
   <div>
   <Header
@@ -205,8 +222,14 @@ onEdit={editNote}
 <Footer />
 </div>
 }
-</div>
 
+</Route>
+
+</Switch>
+
+</div>
+</Router>
+)
 }
 
 export default App;

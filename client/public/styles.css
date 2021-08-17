@@ -101,6 +101,32 @@ form button {
   outline: none;
 }
 
+/* My Classes & Styling */
+.auth-header-text{
+  text-align: center;
+  font-size: 4rem;
+  padding:40px;
+}
+.auth-header{
+  margin-bottom: 50px;
+}
+.auth-sub-heading{
+  text-align: center;
+  color: #0b517a;
+}
+.auth-login-field{
+  text-align: center;
+ 
+}
+.auth-login-btn{
+  background: #0b7a75;
+  color: #fff;
+  border-radius: 0%;
+  width: auto;
+  padding: 5px;
+  height: 36px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
 /* Attribute Selectors */
 
 [contentEditable]{
