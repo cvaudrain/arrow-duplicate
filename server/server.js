@@ -44,14 +44,56 @@ let PracticeModel = db.model("PracticeModel",PracticeSchema)
 //so based on schema, PracticeModel.cloudNotes = [the notes array]
 
 //AUTH GET/POST Req
-app.get("/api/authenticate",(req,res)=>{
-   console.log("redirect to login")
-   res.redirect("/api/authenticate")
-})
+// app.get("/api/authenticate",(req,res)=>{
+//    console.log("redirect to login")
+//    res.redirect("/api/authenticate")
+// })
 app.post("/api/authenticate", (req,res)=>{
-   console.log(req.body)
+   let enteredCredentials = req.body
+   console.log(enteredCredentials)
+   console.log("received")
+   //IF DB query matches, THEN res.json
+if(enteredCredentials.email == "bob@gmail.com" && enteredCredentials.password =="bobpassword"){
+   let responseData = {
+      ...enteredCredentials,
+      authenticated: true,
+      username: "Bob",
+      retrievedNotes:[
+         {
+            title: "Bob's first Note",
+            content: "Fun fact- Bob is a convicted felon"
+         },
+         {
+            title: "A second note",
+            content: "These notes are unique to bob!"
+         },
+         {
+            title: "Note 3",
+            content: "Now I just use Mongoose to create a user schema.."
+         },
+         {
+            title: "Final Note-",
+            content: "...And then anyone can be just like Bob!"
+         }
+      ]
+   }
+   res.json(responseData)
+}else{
+   let responseData = {
+      ...enteredCredentials,
+      authenticated: false,
+      retrievedNotes: [{title: "u r not logged in", content: "sorry dude, I'll redirect you......."}]
+   }
+   res.json(responseData)
+}
+
+  
+   
 })
 
+// app.get("/api/reroute",(req,res)=>{
+//    res.redirect("/")
+// })
 //MAIN APP GET/POST
 app.get("/api/practiceNotes", (req, res) => { //REQ to client for res (notes arr)
  

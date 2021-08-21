@@ -1,5 +1,6 @@
 import React, {useState, useContext, useEffect} from "react";
-import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect,useLocation, useHistory } from "react-router-dom";
+
 
 import Header from "./Header";
 import Footer from "./Footer";
@@ -10,10 +11,17 @@ import NoteEditor from "./NoteEditor";
 import Auth from "./Auth"
 import axios from "axios";
 
+import PracticeRoute from "./PracticeRoute"
 
+// import {createBrowserHistory} from "history"
 
+// let history = createBrowserHistory()
 function App() {
+  
+// console.log(history)
   //State Declarations
+
+const [practiceState, setPracticeState] = useState('')
  
   const [editModeStatus,setEditModeStatus] = useState(false)
   
@@ -24,8 +32,48 @@ function App() {
   })
 
   const [notes,setNotes] = useState([]) 
-  let authStatus = false; //uses react-router <Redirect /> to redirect to login if not logged in
 
+  const [usernameFromAuth,setUsernameFromAuth] = (useState("nameless user"))
+  let [authStatus, setAuthStatus] = useState(false) //uses react-router <Redirect /> to redirect to login if not logged in
+  
+ useEffect(()=>{
+   console.log("authStatus value changed from false to true, re-rendering")
+ },[authStatus])
+
+  //   function authenticateUser(){
+  //     //INVALID HOOK CALL              !!!!!!!!!!!!BUG!!!!!!!!!!!
+  //   //   useEffect(()=>{
+  //   //     console.log("authStatus =")
+  //   //     console.log(authStatus)
+  //   //     console.log("authenticateUser called from app.jsx")
+  //   //  setAuthStatus(true)
+  //   //   },[])
+      
+    
+  // }
+  function authenticateUser(emailProp, passwordProp, authStatusProp){
+        console.log(emailProp) //these are the values from Auth, passed with props. !!!!!!!!!!!
+        console.log(passwordProp)
+        console.log(authStatusProp)
+        
+       
+        // setAuthStatus(true)
+        console.log(authStatus)
+        // if(authStatus===true){
+        //   axios.get("/api/reroute")
+        // }
+        // setTimeout((authStatusProp)=>{ //I am skirting stateful rules here
+        //   authStatusProp && setAuthStatus(authStatusProp)
+        //   console.log(authStatus)
+        // },200 )
+    // console.log(credentials)
+    // axios.post("/api/authenticate",credentials)
+    // event.preventDefault() //prevents "cannot POST" error
+}
+
+
+  
+  
   //handle GET/POST with Axios between client and server AXIOS EXPLAINED HERE:
   //one url communicates with the server get request, the other with the post request
   //the get request in server contains a DB query to return notes, which is caught by Axios here
@@ -41,7 +89,8 @@ function App() {
    then in App.jsx we set state to a user object, and have a new Axios useEffect that will send that to our server for 
    DB CRUD Ops*/
   //AXIOS useEffect calls and function calls to communicate between client and server:
-if(authStatus==true){
+
+// if(authStatus==true){
   useEffect(()=>{ //every render gets notes list from server, handles initial render on app load.
    
     axios.get("/api/practiceNotes") //added ternary to handle empty array received from server
@@ -61,6 +110,7 @@ if(authStatus==true){
    
   },[]) //empty array is useEffect syntax
 
+  
   //addNote function  AND EditNote function can contain our axios.post, sending the newly updated notes array to server
   //every time its state changes. Can we use a simple use of useEffect hook to
   // axios.post() to the server api endpoint on every setNotes() call? <<<<<<<<
@@ -76,8 +126,9 @@ if(authStatus==true){
     }
   }, [notes]) 
 
-} //conditional authStatus
-else{ console.log("not logged in, axios not get/posting to server yet")}
+// } //conditional authStatus
+// else{ console.log("not logged in, axios not get/posting to server yet")}
+
   /*passing the state variable notes into the useEffect 2nd arg will call this function
               // every time notes has a new state change in client (from add, delete, or edit)*/
   
@@ -162,21 +213,43 @@ shallowCopy[index] = edited
   }
 //Functional Components rendering
 
-
-
+function practiceStateFunction(loginStatusBoolFromAuth,valuePassedFromAuth,usernameFromAuth){
+    console.log(loginStatusBoolFromAuth)
+    setUsernameFromAuth(usernameFromAuth)
+setNotes(valuePassedFromAuth)
+  
+}
+console.log(notes)
   return (
-    <Router>
+    <Router history = {history}>
   <div>
 
 <Switch>
 
-<Route path="/authenticate">
-  <Auth
-  onAuthSubmit />
+
+
+<Route path="/PracticeRoute">
+  <PracticeRoute />
 </Route>
 
-<Route path= "/">
-{!authStatus && <Redirect to="/authenticate" />}
+<Route path="/authenticate"> 
+{/* This authStatus logic occurs at a DIFFERENT ROUTE. Need to have authStatus in <Auth>. It doesn't KNOW
+authStatus changed, because it doesn't have authStatus over there EITHER:
+figure out how to access the state across components
+OR make an analogous authStatus over on <Auth> */
+}
+{/* {authStatus && <Redirect from="/authenticate" to="/PracticeRoute"/> } NOT working...  */}
+  <Auth
+  id={"Auth"}
+   authenticateUser = {authenticateUser /*is accepting props from auth, see function above*/} 
+   practiceFunction = {practiceStateFunction}
+   />
+ </Route>
+
+<Route path= "/" >
+{console.log(authStatus)}
+{console.log("right above here is the authStatus full value.. the ternary on line 251 stops the redirect from login to notes app because if we nav straight to index, authState is always set to false by default")}
+ {/* {authStatus && notes[0].title=="u r not logged in" ? <Redirect from="/" to="/authenticate" /> : null} */}
   {editModeStatus &&
   <div>
   <Header
@@ -200,6 +273,7 @@ shallowCopy[index] = edited
 
 <Header 
 headerText="React Notes"
+userNameGreeting={usernameFromAuth}
 />
 <CreateArea 
 onAdd={addNote} 
