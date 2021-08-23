@@ -21,8 +21,9 @@ import SubmitButton from "./SubmitButton"
 
 
 function Auth(props){
-    let [authStatus2, setAuthStatus2] = useState(false)
-    const [failedAttempt, setFailedAttempt] = useState(false)
+    let [authStatus2, setAuthStatus2] = useState(false) //logged in/ !logged in
+    const [failedAttempt, setFailedAttempt] = useState(false) // incorrect login registered
+    const [alreadyRegistered, setAlreadyRegistered] = useState(false)
     // console.log(props)
     // console.log(authStatus) DOES NOT RECOGNIZE AUTHSTATUS
 const [credentials, setCredentials] = useState({
@@ -38,12 +39,6 @@ const [credentials, setCredentials] = useState({
 
     const [isRegistered,setIsRegistered] = useState(true);
     
-    // useEffect(()=>{
-    //     console.log(history)
-    //     console.log("history updated per createBrowserHistory history.push() method, useEffect triggered to attempt re-render in accordance with updated url")
-    // },[history])
-   
-
     function handleChange(event){
         const {name,value} = event.target; //name/value are the html keys name = and value =
 setCredentials(preVal=>{
@@ -55,22 +50,39 @@ setCredentials(preVal=>{
 console.log(credentials)
     }
 
-    
+    function registerSubmission(event){
+axios.post("/api/registerUser",credentials)
+.then((res)=>{
+    console.log("credentials returned: " + res.data.name + " " + res.data.email + " " + res.data.password + " " + res.data.authenticated)
+            console.log(res.data)
+        let authStatusBool = res.data.authenticated //if user is already registered or not
+        //setup receiver in server.js
+        console.log("credentials returned: "+  res.data.username + " " + res.data.email + " " + res.data.password + " " + res.data.authenticated)
+        console.log(res.data)
+        console.log(res)
+        // props.authenticateUser(enteredEmail,enteredPassword,authStatusBool) 
+        setAlreadyRegistered(res.data.alreadyRegistered)
+setAuthStatus2(res.data.authenticated)
+props.practiceFunction(res.data.authenticated, [], res.data.username) //don't use authStatusBool, use the direct response value res.data.authenticated
+})
+
+event.preventDefault() //prevents "cannot POST" error
+    }
 
     function submission(event){
         
         // console.log(credentials)
         axios.post("/api/authenticate",credentials)
         .then((res)=>{
-            console.log("credentials returned: " + res.data.email + " " + res.data.password + " " + res.data.authenticated)
+            console.log("credentials returned: " + res.data.email + " " + res.data.retrievedNotes + " " + res.data.authenticated)
             console.log(res.data)
-            let enteredEmail= res.data.email
-        let enteredPassword = res.data.password
+            // let enteredEmail= res.data.email
+        // let enteredPassword = res.data.password
         let authStatusBool = res.data.authenticated
         let retrievedNotes = res.data.retrievedNotes
-        let retrievedUsername = res.data.username
-        props.authenticateUser(enteredEmail,enteredPassword,authStatusBool)
-            props.changeState 
+        let retrievedUsername = res.data.retrievedUsername
+        // props.authenticateUser(enteredEmail,enteredPassword,authStatusBool)
+            // props.changeState 
         setAuthStatus2(res.data.authenticated)
 authStatusBool== false && setFailedAttempt(true)
         props.practiceFunction(authStatusBool,retrievedNotes,retrievedUsername) /*THIS is how we pass data to main app(parent)
@@ -158,12 +170,13 @@ authStatusBool== false && setFailedAttempt(true)
             {/* <Link to="/"> */}
             <button className="auth-login-btn" 
             id="submitButton" 
-            onClick={submission}>Submit
+            onClick={isRegistered ? submission : registerSubmission}>Submit
             </button>
            {/* </Link> */}
         </form>
         <div>
 {failedAttempt && <h2> Hm. You don't look familiar........ Let's Try again.</h2>}
+{alreadyRegistered && <h2>That email is already in use. Register with a different email, or press the login button</h2>}
 
         </div>
         {isRegistered ? 

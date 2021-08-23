@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 // const cors     = require("cors"); //may need cors to replace proxy in production build
 const path     = require("path");
 const { response } = require("express");
+const { ServerResponse } = require("http");
 const app      = express();
  
 const PORT     = process.env.PORT || 4747;
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors());
  
-// Establish DB connection
+// Establish DB connection////////////////////////////////
 mongoose.connect(DB_URI + PRACTICEDB, {
    useUnifiedTopology: true,
    useNewUrlParser: true,
@@ -43,53 +44,139 @@ const PracticeSchema = new mongoose.Schema(
 let PracticeModel = db.model("PracticeModel",PracticeSchema)
 //so based on schema, PracticeModel.cloudNotes = [the notes array]
 
-//AUTH GET/POST Req
-// app.get("/api/authenticate",(req,res)=>{
-//    console.log("redirect to login")
-//    res.redirect("/api/authenticate")
-// })
+
+const UserSchema = new mongoose.Schema(
+   {
+      username: String,
+      email: String,
+      password: String,
+      notesArray: Array
+   },
+   {collection: "practiceUserCollection"}
+)
+let UserModel = db.model("UserModel", UserSchema)
+//AUTH POST Listeners//////////////////////////////////////////////////////
+
+//For REGISTRATION///////////
+app.post("/api/registerUser", (req,res)=>{
+   let posted = req.body
+   console.log("received new user credentials: ")
+console.log(posted)
+let serverResponse;
+let newUser = new UserModel({
+   username: posted.username,
+   email: posted.email,
+   password: posted.password, //PLAINTEXT requires hash  salt !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   notesArray: []
+})
+UserModel.findOne({email: `${req.body.email}`}, (err,dbRes)=>{
+if(err){
+   console.log(err)
+   serverResponse = "Hm, something went wrong. Please try again."
+} else if(dbRes != null){
+   console.log("that email is already in use. Try logging in.")
+   serverResponse =  {
+      message: "that email is already in use. Try logging in.",
+      alreadyRegistered: true
+} 
+}else if(dbRes === null){
+
+   serverResponse = {
+      authenticated: true,
+      message: "Registration successful! Welcome aboard, " + posted.username + ".",
+      username: posted.username,
+      alreadyRegistered: false
+   }
+
+   newUser.save()
+}
+
+}).then(()=>res.json(serverResponse)) //.then() ensures that serverResponse is ready prior to res.json to client
+
+})
+//
+//For LOGIN/////////////////
 app.post("/api/authenticate", (req,res)=>{
-   let enteredCredentials = req.body
-   console.log(enteredCredentials)
+   let responseData
+   console.log(req.body)
+   console.log(req.body.email)
+   let enteredEmail = req.body.email
+   let enteredPassword = req.body.password
+   console.log(req.body.password)
    console.log("received")
    //IF DB query matches, THEN res.json
-if(enteredCredentials.email == "bob@gmail.com" && enteredCredentials.password =="bobpassword"){
-   let responseData = {
-      ...enteredCredentials,
-      authenticated: true,
-      username: "Bob",
-      retrievedNotes:[
-         {
-            title: "Bob's first Note",
-            content: "Fun fact- Bob is a convicted felon"
-         },
-         {
-            title: "A second note",
-            content: "These notes are unique to bob!"
-         },
-         {
-            title: "Note 3",
-            content: "Now I just use Mongoose to create a user schema.."
-         },
-         {
-            title: "Final Note-",
-            content: "...And then anyone can be just like Bob!"
-         }
-      ]
-   }
-   res.json(responseData)
-}else{
-   let responseData = {
-      ...enteredCredentials,
-      authenticated: false,
+   UserModel.findOne({email: {$regex:enteredEmail},password: {$regex:enteredPassword}}, (err,dbRes)=>{
+      if(err){
+         console.log(err)
+         responseData = "Hm, something went wrong. Please try again."
+      } else if(dbRes){
+         console.log(dbRes)
+         console.log(dbRes.notesArray)
+         responseData =  {
+            message: "that email and password combo was returned as true from db. Proceed.",
+            alreadyRegistered: true,
+            authenticated: true,
+            retrievedUsername: dbRes.username,
+            retrievedNotes: dbRes.notesArray,
+
+      } 
+      }else if(!dbRes){
+      console.log("null case")
+         responseData = {
+            email: "",
+            enteredPassword: "",
+            retrievedUsername: "",
+            authenticated: false,
       retrievedNotes: [{title: "u r not logged in", content: "sorry dude, I'll redirect you......."}]
-   }
-   res.json(responseData)
-}
+         }
+   
+      }
+      
+      })
+      .then(()=>{ //needs to be async to wait for query results so it doesn't res.json undefined.
+      console.log("responseData is set as: ")
+      console.log(responseData)
+res.json(responseData)
+   })
+   })
+   //
+// if(enteredCredentials.email == "bob@gmail.com" && enteredCredentials.password =="bobpassword"){
+//    let responseData = {
+//       ...enteredCredentials,
+//       authenticated: true,
+//       username: "Bob",
+//       retrievedNotes:[
+//          {
+//             title: "Bob's first Note",
+//             content: "Fun fact- Bob is a convicted felon"
+//          },
+//          {
+//             title: "A second note",
+//             content: "These notes are unique to bob!"
+//          },
+//          {
+//             title: "Note 3",
+//             content: "Now I just use Mongoose to create a user schema.."
+//          },
+//          {
+//             title: "Final Note-",
+//             content: "...And then anyone can be just like Bob!"
+//          }
+//       ]
+//    }
+//    res.json(responseData)
+// }else{
+//    let responseData = {
+//       ...enteredCredentials,
+//       authenticated: false,
+//       retrievedNotes: [{title: "u r not logged in", content: "sorry dude, I'll redirect you......."}]
+//    }
+//    res.json(responseData)
+// }
 
   
    
-})
+// })
 
 // app.get("/api/reroute",(req,res)=>{
 //    res.redirect("/")
@@ -143,78 +230,10 @@ app.post("/api/addNotes",(req, res) => {
   })
  
   })
-// PracticeModel.replaceOne({},{allNotes: notes})
-   
-//    if(PracticeModel.find({}).length > 0) {
-//       notes.map((indNote)=>{
-//        indNote = new PracticeModel({
-//          cloudId: indNote.id,
-//          cloudTitle: indNote.title,
-//          cloudContent: indNote.content
-//       })
-//       PracticeModel.replaceOne({cloudId: id},(err)=>{
-//          if(err){
-//             console.log(err)
-//          }
-//       })
-//    })
-// } else {
-//     let firstNote = new PracticeModel(req.body)
-//    firstNote.save()
-// }
-
-              // create new db model for insertion as doc
-   
-
-
 
 
 //END Practice Requests
 
-
-
-
-// Create Schema
-let UserSchema = new mongoose.Schema(
-   {
-      name: String,
-      email: String,
-      password: String,
-      notes: Array
-   },
-   {collection: "notesUsers"}
-//    { collection: "people" }
-);
- 
-// Create Model
-let UserModel = db.model("UserModel", UserSchema);
- 
-// Route to Get all People, responds with all docs from query
-
-// app.get(serverAddress, (req, res) => {
-//    UserModel.find({}, {__v: 0}, (err, docs) => {
-//       if (!err) {
-//          res.json(docs);
-//       } else {
-//          res.status(400).json({"error": err});
-//       }
-//    });
-// })
- 
-// Route to Add a Person
-
-// app.post(serverAddress, (req, res) => {
-//    let user = new UserModel(req.body);
-   
-//    user.save((err, result) => {
-//       if (!err) {
-//          delete result._doc.__v;
-//          res.json(result._doc);
-//       } else {
-//          res.status(400).json({"error": err});
-//       }
-//    });
-// })
  
 app.listen(PORT, () => {
    console.log(app.get("env").toUpperCase() + " Server started on port " + (PORT));
