@@ -35,13 +35,13 @@ const db = mongoose.connection; //the currently specified db in mongoose.connect
 db.once('open', () => console.log(`Connected to ${PRACTICEDB} database`));
  
 //PRACTICE requests
-const PracticeSchema = new mongoose.Schema(
-   {
-      allNotes: Array
-   },
-   {collection: "practiceCollection"} //THE COLLECTION
-)
-let PracticeModel = db.model("PracticeModel",PracticeSchema)
+// const PracticeSchema = new mongoose.Schema(
+//    {
+//       allNotes: Array
+//    },
+//    {collection: "practiceCollection"} //THE COLLECTION
+// )
+// let PracticeModel = db.model("PracticeModel",PracticeSchema)
 //so based on schema, PracticeModel.cloudNotes = [the notes array]
 
 
@@ -85,6 +85,7 @@ if(err){
       authenticated: true,
       message: "Registration successful! Welcome aboard, " + posted.username + ".",
       username: posted.username,
+      email: posted.email,
       alreadyRegistered: false
    }
 
@@ -118,6 +119,7 @@ app.post("/api/authenticate", (req,res)=>{
             authenticated: true,
             retrievedUsername: dbRes.username,
             retrievedNotes: dbRes.notesArray,
+            retrievedEmail: dbRes.email
 
       } 
       }else if(!dbRes){
@@ -183,29 +185,28 @@ res.json(responseData)
 // })
 //MAIN APP GET/POST
 app.get("/api/practiceNotes", (req, res) => { //REQ to client for res (notes arr)
- 
-PracticeModel.find({}, {__v: 0}, (err, docs) => { //_v:0 is a second search param meaning versionKey=0 i.e, first version of document. Not necessary but good practice with complex collections
+   console.log("req.params object is:")
+ console.log(req.headers.email) //use req.headers containing an OBJECT with email as VALUE instead of data or params
+//  console.log(req)
+ let emailQuery = req.headers.email
+UserModel.findOne({email:{$regex:emailQuery}}, (err, userDoc) => { //_v:0 is a second search param meaning versionKey=0 i.e, first version of document. Not necessary but good practice with complex collections
       // find ALL, and put them all into an array before sending back
       if (!err) {
          console.log("GET req:")
-         console.log(docs[0]) 
-         
-         // res.json(docs.map((entry)=>{
-         //    console.log(entry.cloudTitle)
-         //    return {
-         //       id: entry.cloudId,
-         //       title: entry.cloudTitle,
-         //       content: entry.cloudContent
-         //    }
-         // })); //DOCS IS THE RETURNED QUERY
+         console.log(userDoc) 
+         // res.json([])
       } else {
-         res.status(400).json({"error": err});
+         console.log(err)
+         // res.json([])
+         // res.status(400).json({"error": err}); //sends error to client also
       }
    })
-   .then((docs)=>{
-      console.log("promise docs[0]: ")
-      console.log(docs[0])
-      res.json(docs[0]) //sometimes returns undefined, causing app crash
+   .then((userDoc)=>{ //.thenable, so we reference the returned userDoc from mongoose query
+      console.log("user doc returned: ")
+      console.log(userDoc)
+      console.log("notesArray value returned for user: ")
+      console.log(userDoc.notesArray)
+      res.json(userDoc.notesArray) //sometimes returns undefined, causing app crash
                //let's put this res.json OUTSIDE the conditional with a 
          // .then promise, to make sure we get a value before axios response
    })
@@ -215,21 +216,56 @@ app.post("/api/addNotes",(req, res) => {
   
    console.log("req.body is:")
    console.log(req.body)
-   let notes = req.body //this is an array of objects. This is correct
-  PracticeModel.deleteMany({},(err,data)=>{
-     err && console.log(err)
-  })
-  .then(function(){
-   let updated = new PracticeModel({
-      allNotes: notes
-   })
-   console.log("updated:")
-   console.log(updated)
-   updated.save()
+   let notes = req.body.notes //this is an array of objects. This is correct
+   console.log("notes variable set as")
+   console.log(notes)
+   let userEmail = req.body.userEmail 
 
+  const user = UserModel.findOne({email: {$regex:userEmail}},(err,userDoc)=>{
+     if(err){
+        console.log(err)
+     } else if(!userDoc){
+        console.log("Query returned no user-debug")
+
+     } else{
+        return userDoc
+     }
   })
+  .then((userDoc)=>{ //userDoc IS the result of successful query.
+     console.log("userDoc returned from post req query to db is:")
+     console.log(userDoc)
+     console.log("Before save()")
+   console.log(user)
+   userDoc.notesArray = notes
+    userDoc.save() //const  user = the returned query value. Bc findOne is .thenable, 
+    //Need to make sure we refer to UserModel constructor here. 
+    console.log("AFTER user.save() update (should have updated notes array)")
+    console.log(user)
+  })
+  .catch((err)=>console.log(err))
  
   })
+
+
+// app.post("/api/addNotes",(req, res) => {
+  
+//    console.log("req.body is:")
+//    console.log(req.body)
+//    let notes = req.body //this is an array of objects. This is correct
+//   PracticeModel.deleteMany({},(err,data)=>{
+//      err && console.log(err)
+//   })
+//   .then(function(){
+//    let updated = new PracticeModel({
+//       allNotes: notes
+//    })
+//    console.log("updated:")
+//    console.log(updated)
+//    updated.save()
+
+//   })
+ 
+//   })
 
 
 //END Practice Requests

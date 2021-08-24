@@ -20,8 +20,6 @@ function App() {
   
 // console.log(history)
   //State Declarations
-
-const [practiceState, setPracticeState] = useState('')
  
   const [editModeStatus,setEditModeStatus] = useState(false)
   
@@ -31,26 +29,49 @@ const [practiceState, setPracticeState] = useState('')
     Content: ""
   })
 
-  const [notes,setNotes] = useState([]) 
-
-  const [usernameFromAuth,setUsernameFromAuth] = (useState("nameless user"))
-  let [authStatus, setAuthStatus] = useState(false) //uses react-router <Redirect /> to redirect to login if not logged in
-  
+  // Get Session-Dependent State 
+let sessionData = ()=>{
+if(sessionStorage.getItem("userData")) {
+  let sessionStoredValue = sessionStorage.getItem("userData")
+  console.log(JSON.parse(sessionStoredValue))
+  return JSON.parse(sessionStorage.getItem("userData"))
+} else {
+  console.log("sessionStorage NOT set correctly, currently storing dummy values")
+  return { //this means sessionStorage wasn't set and/or retrieved correctly.
+    username: "nameless user",
+    notes: [],
+    email: "no email",
+    authStatus: false
+  }} //handle case with no session data so sessionData never undefined & always usable for initial set state
+}
+sessionData = sessionData() //seems to be returning undefined?
+console.log(sessionData)
+// sessionData = JSON.parse(sessionData)
+const [notes,setNotes] = useState(sessionData.notes) //returns user notes array if 
+console.log(notes)
+//set notes from sessionStorage
+const [usernameFromAuth,setUsernameFromAuth] = useState(sessionData.username) //already parsed in function
+console.log(usernameFromAuth)
+// set username from sessionStorage
+const [emailFromAuth, setEmailFromAuth] = useState(sessionData.email)
+console.log(emailFromAuth)
+//set email from sessionStorage to be used for DB queries to find and return user data to populate notes, username, etc.
+  let [authStatus, setAuthStatus] = useState(/*false*/sessionData.authStatus) //uses react-router <Redirect /> to redirect to login if not logged in
+  //set authStatus from sessionStorage
+ 
  useEffect(()=>{
-   console.log("authStatus value changed from false to true, re-rendering")
- },[authStatus])
+   console.log("a user Data value changed. Re-rendering and updating sessionStorage to match")
+   let newSessionVals = {
+     username: usernameFromAuth,
+     notes: notes,
+     email:emailFromAuth,
+     authStatus:authStatus
+   }
+   newSessionVals = JSON.stringify(newSessionVals)
+   sessionStorage.setItem("userData",newSessionVals)
+ },[authStatus, usernameFromAuth, emailFromAuth,notes])
 
-  //   function authenticateUser(){
-  //     //INVALID HOOK CALL              !!!!!!!!!!!!BUG!!!!!!!!!!!
-  //   //   useEffect(()=>{
-  //   //     console.log("authStatus =")
-  //   //     console.log(authStatus)
-  //   //     console.log("authenticateUser called from app.jsx")
-  //   //  setAuthStatus(true)
-  //   //   },[])
-      
-    
-  // }
+  
   function authenticateUser(emailProp, passwordProp, authStatusProp){
         console.log(emailProp) //these are the values from Auth, passed with props. !!!!!!!!!!!
         console.log(passwordProp)
@@ -93,9 +114,15 @@ const [practiceState, setPracticeState] = useState('')
 // if(authStatus==true){
   useEffect(()=>{ //every render gets notes list from server, handles initial render on app load.
    
-    axios.get("/api/practiceNotes") //added ternary to handle empty array received from server
-    .then((res)=>{
-      /*res.data.length>0 && */ setNotes(res.data.allNotes)
+    console.log("initial GET req on login OR refresh page- emailFromAuth = ")
+   console.log(emailFromAuth)
+    //this get req returns an error on initial load bc the db query on server has no search parameter without posting a string here.
+    //CHANGED so that it returns empty array if err, so if emailFromAuth isn't pulled from sessionStorage, this will setNotes([])
+    axios.get("/api/practiceNotes",{headers: {email:emailFromAuth}}) //is userProfile set at this point? NO. Need to sync this up with stateful var
+    .then((res)=>{ //awaits response from server....
+      console.log(res.data) 
+     setNotes(res.data) //res.data is empty because our POST req on server isn't .save() correctly
+      // setNotes([]) //setNotes as [] to stop crashing temporarily
       console.log("res.data.allNotes arrives at client as:")
       console.log(res.data.allNotes)
       console.log("notes is ")
@@ -118,7 +145,10 @@ const [practiceState, setPracticeState] = useState('')
 
   useEffect(()=>{ //FIX: W/ conditional, initial GET w/ setNotes will NOT trigger this post.
     if(notes.length > 0 && notes){ //i.e don't post on initial load when GET req calls setNotes.
-    axios.post("/api/addNotes",notes)
+    axios.post("/api/addNotes",{
+      userEmail: emailFromAuth, //stateful variable
+      notes: notes
+    })
   // .then((res)=>setNotes(res.data)) 
   // .catch((err)=> console.log(err))
   console.log("useEffect detected setNotes update to notes. axios.post to server notes:")
@@ -213,11 +243,21 @@ shallowCopy[index] = edited
   }
 //Functional Components rendering
 
-function practiceStateFunction(loginStatusBoolFromAuth,valuePassedFromAuth,usernameFromAuth){
+function authStateFunction(loginStatusBoolFromAuth,valuePassedFromAuth,usernameFromAuth,emailFromAuth){
     console.log(loginStatusBoolFromAuth)
+    // userProfile.email = emailFromAuth
+    // userProfile.username = usernameFromAuth
     setUsernameFromAuth(usernameFromAuth)
+    setEmailFromAuth(emailFromAuth)
 setNotes(valuePassedFromAuth)
-  
+let userProfile = { //on login or registration, this object is set to sessionStorage. Keeps session & state consistent
+  username: usernameFromAuth,
+  email: emailFromAuth,
+    notes: valuePassedFromAuth,
+    authStatus: loginStatusBoolFromAuth
+}
+userProfile = JSON.stringify(userProfile)
+sessionStorage.setItem( "userData", userProfile )
 }
 console.log(notes)
   return (
@@ -242,7 +282,8 @@ OR make an analogous authStatus over on <Auth> */
   <Auth
   id={"Auth"}
    authenticateUser = {authenticateUser /*is accepting props from auth, see function above*/} 
-   practiceFunction = {practiceStateFunction}
+   authFunction = {authStateFunction}
+   
    />
  </Route>
 

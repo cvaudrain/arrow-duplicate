@@ -37,7 +37,7 @@ const [credentials, setCredentials] = useState({
         password: ""
     })
 
-    const [isRegistered,setIsRegistered] = useState(true);
+    const [isRegistered,setIsRegistered] = useState(true); //defaults to case of returning user
     
     function handleChange(event){
         const {name,value} = event.target; //name/value are the html keys name = and value =
@@ -56,36 +56,52 @@ axios.post("/api/registerUser",credentials)
     console.log("credentials returned: " + res.data.name + " " + res.data.email + " " + res.data.password + " " + res.data.authenticated)
             console.log(res.data)
         let authStatusBool = res.data.authenticated //if user is already registered or not
-        //setup receiver in server.js
-        console.log("credentials returned: "+  res.data.username + " " + res.data.email + " " + res.data.password + " " + res.data.authenticated)
-        console.log(res.data)
-        console.log(res)
-        // props.authenticateUser(enteredEmail,enteredPassword,authStatusBool) 
+        let retrievedEmail= res.data.email
+        let retrievedUsername = res.data.username
+
+        let userData = { //sessionStorage to be set on registration
+            username: retrievedUsername,
+            notes: [],
+            email: retrievedEmail,
+            authStatus: authStatusBool
+        }
+        userData = JSON.stringify(userData) //ready for session storage as JSON format
+
+        sessionStorage.setItem("userData", userData) //obj key must be string format going in to match JSON format.
+
         setAlreadyRegistered(res.data.alreadyRegistered)
 setAuthStatus2(res.data.authenticated)
-props.practiceFunction(res.data.authenticated, [], res.data.username) //don't use authStatusBool, use the direct response value res.data.authenticated
+props.authFunction(res.data.authenticated, [], res.data.username, res.data.email) //don't use authStatusBool, use the direct response value res.data.authenticated
 })
 
 event.preventDefault() //prevents "cannot POST" error
     }
 
+    
+
     function submission(event){
-        
-        // console.log(credentials)
         axios.post("/api/authenticate",credentials)
         .then((res)=>{
             console.log("credentials returned: " + res.data.email + " " + res.data.retrievedNotes + " " + res.data.authenticated)
             console.log(res.data)
-            // let enteredEmail= res.data.email
+            let retrievedEmail= res.data.retrievedEmail
         // let enteredPassword = res.data.password
         let authStatusBool = res.data.authenticated
         let retrievedNotes = res.data.retrievedNotes
         let retrievedUsername = res.data.retrievedUsername
-        // props.authenticateUser(enteredEmail,enteredPassword,authStatusBool)
-            // props.changeState 
+        let userData = {
+            username: retrievedUsername,
+            notes: retrievedNotes,
+            email: retrievedEmail,
+            authStatus: authStatusBool
+        }
+        userData = JSON.stringify(userData) //ready for session storage as JSON format
+
+        sessionStorage.setItem("userData", userData) //obj key must be string format going in to match JSON format.
+         
         setAuthStatus2(res.data.authenticated)
 authStatusBool== false && setFailedAttempt(true)
-        props.practiceFunction(authStatusBool,retrievedNotes,retrievedUsername) /*THIS is how we pass data to main app(parent)
+        props.authFunction(authStatusBool,retrievedNotes,retrievedUsername,retrievedEmail) /*THIS is how we pass data to main app(parent)
         i.e LIFTING UP STATE WITH HOOKS & FUNCTIONAL COMPONENTS. Bc the internet wasn't helpful.
                              the props.functionName is the prop in App.jsx, and is arbitrary
                             but the ARGS we pass in though are DATA FROM THIS COMPONENT
@@ -125,8 +141,6 @@ authStatusBool== false && setFailedAttempt(true)
     function keydownListener(event){
         event.keyCode === 13 && document.getElementById("submitButton").click()
     }
-
-
 
     return (
         
