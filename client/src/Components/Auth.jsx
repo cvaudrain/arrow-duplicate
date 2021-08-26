@@ -53,25 +53,26 @@ console.log(credentials)
     function registerSubmission(event){
 axios.post("/api/registerUser",credentials)
 .then((res)=>{
-    console.log("credentials returned: " + res.data.name + " " + res.data.email + " " + res.data.password + " " + res.data.authenticated)
+    // console.log("credentials returned: " + res.data.name + " " + res.data.email + " " + res.data.password + " " + res.data.authenticated)
             console.log(res.data)
-        let authStatusBool = res.data.authenticated //if user is already registered or not
+        let authStatusBool = res.data.authStatus //if user is already registered or not
         let retrievedEmail= res.data.email
         let retrievedUsername = res.data.username
 
-        let userData = { //sessionStorage to be set on registration
-            username: retrievedUsername,
-            notes: [],
-            email: retrievedEmail,
-            authStatus: authStatusBool
-        }
-        userData = JSON.stringify(userData) //ready for session storage as JSON format
+               
+//         let userData = { //sessionStorage to be set on registration
+//             username: retrievedUsername,
+//             notes: [],
+//             email: retrievedEmail,
+//             authStatus: authStatusBool
+//         }
+//         userData = JSON.stringify(userData) //ready for session storage as JSON format
 
-        sessionStorage.setItem("userData", userData) //obj key must be string format going in to match JSON format.
+//         sessionStorage.setItem("userData", userData) //obj key must be string format going in to match JSON format.
 
-        setAlreadyRegistered(res.data.alreadyRegistered)
-setAuthStatus2(res.data.authenticated)
-props.authFunction(res.data.authenticated, [], res.data.username, res.data.email) //don't use authStatusBool, use the direct response value res.data.authenticated
+//         setAlreadyRegistered(res.data.alreadyRegistered)
+setAuthStatus2(res.data.authStatus) //THIS causes re-render
+props.authFunction(res.data.authStatus, [], res.data.username, res.data.email) //don't use authStatusBool, use the direct response value res.data.authenticated
 })
 
 event.preventDefault() //prevents "cannot POST" error
@@ -80,10 +81,12 @@ event.preventDefault() //prevents "cannot POST" error
     
 
     function submission(event){
+        console.log("submission function")
         axios.post("/api/authenticate",credentials)
         .then((res)=>{
-            console.log("credentials returned: " + res.data.email + " " + res.data.retrievedNotes + " " + res.data.authenticated)
+            
             console.log(res.data)
+            console.log(res.data.retrievedNotes)
             let retrievedEmail= res.data.retrievedEmail
         // let enteredPassword = res.data.password
         let authStatusBool = res.data.authenticated
@@ -101,7 +104,8 @@ event.preventDefault() //prevents "cannot POST" error
          
         setAuthStatus2(res.data.authenticated)
 authStatusBool== false && setFailedAttempt(true)
-        props.authFunction(authStatusBool,retrievedNotes,retrievedUsername,retrievedEmail) /*THIS is how we pass data to main app(parent)
+// props.resetAuthTern(authStatus2,failedAttempt,alreadyRegistered)
+        props.authFunction(authStatusBool,retrievedNotes,retrievedUsername,retrievedEmail,userData) /*THIS is how we pass data to main app(parent)
         i.e LIFTING UP STATE WITH HOOKS & FUNCTIONAL COMPONENTS. Bc the internet wasn't helpful.
                              the props.functionName is the prop in App.jsx, and is arbitrary
                             but the ARGS we pass in though are DATA FROM THIS COMPONENT
@@ -150,24 +154,25 @@ authStatusBool== false && setFailedAttempt(true)
          
         <div>
         <header className="auth-header">
-        <h1 className = "auth-header-text">Welcome to Notes</h1>
+        <h2 className = "auth-header-text">indigo</h2>
+        <h3><i>A Growing Productivity Toolkit</i></h3>
         </header>
         <h1 className = "auth-sub-heading">{isRegistered ? "Login" : "Register"}</h1>
         <form method="post" className="auth-form">
             
             {!isRegistered && //extra field for name if unregistered
             <input onChange={handleChange}
-            type="text"
-            name="username"
-            placeholder="Username"
+            type="email"
+            name="email"
+            placeholder="Email"
              autoComplete="off"
                  className = "auth-login-field"
              />
             }
             <input onChange={handleChange}
-            type="email"
-            name="email"
-            placeholder="Email"
+            type="text"
+            name="username"
+            placeholder="Username"
              autoComplete="off"
                  className = "auth-login-field"
              />
@@ -181,12 +186,12 @@ authStatusBool== false && setFailedAttempt(true)
                 className = "auth-login-field"
             />
 
-            {/* <Link to="/"> */}
+            
             <button className="auth-login-btn" 
             id="submitButton" 
             onClick={isRegistered ? submission : registerSubmission}>Submit
             </button>
-           {/* </Link> */}
+            
         </form>
         <div>
 {failedAttempt && <h2> Hm. You don't look familiar........ Let's Try again.</h2>}
@@ -195,12 +200,12 @@ authStatusBool== false && setFailedAttempt(true)
         </div>
         {isRegistered ? 
             <div className="register">
-            <h3><i>First time here?</i></h3>
+            <h3 className="regtext"><i>First time here?</i></h3>
             <button onClick= {toggleReg} className="to-register-btn">Register</button>
             </div>
             :
             <div className="register">
-            <h3><i>Already registered?</i></h3>
+            <h3 className="regtext"><i>Already registered?</i></h3>
             <button onClick= {toggleReg} className="to-register-btn">Login</button>
           
             </div>

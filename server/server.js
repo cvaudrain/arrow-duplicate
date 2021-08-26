@@ -1,6 +1,9 @@
 require("dotenv").config();
 const express  = require("express");
 const mongoose = require("mongoose");
+const session = require("express-session")
+const passport = require("passport")
+const passportLocalMongoose = require("passport-local-mongoose")
 // const cors     = require("cors"); //may need cors to replace proxy in production build
 const path     = require("path");
 const { response } = require("express");
@@ -18,6 +21,15 @@ const addNoteAddress = "http://localhost:4747/api/addNotes"
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//Authentication w/ Passport x BCrypt
+app.use(session({
+   resave:false,
+   saveUninitialized:false,
+   secret: "Passport Session Secret Value"
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 // app.use(cors());
  
 // Establish DB connection////////////////////////////////
@@ -45,7 +57,7 @@ db.once('open', () => console.log(`Connected to ${PRACTICEDB} database`));
 //so based on schema, PracticeModel.cloudNotes = [the notes array]
 
 
-const UserSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema( //1st Schema
    {
       username: String,
       email: String,
@@ -54,93 +66,122 @@ const UserSchema = new mongoose.Schema(
    },
    {collection: "practiceUserCollection"}
 )
-let UserModel = db.model("UserModel", UserSchema)
+
+UserSchema.plugin(passportLocalMongoose) //2nd Passport  Plugin
+
+let UserModel = db.model("UserModel", UserSchema) //3rd create Model
+
+passport.use(UserModel.createStrategy()) //4 Create Strategy 
+passport.serializeUser(UserModel.serializeUser())
+passport.deserializeUser(UserModel.deserializeUser())
 //AUTH POST Listeners//////////////////////////////////////////////////////
 
 //For REGISTRATION///////////
-app.post("/api/registerUser", (req,res)=>{
+app.post("/api/registerUser", (req,res)=>{ //This works
    let posted = req.body
    console.log("received new user credentials: ")
 console.log(posted)
-let serverResponse;
-let newUser = new UserModel({
+UserModel.register(
+   {
    username: posted.username,
-   email: posted.email,
-   password: posted.password, //PLAINTEXT requires hash  salt !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   notesArray: []
-})
-UserModel.findOne({email: `${req.body.email}`}, (err,dbRes)=>{
-if(err){
-   console.log(err)
-   serverResponse = "Hm, something went wrong. Please try again."
-} else if(dbRes != null){
-   console.log("that email is already in use. Try logging in.")
-   serverResponse =  {
-      message: "that email is already in use. Try logging in.",
-      alreadyRegistered: true
-} 
-}else if(dbRes === null){
-
-   serverResponse = {
-      authenticated: true,
-      message: "Registration successful! Welcome aboard, " + posted.username + ".",
-      username: posted.username,
-      email: posted.email,
-      alreadyRegistered: false
+   email:posted.email,
+   notesArray:[]
+}, posted.password,function(err,user){
+   if(err){
+      console.log(err)
+      res.json({
+         authStatus: false,
+         username: "",
+         email: "",
+         notes: []
+      }) //will set authstatus in React state 
+   }else{
+      passport.authenticate("local")(req,res,function(){
+         res.json({
+            authStatus: true,
+            username: posted.username,
+            email: posted.email,
+            notes: []
+         }) //will set authstatus in React state
+      })
    }
+})
 
-   newUser.save()
-}
-
-}).then(()=>res.json(serverResponse)) //.then() ensures that serverResponse is ready prior to res.json to client
+//.then(()=>res.json(serverResponse)) //.then() ensures that serverResponse is ready prior to res.json to client
 
 })
 //
 //For LOGIN/////////////////
-app.post("/api/authenticate", (req,res)=>{
-   let responseData
-   console.log(req.body)
-   console.log(req.body.email)
-   let enteredEmail = req.body.email
-   let enteredPassword = req.body.password
-   console.log(req.body.password)
-   console.log("received")
-   //IF DB query matches, THEN res.json
-   UserModel.findOne({email: {$regex:enteredEmail},password: {$regex:enteredPassword}}, (err,dbRes)=>{
-      if(err){
+app.post("/api/authenticate", (req,res,next)=>{
+   console.log("posted recieved from client")
+   passport.authenticate("local",function(err,user,info){
+      if(err){ 
          console.log(err)
-         responseData = "Hm, something went wrong. Please try again."
-      } else if(dbRes){
-         console.log(dbRes)
-         console.log(dbRes.notesArray)
-         responseData =  {
-            message: "that email and password combo was returned as true from db. Proceed.",
-            alreadyRegistered: true,
-            authenticated: true,
-            retrievedUsername: dbRes.username,
-            retrievedNotes: dbRes.notesArray,
-            retrievedEmail: dbRes.email
-
-      } 
-      }else if(!dbRes){
-      console.log("null case")
-         responseData = {
-            email: "",
-            enteredPassword: "",
-            retrievedUsername: "",
-            authenticated: false,
-      retrievedNotes: [{title: "u r not logged in", content: "sorry dude, I'll redirect you......."}]
-         }
-   
+         return next(err)}
+      if(!user){
+         console.log(req.body)
+         console.log("user not found")
+         return res.json("unsuccessful attempt")
       }
-      
+
+      req.logIn(user,function(err){
+         if(err){
+            console.log("req.logIn called, error thrown")
+            return next(err)
+         }
+         console.log("req.logIn called, NO error.")
+         console.log(user.username)
+         console.log(user.notesArray)
+         console.log(user.email)
+         return res.json(
+            {retrievedUsername: user.username,
+               retrievedNotes: user.notesArray,
+               retrievedEmail:user.email,
+               authenticated: true}
+         )
       })
-      .then(()=>{ //needs to be async to wait for query results so it doesn't res.json undefined.
-      console.log("responseData is set as: ")
-      console.log(responseData)
-res.json(responseData)
-   })
-   })
+   })(req,res,next);
+   
+
+});
+            
+         
+   //IF DB query matches, THEN res.json
+   // UserModel.findOne({email: {$regex:enteredEmail},password: {$regex:enteredPassword}}, (err,dbRes)=>{
+   //    if(err){
+   //       console.log(err)
+   //       responseData = "Hm, something went wrong. Please try again."
+   //    } else if(dbRes){
+   //       console.log(dbRes)
+   //       console.log(dbRes.notesArray)
+   //       responseData =  {
+   //          message: "that email and password combo was returned as true from db. Proceed.",
+   //          alreadyRegistered: true,
+   //          authenticated: true,
+   //          retrievedUsername: dbRes.username,
+   //          retrievedNotes: dbRes.notesArray,
+   //          retrievedEmail: dbRes.email
+
+   //    } 
+   //    }else if(!dbRes){
+   //    console.log("null case")
+   //       responseData = {
+   //          email: "",
+   //          enteredPassword: "",
+   //          retrievedUsername: "",
+   //          authenticated: false,
+   //    retrievedNotes: [{title: "u r not logged in", content: "sorry dude, I'll redirect you......."}]
+   //       }
+   
+   //    }
+      
+      //})
+      //.then(()=>{ //needs to be async to wait for query results so it doesn't res.json undefined.
+//       console.log("responseData is set as: ")
+//       console.log(responseData)
+// res.json(responseData)
+   //})
+   //})
    //
 // if(enteredCredentials.email == "bob@gmail.com" && enteredCredentials.password =="bobpassword"){
 //    let responseData = {

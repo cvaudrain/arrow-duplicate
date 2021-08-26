@@ -7,42 +7,59 @@ html {
   font-family: "Montserrat", sans-serif;
 }
 body {
-  background:#c5e8e6;
-  padding: 0 16px;
+  background:#c7d7ff;
+  /* padding: 0 16px; */
 }
 
 header {
-  background-color: #0b7a75;
+  /* background-color: #0b7a75; */
+  background-color: #224663;
   margin: auto -16px;
-  padding: 16px 32px;
+  padding: 15px 30px 0 30px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 }
 
-header h1 {
+header h2, header h3 {
   color: #fff;
-  font-family: "McLaren", cursive;
+  text-shadow: 0 0 1px #fff;
+  font-family: "McLaren", curssans-serif;
   font-weight: 200;
+  padding-left: 25px;
+  padding-bottom:5px;
 }
 
 footer {
   position: absolute;
-  text-align: center;
   bottom: 0;
   width: 100%;
-  height: 2.5rem;
+  padding-top:10vh
+  /* height: 2.5rem;  */
 }
 
-footer p {
-  color: #ccc;
+.indigo{
+  font-size: 3.5rem;
+  padding-bottom: 0;
+}
+.greeting{
+  font-family: "McLaren",sans-serif;
+}
+
+@media(max-width:768px){
+  .note{
+    width:50px;
+    font-size: 1.2rem;
+  }
 }
 .note {
   background: #fff;
   border-radius: 7px;
   box-shadow: 0 2px 5px #ccc;
   padding: 10px;
-  width: 240px;
-  margin: 16px;
-  float: left;
+  width: 38vw;
+  max-width: 450px;
+  margin: 15px;
+  
+  float:left;
 }
 .note h1 {
   font-size: 1.1em;
@@ -59,22 +76,30 @@ footer p {
   position: relative;
   float: right;
   margin-right: 10px;
-  color: #0b517a;
+  color: #224663;
   border: none;
   width: 36px;
   height: 36px;
   cursor: pointer;
   outline: none;
 }
+@media(min-width:1000px){
+  .note{
+    margin-left:80px;
+  }
+}
+
 
 form {
   position: relative;
-  width: 480px;
+  width: 50vw;
   margin: 30px auto 20px auto;
   background: #fff;
   padding: 15px;
+  padding-bottom: 0;
   border-radius: 7px;
   box-shadow: 0 1px 5px rgb(138, 137, 137);
+  text-align: center;
 }
 form input,
 form textarea {
@@ -87,32 +112,66 @@ form textarea {
   resize: none;
 }
 form button {
-  position: absolute;
-  right: 18px;
-  bottom: -18px;
-  background: #0b7a75;
+  position: relative;
+  /* right: 18px;
+  bottom: -18px; */
+  /* right: 45%; */
+  bottom: -15px;
+  background: #274c6b;
   color: #fff;
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 46px;
+  height: 46px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   outline: none;
 }
 
+.centered{
+  text-align: center;
+}
+
+
+.logout-button{
+background-color: #822a59;
+color: #fff;
+text-shadow: 0 0 1px #fff;
+border: 1px solid white;
+padding: 5px;
+/* box-shadow: 0 0 2px white; */
+border-radius: 10%;
+
+position: relative;
+left:90%;
+/* right:10%; */
+bottom: 50px;;
+}
+
+@media(max-width:576px){
+  .logout-button{
+    position: relative;
+    left:80%;
+  }
+}
+
 /* My Classes & Styling */
 .auth-header-text{
   text-align: center;
-  font-size: 4rem;
-  padding:40px;
+  font-size: 3.8rem;
+  /* padding:40px; */
+  padding-bottom:15px;
+  text-align:center;
 }
+
 .auth-header{
   margin-bottom: 50px;
+  text-align: center;
 }
 .auth-sub-heading{
   text-align: center;
   color: #0b517a;
+  text-align:center;
 }
 .auth-form{
   height: auto;
@@ -121,16 +180,18 @@ form button {
   text-align: center;
  padding: 7px 
 }
+
+
 .auth-login-btn{
-  position: absolute;
-  right: 44%;
-top: 90%;
-  background: #0b7a75;
+   /* position: absolute; */
+ 
+  /* background: #0b7a75; */
+  background: #274c6b;
   color: #fff;
-  /* border-radius: 0%; */
-  width: auto;
-  padding: 12px 7px;
-  height: 36px;
+ /* margin: auto; */
+  
+  /* padding: 12px 7px; */
+  /* height: 36px; */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 .register{
@@ -140,10 +201,13 @@ top: 90%;
   text-align: center;
   margin-top: 100px;
 }
+.reg-text{
+  color:black;
+}
 .to-register-btn{
   position: relative;
   top: 50%;
-  background-color: #0b7a75;
+  background-color: #a66511;
   color: #fff;
   padding: 9px;
   border-radius: 50%;

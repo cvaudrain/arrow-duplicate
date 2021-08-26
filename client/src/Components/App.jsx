@@ -29,13 +29,29 @@ function App() {
     Content: ""
   })
 
+  const [notes,setNotes] = useState([])
+  const [authStatus,setAuthStatus] = useState(false)
+  const [usernameFromAuth, setUsernameFromAuth] = useState("unauthenticated interloper")
+  const [emailFromAuth, setEmailFromAuth] = useState("no email")
+  sessionStorage.setItem("userData",JSON.stringify({ //Initial set session storage. Values will be replaced ater successful auth
+    username: "nameless user",
+    notes: [],
+    email: "no email",
+    authStatus: false
+  })
+  )
   // Get Session-Dependent State 
 let sessionData = ()=>{
-if(sessionStorage.getItem("userData")) {
-  let sessionStoredValue = sessionStorage.getItem("userData")
-  console.log(JSON.parse(sessionStoredValue))
-  return JSON.parse(sessionStorage.getItem("userData"))
-} else {
+  let sessionStoredValue= sessionStorage.getItem("userData")
+if(sessionStoredValue.email !== "no email") { //i.e, if the initial values have been replaced by a user login action...
+   sessionStoredValue = sessionStorage.getItem("userData")
+  console.log("sessionData variable is still available (line 34)")
+  JSON.parse(sessionStoredValue)
+  console.log(sessionStoredValue)
+ 
+  return sessionStoredValue
+}
+    else {
   console.log("sessionStorage NOT set correctly, currently storing dummy values")
   return { //this means sessionStorage wasn't set and/or retrieved correctly.
     username: "nameless user",
@@ -44,57 +60,37 @@ if(sessionStorage.getItem("userData")) {
     authStatus: false
   }} //handle case with no session data so sessionData never undefined & always usable for initial set state
 }
+
 sessionData = sessionData() //seems to be returning undefined?
 console.log(sessionData)
-// sessionData = JSON.parse(sessionData)
-const [notes,setNotes] = useState(sessionData.notes) //returns user notes array if 
-console.log(notes)
-//set notes from sessionStorage
-const [usernameFromAuth,setUsernameFromAuth] = useState(sessionData.username) //already parsed in function
-console.log(usernameFromAuth)
-// set username from sessionStorage
-const [emailFromAuth, setEmailFromAuth] = useState(sessionData.email)
-console.log(emailFromAuth)
-//set email from sessionStorage to be used for DB queries to find and return user data to populate notes, username, etc.
-  let [authStatus, setAuthStatus] = useState(/*false*/sessionData.authStatus) //uses react-router <Redirect /> to redirect to login if not logged in
-  //set authStatus from sessionStorage
+// // sessionData = JSON.parse(sessionData)
+// const [notes,setNotes] = useState(sessionData.notes) //returns user notes array if 
+// console.log(notes)
+// //set notes from sessionStorage
+// const [usernameFromAuth,setUsernameFromAuth] = useState(sessionData.username) //already parsed in function
+// console.log(usernameFromAuth)
+// // set username from sessionStorage
+// const [emailFromAuth, setEmailFromAuth] = useState(sessionData.email)
+// console.log(emailFromAuth)
+// //set email from sessionStorage to be used for DB queries to find and return user data to populate notes, username, etc.
+//   let [authStatus, setAuthStatus] = useState(/*false*/sessionData.authStatus) //uses react-router <Redirect /> to redirect to login if not logged in
+//   //set authStatus from sessionStorage
  
- useEffect(()=>{
-   console.log("a user Data value changed. Re-rendering and updating sessionStorage to match")
-   let newSessionVals = {
-     username: usernameFromAuth,
-     notes: notes,
-     email:emailFromAuth,
-     authStatus:authStatus
-   }
-   newSessionVals = JSON.stringify(newSessionVals)
-   sessionStorage.setItem("userData",newSessionVals)
- },[authStatus, usernameFromAuth, emailFromAuth,notes])
+//  useEffect(()=>{
+//    console.log("a user Data value changed. Re-rendering and updating sessionStorage to match")
+//    let newSessionVals = {
+//      username: usernameFromAuth,
+//      notes: notes,
+//      email:emailFromAuth,
+//      authStatus:authStatus
+//    }
+//    newSessionVals = JSON.stringify(newSessionVals)
+//    sessionStorage.setItem("userData",newSessionVals)
+//  },[authStatus, usernameFromAuth, emailFromAuth,notes])
 
   
-  function authenticateUser(emailProp, passwordProp, authStatusProp){
-        console.log(emailProp) //these are the values from Auth, passed with props. !!!!!!!!!!!
-        console.log(passwordProp)
-        console.log(authStatusProp)
-        
-       
-        // setAuthStatus(true)
-        console.log(authStatus)
-        // if(authStatus===true){
-        //   axios.get("/api/reroute")
-        // }
-        // setTimeout((authStatusProp)=>{ //I am skirting stateful rules here
-        //   authStatusProp && setAuthStatus(authStatusProp)
-        //   console.log(authStatus)
-        // },200 )
-    // console.log(credentials)
-    // axios.post("/api/authenticate",credentials)
-    // event.preventDefault() //prevents "cannot POST" error
-}
 
 
-  
-  
   //handle GET/POST with Axios between client and server AXIOS EXPLAINED HERE:
   //one url communicates with the server get request, the other with the post request
   //the get request in server contains a DB query to return notes, which is caught by Axios here
@@ -112,30 +108,30 @@ console.log(emailFromAuth)
   //AXIOS useEffect calls and function calls to communicate between client and server:
 
 // if(authStatus==true){
-  useEffect(()=>{ //every render gets notes list from server, handles initial render on app load.
+  // useEffect(()=>{ //every render gets notes list from server, handles initial render on app load.
    
-    console.log("initial GET req on login OR refresh page- emailFromAuth = ")
-   console.log(emailFromAuth)
-    //this get req returns an error on initial load bc the db query on server has no search parameter without posting a string here.
-    //CHANGED so that it returns empty array if err, so if emailFromAuth isn't pulled from sessionStorage, this will setNotes([])
-    axios.get("/api/practiceNotes",{headers: {email:emailFromAuth}}) //is userProfile set at this point? NO. Need to sync this up with stateful var
-    .then((res)=>{ //awaits response from server....
-      console.log(res.data) 
-     setNotes(res.data) //res.data is empty because our POST req on server isn't .save() correctly
-      // setNotes([]) //setNotes as [] to stop crashing temporarily
-      console.log("res.data.allNotes arrives at client as:")
-      console.log(res.data.allNotes)
-      console.log("notes is ")
-      console.log(notes)
-    }) //will set notes to equal the value of the response from server, from db query
-    .catch((err)=>{
-      console.log(err)
+  //   console.log("initial GET req on login OR refresh page- emailFromAuth = ")
+  //  console.log(emailFromAuth)
+  //   //this get req returns an error on initial load bc the db query on server has no search parameter without posting a string here.
+  //   //CHANGED so that it returns empty array if err, so if emailFromAuth isn't pulled from sessionStorage, this will setNotes([])
+  //   axios.get("/api/practiceNotes",{headers: {email:emailFromAuth}}) //is userProfile set at this point? NO. Need to sync this up with stateful var
+  //   .then((res)=>{ //awaits response from server....
+  //     console.log(res.data) 
+  //    setNotes(res.data) //res.data is empty because our POST req on server isn't .save() correctly
+  //     // setNotes([]) //setNotes as [] to stop crashing temporarily
+  //     //console.log("res.data.allNotes arrives at client as:")
+  //     //console.log(res.data.allNotes)
+  //     //console.log("notes is ")
+  //     //console.log(notes)
+  //   }) //will set notes to equal the value of the response from server, from db query
+  //   .catch((err)=>{
+  //     console.log(err)
       
-    }) //handle error logging
-    // console.log("notes reset via setNotes. axios.get to server. notes array =")
-    console.log(notes) //NOW is returning as empty array here.
+  //   }) //handle error logging
+  //   // console.log("notes reset via setNotes. axios.get to server. notes array =")
+  //   console.log(notes) //NOW is returning as empty array here.
    
-  },[]) //empty array is useEffect syntax
+  // },[]) //empty array is useEffect syntax
 
   
   //addNote function  AND EditNote function can contain our axios.post, sending the newly updated notes array to server
@@ -151,6 +147,7 @@ console.log(emailFromAuth)
     })
   // .then((res)=>setNotes(res.data)) 
   // .catch((err)=> console.log(err))
+  console.log(emailFromAuth)
   console.log("useEffect detected setNotes update to notes. axios.post to server notes:")
   console.log(notes)
     }
@@ -173,8 +170,8 @@ console.log(emailFromAuth)
   notes.forEach((entry)=>{
     tempArr.push(entry)
   })
-  console.log("tempArr")
-  console.log(tempArr)
+  //console.log("tempArr")
+  //console.log(tempArr)
   // axios.post("/api/addNotes",tempArr)         //AXIOS CALL
   // .catch((err)=>console.log(err))
   // console.log("on addNote, we send the following via post from client to server:")
@@ -216,9 +213,9 @@ function editNote(id,title,content){
   }
 //called when <NotedEditor add button is pressed.
   function editComplete(edited){ //edited is from NoteEditor onEditSubmit
-    console.log(edited) //edited IS logging and shows changes made in editor
-    console.log("editComplete called")
-    console.log(edited.id) //IS now capturing id value
+    //console.log(edited) //edited IS logging and shows changes made in editor
+    //console.log("editComplete called")
+    //console.log(edited.id) //IS now capturing id value
 
     // axios.post("/api/addNotes",notes)         //AXIOS CALL
     // .catch((err)=>console.log(err))    
@@ -237,19 +234,22 @@ shallowCopy[index] = edited
     /* setNotes(shallowCopy)
      if you setNotes HERE, it DOESN'T WORK */
     setEditModeStatus(false)
-    console.log("testtest 54321.. notes state = ")
+    //console.log("testtest 54321.. notes state = ")
     console.log(notes) //THIS IS NOW UPDATED to match shallowCopy. try axios.post here
-    axios.post("/api/addNotes",notes) 
+    
+      // axios.post("/api/addNotes",notes) 
+    
   }
 //Functional Components rendering
 
-function authStateFunction(loginStatusBoolFromAuth,valuePassedFromAuth,usernameFromAuth,emailFromAuth){
+function authStateFunction(loginStatusBoolFromAuth,valuePassedFromAuth,usernameFromAuth,emailFromAuth,userDataFromAuth){
     console.log(loginStatusBoolFromAuth)
     // userProfile.email = emailFromAuth
     // userProfile.username = usernameFromAuth
     setUsernameFromAuth(usernameFromAuth)
     setEmailFromAuth(emailFromAuth)
 setNotes(valuePassedFromAuth)
+setAuthStatus(loginStatusBoolFromAuth)
 let userProfile = { //on login or registration, this object is set to sessionStorage. Keeps session & state consistent
   username: usernameFromAuth,
   email: emailFromAuth,
@@ -260,6 +260,22 @@ userProfile = JSON.stringify(userProfile)
 sessionStorage.setItem( "userData", userProfile )
 }
 console.log(notes)
+
+function logout(){
+  axios.get("/logout",function(req,res){
+    req.logout;
+    setAuthStatus(false)
+  })
+  sessionStorage.clear()
+  setNotes([])
+  // window.location.reload()
+}
+// function resetAuthTernaries(status,failed,registered){
+//   status=false
+//   failed=false
+//   registered=false
+// }
+
   return (
     <Router history = {history}>
   <div>
@@ -281,9 +297,8 @@ OR make an analogous authStatus over on <Auth> */
 {/* {authStatus && <Redirect from="/authenticate" to="/PracticeRoute"/> } NOT working...  */}
   <Auth
   id={"Auth"}
-   authenticateUser = {authenticateUser /*is accepting props from auth, see function above*/} 
    authFunction = {authStateFunction}
-   
+  //  resetAuthTern= {resetAuthTernaries}
    />
  </Route>
 
@@ -291,10 +306,12 @@ OR make an analogous authStatus over on <Auth> */
 {console.log(authStatus)}
 {console.log("right above here is the authStatus full value.. the ternary on line 251 stops the redirect from login to notes app because if we nav straight to index, authState is always set to false by default")}
  {/* {authStatus && notes[0].title=="u r not logged in" ? <Redirect from="/" to="/authenticate" /> : null} */}
+ 
   {editModeStatus &&
   <div>
   <Header
     headerText="Edit Note"
+    logout={logout}
   />
   <NoteEditor 
   
@@ -309,12 +326,13 @@ OR make an analogous authStatus over on <Auth> */
 {!editModeStatus &&
 
 <div>
-{console.log("notes array looks like this before rendering, after submitting edit:")}
-{console.log(notes)}
+{/* {console.log("notes array looks like this before rendering, after submitting edit:")}
+{console.log(notes)} */}
 
 <Header 
-headerText="React Notes"
+headerText="indigo"
 userNameGreeting={usernameFromAuth}
+logout={logout}
 />
 <CreateArea 
 onAdd={addNote} 
@@ -332,8 +350,9 @@ onEdit={editNote}
 />
 })
 }
-{console.log("Finished Render/map. Notes array is:")}
-{console.log(notes) /*axios.post here to handle ALL add,edit,delete?*/} 
+{/* {console.log("Finished Render/map. Notes array is:")}
+{console.log(notes)}  */}
+
 <Footer />
 </div>
 }
