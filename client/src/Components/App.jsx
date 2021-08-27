@@ -28,18 +28,21 @@ function App() {
     Title: "",
     Content: ""
   })
+//ACTUALLY declare ALL state variables that correspond with sessionStorage AFTER checking the sessionStorage value
+  //const [notes,setNotes] = useState([]) //lets declare notes AFTEr checking to see if sessionStorage exists, to avoid too many re-renders..
+  // const [authStatus,setAuthStatus] = useState(false)
+  // const [usernameFromAuth, setUsernameFromAuth] = useState("unauthenticated interloper")
+  // const [emailFromAuth, setEmailFromAuth] = useState("no email")
 
-  const [notes,setNotes] = useState([])
-  const [authStatus,setAuthStatus] = useState(false)
-  const [usernameFromAuth, setUsernameFromAuth] = useState("unauthenticated interloper")
-  const [emailFromAuth, setEmailFromAuth] = useState("no email")
-  sessionStorage.setItem("userData",JSON.stringify({ //Initial set session storage. Values will be replaced ater successful auth
+  if(sessionStorage.getItem("userData") === null){
+  sessionStorage.setItem("userData",JSON.stringify({ //IF null, Initial set session storage. Values will be replaced ater successful auth
     username: "nameless user",
     notes: [],
     email: "no email",
     authStatus: false
   })
   )
+}
   // Get Session-Dependent State 
 let sessionData = ()=>{
   let sessionStoredValue= sessionStorage.getItem("userData")
@@ -49,7 +52,7 @@ if(sessionStoredValue.email !== "no email") { //i.e, if the initial values have 
   JSON.parse(sessionStoredValue)
   console.log(sessionStoredValue)
  
-  return sessionStoredValue
+  return JSON.parse(sessionStoredValue)
 }
     else {
   console.log("sessionStorage NOT set correctly, currently storing dummy values")
@@ -62,7 +65,16 @@ if(sessionStoredValue.email !== "no email") { //i.e, if the initial values have 
 }
 
 sessionData = sessionData() //seems to be returning undefined?
+console.log("sessiondata ====")
 console.log(sessionData)
+console.log(sessionData.notes) //wasn't being parsed so was returning undefined!!!!!!!!!!!!!!!!!!!!!!
+const [notes,setNotes] = useState(sessionData.notes) // declare notes HERE so page refresh will work without too many renders caused by re-setting it too many times in initial render.
+console.log("notes stateful ===")
+console.log(notes)
+const [authStatus,setAuthStatus] = useState(sessionData.authStatus)
+  const [usernameFromAuth, setUsernameFromAuth] = useState(sessionData.username)
+  const [emailFromAuth, setEmailFromAuth] = useState(sessionData.email)
+//setNotes(sessionData.notes)    //causes TOO MANY RE-RENDERS due to useEffect loop. 
 // // sessionData = JSON.parse(sessionData)
 // const [notes,setNotes] = useState(sessionData.notes) //returns user notes array if 
 // console.log(notes)
@@ -139,19 +151,30 @@ console.log(sessionData)
   // axios.post() to the server api endpoint on every setNotes() call? <<<<<<<<
   //Yes we can:
 
+  //Works perfectly for add and delete, but NOT for edit. Bc we circumvented setNotes with shallowCopy. Will perform CRUD
+  //for session and axios.post from that function, after the point where notes is set correctly
   useEffect(()=>{ //FIX: W/ conditional, initial GET w/ setNotes will NOT trigger this post.
     if(notes.length > 0 && notes){ //i.e don't post on initial load when GET req calls setNotes.
+      console.log("when posting in useEffect, notes ==")
+      console.log(notes)
     axios.post("/api/addNotes",{
       userEmail: emailFromAuth, //stateful variable
       notes: notes
     })
+    sessionStorage.setItem("userData",JSON.stringify({ //should sync session with what we send to DB
+      username: usernameFromAuth,
+    notes: notes,
+    email: emailFromAuth,
+    authStatus: true
+    })
+    )
   // .then((res)=>setNotes(res.data)) 
   // .catch((err)=> console.log(err))
   console.log(emailFromAuth)
   console.log("useEffect detected setNotes update to notes. axios.post to server notes:")
   console.log(notes)
     }
-  }, [notes]) 
+  },[notes]) 
 
 // } //conditional authStatus
 // else{ console.log("not logged in, axios not get/posting to server yet")}
@@ -170,8 +193,8 @@ console.log(sessionData)
   notes.forEach((entry)=>{
     tempArr.push(entry)
   })
-  //console.log("tempArr")
-  //console.log(tempArr)
+  console.log("tempArr")
+  console.log(tempArr)
   // axios.post("/api/addNotes",tempArr)         //AXIOS CALL
   // .catch((err)=>console.log(err))
   // console.log("on addNote, we send the following via post from client to server:")
@@ -235,15 +258,27 @@ shallowCopy[index] = edited
      if you setNotes HERE, it DOESN'T WORK */
     setEditModeStatus(false)
     //console.log("testtest 54321.. notes state = ")
-    console.log(notes) //THIS IS NOW UPDATED to match shallowCopy. try axios.post here
     
-      // axios.post("/api/addNotes",notes) 
+    console.log("NOTES STATUS IN EDITCOMPLETE LINE 260  ")
+    console.log(notes) //THIS IS NOW UPDATED to match shallowCopy. try axios.post here
+    //manually inserting CRUD Op for edits, add/delete are detected by useEffect.
+    axios.post("/api/addNotes",{
+      userEmail: emailFromAuth, //stateful variable
+      notes: notes
+    })
+    sessionStorage.setItem("userData",JSON.stringify({ //should sync session with what we send to DB
+      username: usernameFromAuth,
+    notes: notes,
+    email: emailFromAuth,
+    authStatus: true
+    })
+    ) //end CRUD insert
     
   }
 //Functional Components rendering
 
-function authStateFunction(loginStatusBoolFromAuth,valuePassedFromAuth,usernameFromAuth,emailFromAuth,userDataFromAuth){
-    console.log(loginStatusBoolFromAuth)
+function authStateFunction(loginStatusBoolFromAuth,valuePassedFromAuth,usernameFromAuth,emailFromAuth){
+    console.log("authStateFunction Called")
     // userProfile.email = emailFromAuth
     // userProfile.username = usernameFromAuth
     setUsernameFromAuth(usernameFromAuth)
@@ -256,6 +291,8 @@ let userProfile = { //on login or registration, this object is set to sessionSto
     notes: valuePassedFromAuth,
     authStatus: loginStatusBoolFromAuth
 }
+console.log("USERPROFILE:")
+console.log(userProfile)
 userProfile = JSON.stringify(userProfile)
 sessionStorage.setItem( "userData", userProfile )
 }
@@ -338,7 +375,8 @@ logout={logout}
 onAdd={addNote} 
 /> 
 {notes.map((noteItem,index)=>{
-  console.log(notes) //The notes array is updated successfully....
+  //console.log("Notes inside map function down in render section")
+  //console.log(notes) //The notes array is updated successfully....
   
 return <Note 
 key={index}
@@ -349,6 +387,7 @@ onDelete={deleteNote}
 onEdit={editNote}
 />
 })
+
 }
 {/* {console.log("Finished Render/map. Notes array is:")}
 {console.log(notes)}  */}

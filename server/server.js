@@ -276,12 +276,12 @@ app.post("/api/addNotes",(req, res) => {
      console.log("userDoc returned from post req query to db is:")
      console.log(userDoc)
      console.log("Before save()")
-   console.log(user)
+   console.log(userDoc)
    userDoc.notesArray = notes
     userDoc.save() //const  user = the returned query value. Bc findOne is .thenable, 
     //Need to make sure we refer to UserModel constructor here. 
     console.log("AFTER user.save() update (should have updated notes array)")
-    console.log(user)
+    console.log(userDoc)
   })
   .catch((err)=>console.log(err))
  
