@@ -154,13 +154,13 @@ const [authStatus,setAuthStatus] = useState(sessionData.authStatus)
   //Works perfectly for add and delete, but NOT for edit. Bc we circumvented setNotes with shallowCopy. Will perform CRUD
   //for session and axios.post from that function, after the point where notes is set correctly
   useEffect(()=>{ //FIX: W/ conditional, initial GET w/ setNotes will NOT trigger this post.
-    if(notes.length > 0 && notes){ //i.e don't post on initial load when GET req calls setNotes.
+    if(notes.length > 0 && notes){ //i.e don't post on initial load when GET req calls setNotes. OR if login fails, leaving empty []
       console.log("when posting in useEffect, notes ==")
       console.log(notes)
     axios.post("/api/addNotes",{
       userEmail: emailFromAuth, //stateful variable
       notes: notes
-    })
+    }).then((res)=>console.log(res.data))
     sessionStorage.setItem("userData",JSON.stringify({ //should sync session with what we send to DB
       username: usernameFromAuth,
     notes: notes,
@@ -265,7 +265,7 @@ shallowCopy[index] = edited
     axios.post("/api/addNotes",{
       userEmail: emailFromAuth, //stateful variable
       notes: notes
-    })
+    }).then((res)=>console.log(res.data))
     sessionStorage.setItem("userData",JSON.stringify({ //should sync session with what we send to DB
       username: usernameFromAuth,
     notes: notes,
@@ -301,12 +301,17 @@ console.log(notes)
 function logout(){
   axios.get("/logout",function(req,res){
     req.logout;
-    setAuthStatus(false)
+    // setAuthStatus(false)
   })
   sessionStorage.clear()
   setNotes([])
+  setUsernameFromAuth("nameless user")
+  setEmailFromAuth("no email")
+  setAuthStatus(false)
   // window.location.reload()
 }
+
+
 // function resetAuthTernaries(status,failed,registered){
 //   status=false
 //   failed=false
@@ -325,7 +330,8 @@ function logout(){
   <PracticeRoute />
 </Route>
 
-<Route path="/authenticate"> 
+<Route path="/authenticate">
+{authStatus && <Redirect from="/authenticate" to="/" /*WORKS*/ />} 
 {/* This authStatus logic occurs at a DIFFERENT ROUTE. Need to have authStatus in <Auth>. It doesn't KNOW
 authStatus changed, because it doesn't have authStatus over there EITHER:
 figure out how to access the state across components
@@ -341,9 +347,9 @@ OR make an analogous authStatus over on <Auth> */
 
 <Route path= "/" >
 {console.log(authStatus)}
-{console.log("right above here is the authStatus full value.. the ternary on line 251 stops the redirect from login to notes app because if we nav straight to index, authState is always set to false by default")}
- {/* {authStatus && notes[0].title=="u r not logged in" ? <Redirect from="/" to="/authenticate" /> : null} */}
- 
+{console.log("right above here is the authStatus full value..")}
+ {!authStatus && <Redirect from="/" to="/authenticate" /> /*WORKS*/} 
+
   {editModeStatus &&
   <div>
   <Header

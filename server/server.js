@@ -282,8 +282,12 @@ app.post("/api/addNotes",(req, res) => {
     //Need to make sure we refer to UserModel constructor here. 
     console.log("AFTER user.save() update (should have updated notes array)")
     console.log(userDoc)
+    res.json("Your notes have updated successfully!")
   })
-  .catch((err)=>console.log(err))
+  .catch((err)=>{
+     console.log(err)
+     res.json(err)
+   })
  
   })
 

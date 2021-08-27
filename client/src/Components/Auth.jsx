@@ -72,7 +72,7 @@ axios.post("/api/registerUser",credentials)
 
 //         setAlreadyRegistered(res.data.alreadyRegistered)
 setAuthStatus2(res.data.authStatus) //THIS causes re-render
-props.authFunction(res.data.authStatus, [], res.data.username, res.data.email) //don't use authStatusBool, use the direct response value res.data.authenticated
+authStatus2 && props.authFunction(res.data.authStatus, [], res.data.username, res.data.email) //don't use authStatusBool, use the direct response value res.data.authenticated
 })
 
 event.preventDefault() //prevents "cannot POST" error
@@ -92,20 +92,32 @@ event.preventDefault() //prevents "cannot POST" error
         let authStatusBool = res.data.authenticated
         let retrievedNotes = res.data.retrievedNotes
         let retrievedUsername = res.data.retrievedUsername
-        let userData = {
+        
+        let userData = { 
             username: retrievedUsername,
             notes: retrievedNotes,
             email: retrievedEmail,
             authStatus: authStatusBool
         }
+        if(res.data == "unsuccessful attempt"){ //i.e failed login retains dummy values, but prevents empty sessionStorage
+            userData = {
+            username: "nameless user",
+            notes: [],
+            email: "no email",
+            authStatus: false
+            }
+            
+        }
+                        
         userData = JSON.stringify(userData) //ready for session storage as JSON format
 
         sessionStorage.setItem("userData", userData) //obj key must be string format going in to match JSON format.
          
         setAuthStatus2(res.data.authenticated)
-authStatusBool== false && setFailedAttempt(true)
-// props.resetAuthTern(authStatus2,failedAttempt,alreadyRegistered)
-        props.authFunction(authStatusBool,retrievedNotes,retrievedUsername,retrievedEmail,userData) /*THIS is how we pass data to main app(parent)
+!userData.authStatus && setFailedAttempt(true) //fires UI message
+
+//only fire this IF authStatusBool = true, so that we stay on auth page and can send users messages like "incorrect login, try again.."
+        authStatusBool && props.authFunction(authStatusBool,retrievedNotes,retrievedUsername,retrievedEmail,userData) /*THIS is how we pass data to main app(parent)
         i.e LIFTING UP STATE WITH HOOKS & FUNCTIONAL COMPONENTS. Bc the internet wasn't helpful.
                              the props.functionName is the prop in App.jsx, and is arbitrary
                             but the ARGS we pass in though are DATA FROM THIS COMPONENT
@@ -140,6 +152,7 @@ authStatusBool== false && setFailedAttempt(true)
 
     function toggleReg(){
         isRegistered ? setIsRegistered(false) : setIsRegistered(true)
+        failedAttempt && setFailedAttempt(false) 
     }
 //kb event listener to submit credentials on enter 
     function keydownListener(event){
@@ -167,6 +180,7 @@ authStatusBool== false && setFailedAttempt(true)
             placeholder="Email"
              autoComplete="off"
                  className = "auth-login-field"
+                 required="true"
              />
             }
             <input onChange={handleChange}
@@ -175,6 +189,7 @@ authStatusBool== false && setFailedAttempt(true)
             placeholder="Username"
              autoComplete="off"
                  className = "auth-login-field"
+                 required="true"
              />
 
             <input onChange={handleChange}
@@ -184,6 +199,7 @@ authStatusBool== false && setFailedAttempt(true)
             placeholder="Password" 
             autoComplete="off"
                 className = "auth-login-field"
+                required="true"
             />
 
             
@@ -193,11 +209,12 @@ authStatusBool== false && setFailedAttempt(true)
             </button>
             
         </form>
-        <div>
-{failedAttempt && <h2> Hm. You don't look familiar........ Let's Try again.</h2>}
-{alreadyRegistered && <h2>That email is already in use. Register with a different email, or press the login button</h2>}
+        
+        
+{failedAttempt==true &&  <div className="errMessage centered"><h4>Incorrect login... Let's try again.</h4></div>}
+{alreadyRegistered==true && <div className="errMessage centered"><h4>That email is already in use. Register with a different email, or press the login button.</h4></div>}
 
-        </div>
+        
         {isRegistered ? 
             <div className="register">
             <h3 className="regtext"><i>First time here?</i></h3>
