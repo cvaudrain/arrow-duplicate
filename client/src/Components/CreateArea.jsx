@@ -28,6 +28,10 @@ function CreateArea(props){
     }
 
     function submitNote(event){
+        if(note.title.length == 0 && note.content.length==0){
+            console.log("detecting EMPTY NOTE")
+            return
+        }
         props.onAdd(note)
        noteValue = note;
         setNote({

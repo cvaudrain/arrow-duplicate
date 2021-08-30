@@ -10,7 +10,8 @@
     "react-contenteditable": "^3.3.5",
     "react-dom": "16.8.6",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.3"
+    "react-scripts": "^4.0.3",
+    "validator": "^13.6.0"
   },
   "devDependencies": {
     "typescript": "3.3.3"

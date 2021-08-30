@@ -130,7 +130,21 @@ form button {
 .centered{
   text-align: center;
 }
+.pad-b{
+  padding-bottom:100px;
+}
 
+/* Logo */
+.arrow{
+  width: auto;
+ 
+}
+
+@media(max-width:950px){
+  .arrow{
+    width:85vw;
+  }
+}
 /* UI Alerts */
 
 .errMessage{
@@ -147,6 +161,11 @@ form button {
   /* border-radius: 50%; */
   box-shadow: 0 1px 5px rgb(138, 137, 137);
 }
+/* @media(max-width:576px){
+  .errMessage{
+    width:80vw;
+  }
+} */
 
 .logout-button{
 background-color: #822a59;
@@ -233,7 +252,30 @@ bottom: 50px;;
   border: none;
   margin: 0 auto;
   margin-top: 5px;
+  margin-bottom: 100px;
   cursor: pointer;
+}
+
+
+/* About (Login) */
+.about-arrow{
+  background-color: #224663;
+  color:#fff;
+  margin: auto -16px;
+  padding: 50px 13vw;
+  text-align:center;
+  line-height: 200%;
+}
+.about-header{
+  padding-bottom:50px;
+  color:#e09200;
+}
+.paragraph{
+  padding:15px 0;
+  text-align: left;
+}
+.br{
+  padding-top:20px;
 }
 /* Attribute Selectors */
 

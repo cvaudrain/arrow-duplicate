@@ -91,9 +91,10 @@ UserModel.register(
       console.log(err)
       res.json({
          authStatus: false,
-         username: "",
-         email: "",
-         notes: []
+         username: "nameless user",
+         email: "no email",
+         notes: [],
+         error:err
       }) //will set authstatus in React state 
    }else{
       passport.authenticate("local")(req,res,function(){
