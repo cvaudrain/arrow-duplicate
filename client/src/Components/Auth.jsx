@@ -61,9 +61,9 @@ console.log(credentials)
         var lower = /[a-z]/.test(password)
         var upper = /[A-Z]/.test(password)
         var num = /\d/.test(password)
-        var invalid = /\W/.test(password)
+        // var invalid = /\W/.test(password)
         var len = password.length
-         if(lower == true && upper == true && num == true && invalid == false && len>=6){
+         if(lower == true && upper == true && num == true /*&& invalid == false*/ && len>=6){
              passwordPassed = true
          }
          else{passwordPassed = false}

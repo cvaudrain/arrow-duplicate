@@ -8,32 +8,35 @@ const passportLocalMongoose = require("passport-local-mongoose")
 const path     = require("path");
 const { response } = require("express");
 const { ServerResponse } = require("http");
-const app      = express();
+const app = express();
  
+const SECRET = process.env.SECRET //passport.js local strategy secret key- cookie signature
 const PORT     = process.env.PORT || 4747;
-const DB_URI   = "mongodb://localhost:27017/"; // recall that mongo runs locally on port 27017 by default
-const DB       = "NotesDB";
-const PRACTICEDB = "practiceDB" 
+const DB       = "arrowDB";
+const DB_URI   = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.sfcxm.mongodb.net/arrowDB?retryWrites=true`; // recall that mongo runs locally on port 27017 by default
+
+// const PRACTICEDB = "practiceDB" 
 // const serverAddress = "http://localhost:4747/api/notes"
-const serverAddress = "http://localhost:4747/api/practiceNotes"
-const addNoteAddress = "http://localhost:4747/api/addNotes"
+// const serverAddress = "http://localhost:4747/api/practiceNotes"
+// const addNoteAddress = "http://localhost:4747/api/addNotes"
 //used full address instead of proxy to launch w/o issue in production build
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //Authentication w/ Passport x BCrypt
+
 app.use(session({
    resave:false,
    saveUninitialized:false,
-   secret: "Passport Session Secret Value"
+   secret: SECRET
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 // app.use(cors());
  
 // Establish DB connection////////////////////////////////
-mongoose.connect(DB_URI + PRACTICEDB, {
+mongoose.connect(DB_URI + DB, {
    useUnifiedTopology: true,
    useNewUrlParser: true,
    useCreateIndex: true,
@@ -44,7 +47,7 @@ mongoose.connect(DB_URI + PRACTICEDB, {
 const db = mongoose.connection; //the currently specified db in mongoose.connect()
  db.on("error",(error)=>{console.log(error)})
 // Event listeners
-db.once('open', () => console.log(`Connected to ${PRACTICEDB} database`));
+db.once('open', () => console.log(`Connected to ${DB} database`));
  
 //PRACTICE requests
 // const PracticeSchema = new mongoose.Schema(
@@ -64,7 +67,7 @@ const UserSchema = new mongoose.Schema( //1st Schema
       password: String,
       notesArray: Array
    },
-   {collection: "practiceUserCollection"}
+   {collection: process.env.Collection}
 )
 
 UserSchema.plugin(passportLocalMongoose) //2nd Passport  Plugin

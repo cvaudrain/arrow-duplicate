@@ -355,6 +355,7 @@ OR make an analogous authStatus over on <Auth> */
   <Header
     headerText="Edit Note"
     logout={logout}
+    userNameGreeting={usernameFromAuth}
   />
   <NoteEditor 
   
@@ -373,7 +374,7 @@ OR make an analogous authStatus over on <Auth> */
 {console.log(notes)} */}
 
 <Header 
-headerText="indigo"
+headerText="Notepad"
 userNameGreeting={usernameFromAuth}
 logout={logout}
 />
