@@ -5,22 +5,9 @@ import {
     Switch,
     Route,
     Link,
-    Redirect,
-    useHistory,
-    useLocation,
-    withRouter
+    Redirect
   } from "react-router-dom";
-
   import isEmail from "validator/lib/isEmail"
-
-  import {createBrowserHistory} from "history"
-// let history = createBrowserHistory()
-
-import Header from "./Header";
-import Footer from "./Footer";
-import SubmitButton from "./SubmitButton"
- 
-
 
 function Auth(props){
     let [authStatus2, setAuthStatus2] = useState(false) //logged in/ !logged in
@@ -28,8 +15,7 @@ function Auth(props){
     const [alreadyRegistered, setAlreadyRegistered] = useState(false)
     const [failedReg, setFailedReg] = useState(false) 
     const [usernameTaken, setUsernameTaken] = useState(false)
-    // console.log(props)
-    // console.log(authStatus) DOES NOT RECOGNIZE AUTHSTATUS
+    
 const [credentials, setCredentials] = useState({
     name:"",
     email: "",
@@ -90,22 +76,7 @@ axios.post("/api/registerUser",credentials)
         let retrievedEmail= res.data.email
         let retrievedUsername = res.data.username
 
-               
-
- //= { //sessionStorage to be set on registration
-//             username: retrievedUsername,
-//             notes: [],
-//             email: retrievedEmail,
-//             authStatus: authStatusBool
-//         }
-//         userData = JSON.stringify(userData) //ready for session storage as JSON format
-
-//         sessionStorage.setItem("userData", userData) //obj key must be string format going in to match JSON format.
-
-//         setAlreadyRegistered(res.data.alreadyRegistered)
-setAuthStatus2(res.data.authStatus) //THIS causes re-render
-//CLEANUP ERROR after registration fixed here. We were saying authStatus2 instead of authStatusBool. And authStatus2 is stateful, and not ready to be evaluated.
-//Refreshing window.location.reload() would also work because we had sessionStorage, but this is better.
+setAuthStatus2(res.data.authStatus) //re-render
 authStatusBool && props.authFunction(res.data.authStatus, [], res.data.username, res.data.email) //don't use authStatusBool, use the direct response value res.data.authenticated
 !res.data.authStatus && setFailedReg(true) 
 res.data.authStatus && setFailedReg(false)
@@ -114,7 +85,6 @@ if(res.data.authStatus){
      userData = JSON.stringify(res.data)
      sessionStorage.setItem("userData",userData)
     }
-
 
 let nameError;
 if(res.data.error != null && res.data.error.name != undefined){
@@ -133,17 +103,11 @@ nameError == "UserExistsError" && setUsernameTaken(true)
         event.preventDefault() //prevents "cannot POST" error
     }
 
-    
-
     function submission(event){
-        console.log("submission function")
+        console.log("submission function fired")
         axios.post("/api/authenticate",credentials)
         .then((res)=>{
-            
-            console.log(res.data)
-            console.log(res.data.retrievedNotes)
             let retrievedEmail= res.data.retrievedEmail
-        // let enteredPassword = res.data.password
         let authStatusBool = res.data.authenticated
         let retrievedNotes = res.data.retrievedNotes
         let retrievedUsername = res.data.retrievedUsername
@@ -172,34 +136,8 @@ nameError == "UserExistsError" && setUsernameTaken(true)
         setAuthStatus2(res.data.authenticated)
 !userData.authStatus && setFailedAttempt(true) //fires UI message
 
-//only fire this IF authStatusBool = true, so that we stay on auth page and can send users messages like "incorrect login, try again.."
-        authStatusBool && props.authFunction(authStatusBool,retrievedNotes,retrievedUsername,retrievedEmail,userData) /*THIS is how we pass data to main app(parent)
-        i.e LIFTING UP STATE WITH HOOKS & FUNCTIONAL COMPONENTS. Bc the internet wasn't helpful.
-                             the props.functionName is the prop in App.jsx, and is arbitrary
-                            but the ARGS we pass in though are DATA FROM THIS COMPONENT
-                             So the args in the prop function ARE passed over, and in App.jsx
-                             we'll have practiceFunction = {functionNameFromMainParentApp}
-                             which will accept the appropriate number of args in its function definition
-                             and will set state with setNotes(arg), and the arg will equal the arg passed here
-                             which is retreivedNotes, an ARRAY from our SERVER, which will ultimately be taken
-                             from QUERYING the DB on the serverside, awaiting query, then sending the retreived array
-                             with the other values with res.json(responseData), received here as res.data
-                             which we can deconstruct above as res.data.email, res.data.retreivedNotes, etc!
-                                    */
-
-//         props.practiceFunction([
-//             {
-//             title:"prop title 1",
-//             content: "note content passed from Auth.jsx"
-//         },
-//     {
-//         title: "a second note title",
-//         content: "the function inside the submission function from Auth.jsx passed these replacement notes as props"
-//     },
-//     {title: "How?",
-//     content: "props.practiceFunction in Auth took 1 argument- an array with these 3 objects!"
-// }
-// ])
+//only fire this IF authStatusBool = true, so that we stay on auth page for UI msg on on authentication err
+        authStatusBool && props.authFunction(authStatusBool,retrievedNotes,retrievedUsername,retrievedEmail,userData) 
        
         })
        
@@ -226,8 +164,7 @@ nameError == "UserExistsError" && setUsernameTaken(true)
         <div>
         <header className="auth-header">
         <img className="arrow" src="arrow.png"></img>
-        {/* <h2 className = "auth-header-text">indigo</h2> */}
-        {/* <h3><i>A Growing Productivity Toolkit</i></h3> */}
+        
         </header>
         <h1 className = "auth-sub-heading">{isRegistered ? "Login" : "Register"}</h1>
         <form method="post" className="auth-form" id="authForm">
