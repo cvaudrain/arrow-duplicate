@@ -4,8 +4,8 @@ const mongoose = require("mongoose");
 const session = require("express-session")
 const passport = require("passport")
 const passportLocalMongoose = require("passport-local-mongoose")
-// const cors     = require("cors"); //may need cors to replace proxy in production build
-const path     = require("path");
+// const cors = require("cors"); 
+const path = require("path");
 const { response } = require("express");
 const { ServerResponse } = require("http");
 const app = express();
@@ -15,11 +15,12 @@ const PORT     = process.env.PORT || 4747;
 const DB       = "arrowDB";
 const DB_URI   = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.sfcxm.mongodb.net/arrowDB?retryWrites=true`; // recall that mongo runs locally on port 27017 by default
 
-// const PRACTICEDB = "practiceDB" 
-// const serverAddress = "http://localhost:4747/api/notes"
-// const serverAddress = "http://localhost:4747/api/practiceNotes"
-// const addNoteAddress = "http://localhost:4747/api/addNotes"
-//used full address instead of proxy to launch w/o issue in production build
+//Serve Production Build:
+app.use(express.static(path.join(__dirname,"../client/build")));
+app.get("*",(req,res)=>{
+   res.sendFile(path.join(__dirname,"build","index.html"))
+})
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
