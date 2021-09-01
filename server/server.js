@@ -15,7 +15,8 @@ const DB       = "arrowDB";
 const DB_URI   = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.sfcxm.mongodb.net/arrowDB?retryWrites=true`; // recall that mongo runs locally on port 27017 by default
 
 //Serve Production Build as static:
-app.use(express.static(path.join(__dirname,"../client/build")));
+// app.use(express.static(path.join(__dirname,"../client/build")));
+app.use(express.static(path.join(__dirname,"build")));
 app.get("*",(req,res)=>{
    res.sendFile(path.join(__dirname,"build","index.html"))
 })
