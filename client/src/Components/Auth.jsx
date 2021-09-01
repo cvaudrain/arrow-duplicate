@@ -9,6 +9,7 @@ import {
   } from "react-router-dom";
   import isEmail from "validator/lib/isEmail"
 
+  const API_ENDPOINT = process.env.PORT || "http://localhost:4747"
 function Auth(props){
     let [authStatus2, setAuthStatus2] = useState(false) //logged in/ !logged in
     const [failedAttempt, setFailedAttempt] = useState(false) // incorrect login registered
@@ -38,7 +39,7 @@ setCredentials(preVal=>{
         [name]: value
     }
 })
-console.log(credentials)
+
     }
 
     function validation(email,password) { //ensure pass and email meet requirements before continuing.
@@ -104,8 +105,16 @@ nameError == "UserExistsError" && setUsernameTaken(true)
     }
 
     function submission(event){
-        console.log("submission function fired")
-        axios.post("/api/authenticate",credentials)
+        
+        console.log("submission function fired...")
+       
+        axios({
+            method: "post",
+            url:"/api/authenticate",
+            data: credentials
+        })
+        
+        // axios.post(`/${API_ENDPOINT}/authenticate`,credentials)
         .then((res)=>{
             let retrievedEmail= res.data.retrievedEmail
         let authStatusBool = res.data.authenticated
@@ -118,6 +127,7 @@ nameError == "UserExistsError" && setUsernameTaken(true)
             email: retrievedEmail,
             authStatus: authStatusBool
         }
+        console.log(res.data)
         if(res.data == "unsuccessful attempt"){ //i.e failed login retains dummy values, but prevents empty sessionStorage
             userData = {
             username: "nameless user",

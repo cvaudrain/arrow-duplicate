@@ -10,7 +10,7 @@ import NoteEditor from "./NoteEditor";
 import Auth from "./Auth"
 import axios from "axios";
 import PracticeRoute from "./PracticeRoute"
-
+const API_ENDPOINT = process.env.PORT || "http://localhost:4747"
 function App() {
   //State Declarations
   const [editModeStatus,setEditModeStatus] = useState(false)
