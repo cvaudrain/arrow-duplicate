@@ -17,9 +17,9 @@ const DB_URI   = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS
 
 //Serve Production Build as static:
 // app.use(express.static(path.join(__dirname,"../client/build")));
-app.use(express.static(path.join(__dirname,"./client/build")));
+app.use(express.static(path.join(__dirname,".././client/build"))); //imports build
 app.get("*",(req,res)=>{
-   res.sendFile(path.join(__dirname,".client/build","index.html"))
+   res.sendFile(path.join(__dirname,"../.client/build","index.html"))
 })
 
 // Middleware
