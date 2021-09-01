@@ -5,10 +5,11 @@ var session = require("express-session")
 const passport = require("passport")
 const passportLocalMongoose = require("passport-local-mongoose")
 const path = require("path");
+var cors = require('cors')
 const { response } = require("express");
 const { ServerResponse } = require("http");
 const app = express();
- 
+
 const SECRET = process.env.SECRET //passport.js local strategy secret key- cookie signature
 const PORT     = process.env.PORT || 4747;
 const DB       = "arrowDB";
@@ -24,7 +25,7 @@ app.get("*",(req,res)=>{
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors())
 //Authentication w/ Passport
 
 app.use(session({
@@ -108,6 +109,7 @@ app.post("/api/authenticate", (req,res,next)=>{
    console.log("posted recieved from client")
    passport.authenticate("local",function(err,user,info){
       if(err){ 
+         res.json(err)
          console.log(err)
          return next(err)}
       if(!user){
@@ -118,6 +120,7 @@ app.post("/api/authenticate", (req,res,next)=>{
 
       req.logIn(user,function(err){
          if(err){
+            res.json(err)
             console.log("req.logIn called, error thrown")
             return next(err)
          }
