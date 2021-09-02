@@ -10,10 +10,10 @@ const { response } = require("express");
 const { ServerResponse } = require("http");
 const app = express();
 
-const SECRET = process.env.SECRET //passport.js local strategy secret key- cookie signature
+// const SECRET = process.env.SECRET //passport.js local strategy secret key- cookie signature
 const PORT     = process.env.PORT || 4747;
 const DB       = "arrowDB";
-const DB_URI   = process.env.DATABASE_URL; // recall that mongo runs locally on port 27017 by default
+// const DB_URI   = process.env.DATABASE_URL; // recall that mongo runs locally on port 27017 by default
 
 //Serve Production Build as static:
 // app.use(express.static(path.join(__dirname,"../client/build")));
@@ -38,7 +38,7 @@ app.use(passport.session())
 // app.use(cors());
  
 // Establish DB connection////////////////////////////////
-mongoose.connect(DB_URI + DB, {
+mongoose.connect(process.env.DATABASE_URL + DB, {
    useUnifiedTopology: true,
    useNewUrlParser: true,
    useCreateIndex: true,
