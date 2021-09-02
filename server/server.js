@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({debug: process.env.DEBUG});
 const express  = require("express");
 const mongoose = require("mongoose");
 var session = require("express-session")
@@ -31,7 +31,7 @@ app.use(cors())
 app.use(session({
    resave:false,
    saveUninitialized:false,
-   secret: "BlueElephant"
+   secret: "BlueElephant" //REQUIRED here, not as a process.env
 }))
 app.use(passport.initialize())
 app.use(passport.session())
