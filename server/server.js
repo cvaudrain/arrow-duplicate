@@ -31,7 +31,7 @@ app.use(cors())
 app.use(session({
    resave:false,
    saveUninitialized:false,
-   secret: "BlueElephant" //REQUIRED here, not as a process.env
+   secret: SECRET //REQUIRED here, not as a process.env
 }))
 app.use(passport.initialize())
 app.use(passport.session())
