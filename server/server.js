@@ -58,12 +58,12 @@ const UserSchema = new mongoose.Schema( //1st Schema
       password: String,
       notesArray: Array
    },
-   {collection: process.env.Collection}
+   {collection: "arrowUsers"} //custom collection name
 )
 
 UserSchema.plugin(passportLocalMongoose) //2nd Passport  Plugin
 
-let UserModel = db.model("UserModel", UserSchema) //3rd create Model
+let UserModel = db.model("UserModel", UserSchema) //3rd create Model //by default would start new collection called usermodels case insensitive.
 
 passport.use(UserModel.createStrategy()) //4 Create Strategy 
 passport.serializeUser(UserModel.serializeUser())
