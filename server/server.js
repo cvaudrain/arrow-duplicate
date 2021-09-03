@@ -19,8 +19,12 @@ const DB       = "arrowDB";
 // app.use(express.static(path.join(__dirname,"../client/build")));
 app.use(express.static(path.join(__dirname,".././client/build"))); //imports build
 app.get("*",(req,res)=>{
-   res.sendFile(path.join(__dirname,"../.client/build","index.html"))
+   res.sendFile(path.join(__dirname,"../client/build","index.html"))
 })
+
+// app.get("/authenticate",(req,res)=>{
+// res.sendFile(path.join(__dirname,"../client/build","index.html"))
+// })
 
 // Middleware
 app.use(express.json());
@@ -38,6 +42,7 @@ app.use(passport.session())
 // app.use(cors());
  
 // Establish DB connection////////////////////////////////
+
 mongoose.connect(process.env.DATABASE_URL + DB, {
    useUnifiedTopology: true,
    useNewUrlParser: true,
@@ -45,6 +50,15 @@ mongoose.connect(process.env.DATABASE_URL + DB, {
    useFindAndModify: false,
    connectTimeoutMS: 10000
 });
+
+//local ONLY testing connection to Mongo
+// mongoose.connect(process.env.URI_CONNECTION + DB, {
+//    useUnifiedTopology: true,
+//    useNewUrlParser: true,
+//    useCreateIndex: true,
+//    useFindAndModify: false,
+//    connectTimeoutMS: 10000
+// });
  
 const db = mongoose.connection; //the currently specified db in mongoose.connect()
  db.on("error",(error)=>{console.log(error)})
