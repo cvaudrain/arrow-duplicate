@@ -60,7 +60,7 @@ mongoose.connect(process.env.DATABASE_URL + DB, {
 //    connectTimeoutMS: 10000
 // });
  
-const db = mongoose.connection; //the currently specified db in mongoose.connect()
+const db = mongoose.connection; 
  db.on("error",(error)=>{console.log(error)})
 // Event listeners
 db.once('open', () => console.log(`Connected to ${DB} database`));
@@ -85,7 +85,7 @@ passport.deserializeUser(UserModel.deserializeUser())
 //AUTH POST Listeners///////
 
 //For REGISTRATION///////////
-app.post("/api/registerUser", (req,res)=>{ //This works
+app.post("/api/registerUser", (req,res)=>{ 
    let posted = req.body
    console.log("received new user credentials: ")
 console.log(posted)
