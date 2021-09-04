@@ -184,7 +184,7 @@ app.post("/api/addNotes",(req, res) => {
         return userDoc
      }
   })
-  .then((userDoc)=>{ //userDoc IS the result of successful query.
+  .then((userDoc)=>{ 
      
    userDoc.notesArray = notes
     userDoc.save() //const  user = the returned query value. 
