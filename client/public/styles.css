@@ -205,6 +205,22 @@ left:90%;
 bottom: 35px;;
 }
 
+.calendar-button{
+  background-color: #822a59;
+  color: #fff;
+  text-shadow: 0 0 1px #fff;
+  border: 1px solid white;
+  padding: 5px;
+  /* box-shadow: 0 0 2px white; */
+  border-radius: 10%;
+  
+  position: relative;
+  left:90%;
+  /* right:10%; */
+  bottom: 35px;;
+  }
+
+
 @media(max-width:576px){
   .logout-button{
     position: relative;

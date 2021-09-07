@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from "react";
-import { BrowserRouter as Router, Switch, Route, Link, Redirect,useLocation, useHistory } from "react-router-dom";
-
+import { Switch, Route, Link, Redirect,useLocation, useHistory } from "react-router-dom";
+import ReactCalendar from "./ReactCalendar"
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
@@ -19,7 +19,7 @@ function App() {
     Title: "",
     Content: ""
   })
-
+const history = useHistory()
   if(sessionStorage.getItem("userData") === null){
   sessionStorage.setItem("userData",JSON.stringify({ //IF null, Initial set session storage. Values will be replaced ater successful auth
     username: "nameless user",
@@ -154,13 +154,17 @@ function logout(){
   setAuthStatus(false)
   // window.location.reload()
 }
-
+function toCalendar(){
+history.push("/calendar")
+}
 //Render Phase
   return (
-    <Router history = {history}>
+ 
   <div>
 
-<Switch>
+<Route path="/calendar">
+<ReactCalendar/>
+</Route>
 
 <Route path="/PracticeRoute">
   <PracticeRoute />
@@ -183,6 +187,7 @@ function logout(){
     headerText="Edit Note"
     logout={logout}
     userNameGreeting={usernameFromAuth}
+    toCalendar={toCalendar}
   />
   <NoteEditor 
   populateId= {selectedNote.Id} //THIS wasn't included before, causing map function to fail.
@@ -220,9 +225,9 @@ onEdit={editNote}
 </div>
 }
 </Route>
-</Switch>
+
 </div>
-</Router>
+
 )
 }
 
