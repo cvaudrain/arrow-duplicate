@@ -36,6 +36,9 @@ footer {
   /* height: 2.5rem;  */
 }
 
+.mclaren{
+  font-family: "McLaren", curssans-serif;
+}
 .indigo{
   color: #fff;
   text-shadow: 0 0 1px #fff;
@@ -146,6 +149,7 @@ form button {
   padding-bottom:100px;
 }
 
+
 /* Logo */
 .arrow{
   width: auto;
@@ -215,7 +219,7 @@ bottom: 35px;;
   border-radius: 10%;
   
   position: relative;
-  left:90%;
+  left:89%;
   /* right:10%; */
   bottom: 35px;;
   }
@@ -257,7 +261,7 @@ bottom: 35px;;
 
 .auth-login-btn{
    /* position: absolute; */
- 
+ font-size: 0.7rem;
   /* background: #0b7a75; */
   background: #274c6b;
   color: #fff;
@@ -320,4 +324,315 @@ bottom: 35px;;
 
 [contentEditable]{
   outline: 0px solid transparent;
+}
+
+
+
+/* React CALENDAR Imported */
+
+/* Calendar Component */
+.calendar-container{
+  position: relative;
+  width: 90vw;
+  margin: 30px auto 20px auto;
+  background: #fff;
+  padding: 15px;
+  padding-bottom: 0;
+  border-radius: 7px;
+  box-shadow: 0 1px 5px rgb(138, 137, 137);
+  font-size: 1.2rem;
+  font-family: "McLaren", curssans-serif;
+}
+/* .react-calendar {
+  position: relative;
+  width: 80vw;
+  margin: auto;
+  background: #fff;
+  padding: 15px;
+  padding-bottom: 0;
+  border-radius: 7px;
+  box-shadow: 0 1px 5px rgb(138, 137, 137);
+  text-align: center;
+  background: white;
+  border: 1px solid #a0a096;
+  
+  line-height: 1.125em;
+} */
+.react-calendar--doubleView {
+  width: 90vw;
+}
+.react-calendar--doubleView .react-calendar__viewContainer {
+  display: flex;
+  margin: -0.5em;
+}
+.react-calendar--doubleView .react-calendar__viewContainer > * {
+  width: 90vw;
+  margin: 0.5em;
+}
+.react-calendar,
+.react-calendar *,
+.react-calendar *:before,
+.react-calendar *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.react-calendar button {
+  margin: 0;
+  border: 0;
+  outline: none;
+}
+.react-calendar button:enabled:hover {
+  cursor:pointer;
+}
+.react-calendar__navigation {
+  height: 50px;
+  margin-bottom: 1em;
+  font-size: 1.2rem;
+  font-weight:bolder;
+  /* font-family: "McLaren", curssans-serif; */
+}
+.react-calendar__navigation button {
+  /* min-width: 10px; */
+  width:30px;
+  background: none;
+  font-size:1.4rem;
+}
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: #e6e6e6;
+}
+.react-calendar__navigation button[disabled] {
+  background-color: #f0f0f0;
+  
+}
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  /* font-size: 0.75em; */
+}
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+.react-calendar__month-view__weekNumbers {
+  font-weight: bold;
+}
+.react-calendar__month-view__weekNumbers .react-calendar__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* font-size: 0.75em; */
+  padding: calc(0.75em / 0.75) calc(0.5em / 0.75);
+}
+.react-calendar__month-view__days__day--weekend {
+  color: #d10000;
+}
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #757575;
+}
+.react-calendar__year-view .react-calendar__tile,
+.react-calendar__decade-view .react-calendar__tile,
+.react-calendar__century-view .react-calendar__tile {
+  
+  padding: 2em 0.em;
+}
+.react-calendar__tile {
+  border-radius:50%;
+  /* max-width: 30%; */
+  text-align: center;
+  padding: 1.5rem 0;
+  margin: auto 0;
+  background: none;
+  font-size:1.4rem;
+}
+.react-calendar__tile:disabled {
+  background-color: #f0f0f0;
+}
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #e6e6e6;
+}
+.react-calendar__tile--now {
+  background: #a66511;
+}
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background: #a66511;
+}
+.react-calendar__tile--hasActive {
+  background: #76baff;
+}
+.react-calendar__tile--hasActive:enabled:hover,
+.react-calendar__tile--hasActive:enabled:focus {
+  background: #a9d4ff;
+}
+.react-calendar__tile--active {
+  background: #224663;
+  color: white;
+}
+
+.react-calendar__tile--active:enabled:focus {
+  background: #224663;
+  color:white;
+}
+.react-calendar__tile--active:enabled:hover{
+  background-color: #822a59;
+  color: #fff;
+}
+.react-calendar--selectRange .react-calendar__tile--hover {
+  background-color: #e6e6e6;
+}
+
+
+/* color pallettes
+ orange  #a66511;
+ indigo 
+*/
+
+/* Profile Tray */
+
+
+.padding {
+  padding: 3rem !important
+}
+
+.user-card-full {
+  overflow: hidden
+}
+
+.card {
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+  box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+  border: none;
+  margin-bottom: 30px;
+  
+}
+.stats{
+  font-family: 'Shadows Into Light', cursive;
+}
+.section-header{
+  font-size: 1.3rem;;
+}
+
+.m-r-0 {
+  margin-right: 0px
+}
+
+.m-l-0 {
+  margin-left: 0px
+}
+
+.user-card-full .user-profile {
+  border-radius: 3px 
+}
+
+.bg-c-lite-green {
+  background: -webkit-gradient(linear, left top, right top, from(#f29263), to(#ee5a6f));
+  background: linear-gradient(to right, #ee5a6f, #f29263)
+}
+
+.user-profile {
+  padding: 20px 0
+}
+
+.card-block {
+  padding: 1.25rem
+}
+
+.m-b-25 {
+  margin-bottom: 25px
+}
+
+.img-radius {
+  border-radius: 5px
+}
+.pfp{
+  width:150px;
+  height:150px;
+  box-shadow: 0 1px 3px black;
+  border-radius:50%;
+
+}
+
+.h6 {
+  font-size: 18px
+}
+
+.card .card-block p {
+  line-height: 25px
+}
+
+/* @media only screen and (min-width: 1400px) {
+  p {
+      font-size: 14px
+  }
+} */
+
+.card-block {
+  padding: 1.25rem
+}
+
+.b-b-default {
+  border-bottom: 1px solid #e0e0e0
+}
+
+.m-b-20 {
+  margin-bottom: 20px
+}
+
+.p-b-5 {
+  padding-bottom: 5px !important
+}
+
+.card .card-block p {
+  line-height: 25px
+}
+
+.m-b-10 {
+  margin-bottom: 10px
+}
+
+.text-muted {
+  color: #97575d !important
+}
+
+.b-b-default {
+  border-bottom: 1px solid #e0e0e0
+}
+
+.f-w-600 {
+  font-weight: 600
+}
+
+.m-b-20 {
+  margin-bottom: 20px
+}
+
+.m-t-40 {
+  margin-top: 20px
+}
+
+.p-b-5 {
+  padding-bottom: 5px !important
+}
+
+.m-b-10 {
+  margin-bottom: 10px
+}
+
+.m-t-40 {
+  margin-top: 20px
+}
+
+.user-card-full .social-link li {
+  display: inline-block
+}
+
+.user-card-full .social-link li a {
+  font-size: 20px;
+  margin: 0 10px 0 0;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out
 }

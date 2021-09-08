@@ -8,9 +8,22 @@ import CreateArea from "./CreateArea";
 import noteValue from "./CreateArea";
 import NoteEditor from "./NoteEditor";
 import Auth from "./Auth"
+import Settings from "./Settings"
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+
 import axios from "axios";
-import PracticeRoute from "./PracticeRoute"
+
 const API_ENDPOINT = process.env.PORT || "http://localhost:4747"
+let userContext; //global variable declaration. Will be defined after userNameFromAuth is defined from <Auth />
 function App() {
   //State Declarations
   const [editModeStatus,setEditModeStatus] = useState(false)
@@ -19,6 +32,7 @@ function App() {
     Title: "",
     Content: ""
   })
+  
 const history = useHistory()
   if(sessionStorage.getItem("userData") === null){
   sessionStorage.setItem("userData",JSON.stringify({ //IF null, Initial set session storage. Values will be replaced ater successful auth
@@ -54,6 +68,8 @@ const [notes,setNotes] = useState(sessionData.notes)
 const [authStatus,setAuthStatus] = useState(sessionData.authStatus)
   const [usernameFromAuth, setUsernameFromAuth] = useState(sessionData.username)
   const [emailFromAuth, setEmailFromAuth] = useState(sessionData.email)
+userContext = React.createContext(usernameFromAuth) //create context for SwipeableDrawer to consume with useContext hook
+
 
   useEffect(()=>{ //FIX: W/ conditional, initial GET w/ setNotes will NOT trigger this post.
     if(notes.length > 0 && notes){ //i.e don't post on initial load when GET req calls setNotes.
@@ -154,6 +170,7 @@ function logout(){
   setAuthStatus(false)
   // window.location.reload()
 }
+
 function toCalendar(){
 history.push("/calendar")
 }
@@ -163,11 +180,23 @@ history.push("/calendar")
   <div>
 
 <Route path="/calendar">
+<Header
+  logout={logout}
+    userNameGreeting={usernameFromAuth}
+    toCalendar={toCalendar}
+   
+/>
 <ReactCalendar/>
 </Route>
 
-<Route path="/PracticeRoute">
-  <PracticeRoute />
+<Route exact path="/settings">
+<Header
+  logout={logout}
+    userNameGreeting={usernameFromAuth}
+    toCalendar={toCalendar}
+   
+/>
+  <Settings />
 </Route>
 
 <Route path="/authenticate">
@@ -179,7 +208,7 @@ history.push("/calendar")
    />
  </Route>
 
-<Route path= "/" >
+<Route exact path= "/" >
  {!authStatus && <Redirect from="/" to="/authenticate" />} 
   {editModeStatus &&
   <div>
@@ -188,6 +217,7 @@ history.push("/calendar")
     logout={logout}
     userNameGreeting={usernameFromAuth}
     toCalendar={toCalendar}
+    user={usernameFromAuth}
   />
   <NoteEditor 
   populateId= {selectedNote.Id} //THIS wasn't included before, causing map function to fail.
@@ -203,7 +233,7 @@ history.push("/calendar")
 <div>
 
 <Header 
-headerText="Notepad"
+headerText="Dashboard"
 userNameGreeting={usernameFromAuth}
 logout={logout}
 />
@@ -229,7 +259,8 @@ onEdit={editNote}
 </div>
 
 )
+
 }
 
 export default App;
-
+export {userContext}

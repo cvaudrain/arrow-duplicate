@@ -1,11 +1,15 @@
 import React, {useState, useContext, useEffect} from "react";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect, useHistory } from "react-router-dom";
 
-function PracticeRoute(props){
+function Settings(props){
 console.log("codeblock on PracticeRoute running")
     return (
-        <h1>A practice route</h1>
+        <div className="mclaren">
+      
+        <h1>A user profile page</h1>
+        <h2>Settings and such.</h2>
+        </div>
     )
 }
 
-export default PracticeRoute
+export default Settings

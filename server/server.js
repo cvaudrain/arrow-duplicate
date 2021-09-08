@@ -52,7 +52,7 @@ app.use(passport.session())
 // });
 
 //local ONLY testing connection to Mongo
-mongoose.connect(process.env.URI_CONNECTION + DB, {
+mongoose.connect("mongodb://localhost:27017"+ DB, {
    useUnifiedTopology: true,
    useNewUrlParser: true,
    useCreateIndex: true,
