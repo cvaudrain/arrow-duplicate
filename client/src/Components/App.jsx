@@ -1,6 +1,9 @@
 import React, {useState, useContext, useEffect} from "react";
 import { Switch, Route, Link, Redirect,useLocation, useHistory } from "react-router-dom";
-import ReactCalendar from "./ReactCalendar"
+import Scheduler from "./Scheduler"
+import Date from "./Date"
+import Journal from "./Journal"
+import Events from "./Events"
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
@@ -24,6 +27,7 @@ import axios from "axios";
 
 const API_ENDPOINT = process.env.PORT || "http://localhost:4747"
 let userContext; //global variable declaration. Will be defined after userNameFromAuth is defined from <Auth />
+
 function App() {
   //State Declarations
   const [editModeStatus,setEditModeStatus] = useState(false)
@@ -172,21 +176,34 @@ function logout(){
 }
 
 function toCalendar(){
-history.push("/calendar")
+history.push("/scheduler")
 }
+
+
 //Render Phase
   return (
  
   <div>
 
-<Route path="/calendar">
+<Route exact path="/scheduler">
 <Header
   logout={logout}
     userNameGreeting={usernameFromAuth}
     toCalendar={toCalendar}
    
 />
-<ReactCalendar/>
+<Scheduler/>
+</Route>
+
+<Route exact path="/scheduler/date"> 
+<Date />
+</Route>
+{/* paths below have placeholders for date variable as m-d-yy. Will have to originate in Scheduler, and pass up to App here for filepath*/}
+<Route exact path ="/scheduler/date/m-d-yy/journal"> 
+  <Journal />
+</Route>
+<Route exact path ="/scheduler/date/m-d-yy/events">
+  <Events />
 </Route>
 
 <Route exact path="/settings">

@@ -18,8 +18,8 @@ function Header(props){
     />
 <p className="indigo">{props.headerText}</p> <h3 className="greeting">Hello, {props.userNameGreeting}.</h3>
 
-<Link to="/calendar">
-<button onClick={props.toCalendar} className="calendar-button align-r" >Calendar</button>
+<Link to="/scheduler">
+<button onClick={props.toCalendar} className="calendar-button align-r" >Scheduler</button>
 </Link>
 <Link to="/authenticate">
 <button onClick={props.logout} className="logout-button align-r" >Logout</button>

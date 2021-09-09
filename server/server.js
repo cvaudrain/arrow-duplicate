@@ -52,7 +52,7 @@ app.use(passport.session())
 // });
 
 //local ONLY testing connection to Mongo
-mongoose.connect("mongodb://localhost:27017"+ DB, {
+mongoose.connect("mongodb://localhost:27017/"+DB,{
    useUnifiedTopology: true,
    useNewUrlParser: true,
    useCreateIndex: true,
@@ -70,7 +70,18 @@ const UserSchema = new mongoose.Schema( //1st Schema
       username: String,
       email: String,
       password: String,
-      notesArray: Array
+      notesArray: Array,
+      dates: {
+         eventArray: Array,//contains obj event: {Title: String, location: String, Description: String}
+         journalEntry: {
+            mood: Number,
+            motivation: Number,
+            sleepQuality: Number,
+            powerLevel: Number,//(mood + motivation + sleepQuality / 3) x 1000. 
+            entry: String
+         } 
+      },
+      theme: String
    },
    {collection: "arrowUsers"} //custom collection name
 )

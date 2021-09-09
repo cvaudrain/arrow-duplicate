@@ -35,7 +35,7 @@ function SwipeableDrawerCustom(props){
         if(string=="Dashboard"){
             return "/"
         } else if(string=="Scheduler"){
-            return "/calendar"
+            return "/scheduler"
         } else if(string=="Settings"){
             return "/settings"
         } 
