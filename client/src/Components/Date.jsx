@@ -3,7 +3,14 @@ import {Link} from "react-router-dom"
 import React from "react"
 import Header from "./Header";
 import {userContext} from "./App"
+import {dayContext} from "./Scheduler" //access date value for selected day
+
 function Date(props){
+    console.log("On Date view:")
+    console.log(dayContext.day)
+    
+
+    const currDate = dayContext.day //Must be PARSED bc export/import is JSON. Avoids invariant violation
 const styles = {
     eventDiv:{
         width: "40vw",
@@ -29,6 +36,7 @@ const styles = {
         <Header
             userNameGreeting={useContext(userContext)}
         />
+        <h1>{currDate}</h1>
 
         <div style={styles.eventDiv}>
         <Link to="/scheduler/date/m-d-yy/events">

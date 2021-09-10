@@ -2,8 +2,10 @@ import {useContext, useState} from "react"
 import React from "react"
 import Header from "./Header";
 import {userContext} from "./App"
-function Journal(props){
+import {dayContext} from "./Scheduler" //access date value for selected day
 
+function Journal(props){
+const currDate = JSON.parse(dayContext)
     return(
         <div>
         <Header
@@ -11,7 +13,7 @@ function Journal(props){
         />
 
         <div>
-        <p>Journal Entry Page</p>
+        <p>Journal Entry Page for {currDate}</p>
         <ul>
         <p>Want to Log Your Power Level?</p>
         <p>On a scale of 1-10....</p>
