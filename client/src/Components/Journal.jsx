@@ -2,6 +2,7 @@ import {useContext, useEffect, useState} from "react"
 import {useHistory} from "react-router-dom"
 import React from "react"
 import Header from "./Header";
+
 import {userContext} from "./App"
 import {dayContext} from "./Scheduler" //access date value for selected day
 import axios from "axios";
@@ -10,12 +11,15 @@ function Journal(props){
 // const currDate = JSON.parse(dayContext)
 const history = useHistory()
 let currDate;
-
+let weekday;
 if(sessionStorage.getItem("day") != undefined){ //avoid returning undefined on refresh (state refreshes)
     currDate = sessionStorage.getItem("day")
    console.log(sessionStorage.getItem("day"))
+   weekday = sessionStorage.getItem("weekday")
+   console.log(weekday)
 }else{ //after click date, i.e NOT after refreshing the /events route
 currDate = dayContext.day //Must be PARSED bc export/import is JSON. Avoids invariant violation
+weekday= dayContext.weekday
 }
 
 const styles = {
@@ -135,7 +139,7 @@ const [entry,setEntry] = useState({
        props.fromJournalEntry(entry)
         
         return (
-            <div classname="centered">
+            <div className="centered">
             <div className=" card-div journal-header" style={{width: "30vw"}}>
             <h4>Collect your thoughts...</h4>
             </div>
