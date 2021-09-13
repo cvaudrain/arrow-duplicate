@@ -6,7 +6,14 @@ import {dayContext} from "./Scheduler" //access date value for selected day
 
 
 function Events(props){
-const currDate = JSON.parse(dayContext)
+    let currDate;
+    if(sessionStorage.getItem("day") != undefined){ //avoid returning undefined on refresh (state refreshes)
+         currDate = sessionStorage.getItem("day")
+        console.log(sessionStorage.getItem("day"))
+    }else{ //after click date from context, i.e NOT after refreshing the /events route, requiring sessionStorage
+     currDate = dayContext.day //Must be PARSED bc export/import is JSON. Avoids invariant violation
+    }
+   
     return(
         <div>
         <Header

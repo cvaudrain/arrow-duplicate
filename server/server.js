@@ -76,7 +76,8 @@ const UserSchema = new mongoose.Schema( //1st Schema
          journalEntry: {
             mood: Number,
             motivation: Number,
-            sleepQuality: Number,
+            focus: Number,
+            calm: Number,
             powerLevel: Number,//(mood + motivation + sleepQuality / 3) x 1000. 
             entry: String
          } 
@@ -207,6 +208,13 @@ app.post("/api/addNotes",(req, res) => {
      res.json(err)
    })
  
+  })
+
+  app.post("/journal/save",(req,res)=>{
+     console.log("save function fired")
+     console.log(req.body)
+
+     res.json("Received at server.")
   })
 
 app.listen(PORT, () => {

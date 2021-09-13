@@ -26,9 +26,11 @@ function Scheduler(){
             day: parsedDate
         } //obj format to import/export properly
         
-        
+        sessionStorage.setItem("day", parsedDate)
+        console.log("from local storage")
+console.log(sessionStorage.getItem("day"))
         history.push("/scheduler/date") //nav to date view 
-
+        
     }
     return(
         <div className="calendar-container">

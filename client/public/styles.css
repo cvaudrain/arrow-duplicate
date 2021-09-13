@@ -3,6 +3,10 @@
   margin: 0;
   box-sizing: border-box;
 }
+a {
+  color: white;
+}
+
 html {
   font-family: "Montserrat", sans-serif;
 }
@@ -636,3 +640,65 @@ bottom: 35px;;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out
 }
+
+/* JOURNAL and STATLOG Components */
+
+.journal-header{
+  color:rgb(44, 44, 46);
+  text-shadow: 2px, 2px, 3px black;
+  font-family: "McLaren";
+  
+}
+
+
+
+.plain-list{
+  list-style: none;
+  
+}
+.card-div{
+  position: relative;
+  width: 60vw;
+  margin: 30px auto 30px auto;
+  background: #fff;
+  padding: 15px;
+  
+  border-radius: 7px;
+  box-shadow: 0 1px 5px rgb(138, 137, 137);
+  text-align: center;
+}
+
+.date-div{
+  font-family: "McLaren";
+  font-size: 3rem;
+  color: black;
+  position: relative;
+  width: 40vw;
+  height:40vh;
+  margin: 30px auto 20px auto;
+  background: rgba(195, 70, 97, 0.616);
+  padding-top:15vh;
+text-decoration: none;
+  border-radius: 7px;
+  box-shadow: 0 1px 5px rgb(75, 75, 75);
+  text-align: center;
+  text-shadow: 2px 1px 2px black;
+  /* In-Line text decoration applied- Link styling needed to be removed */
+}
+.peach{
+  background-color: rgb(221, 167, 104);
+  color: white;
+  text-shadow: 2px 1px 3px black;
+  margin-bottom: 20px;
+  border-radius: 7px;
+}
+.paper{
+  text-decoration: underline;
+  text-decoration-color: rgba(185, 183, 183, 0.719);
+}
+.button-pad{
+  padding:8px;
+  border-radius: 7px;
+  font-size: 1.5rem;;
+}
+
