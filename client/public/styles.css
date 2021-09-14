@@ -727,6 +727,8 @@ text-decoration: none;
 .br-white{
   background-color: #fff;
 }
+
+
 .weekday{
   text-align:center;
   background-color: #76baff;
@@ -735,7 +737,7 @@ text-decoration: none;
   border: 1px solid black;
   text-shadow: 2px 1px 3px black;
     border: 1px solid black;
-    padding-top:4vh;
+    padding-top:2vh;
     font-size: 1.2rem;
 }
 
@@ -745,7 +747,7 @@ text-decoration: none;
   text-decoration: underline;
     text-shadow: 2px 1px 3px black;
     border: 1px solid black;
-    padding-top:4vh;
+    padding-top:2vh;
     font-size: 1.2rem;
 }
 .time-col{
@@ -758,15 +760,18 @@ text-decoration: none;
 }
 
 .days-row{
-  height:16vh;
+  height:8vh;
   border:1px solid black;
 text-shadow: 2px 1px 3px black;
 
 }
 
+.hour-per-day{
+  border: 1px dotted lightgray;
+}
 .timestamp{
   padding-top:3vh;
-  height: 16vh;
+  height: 8vh;
   border-bottom:1px dotted black;
   padding-left: 5px;
     background-color: rgb(165, 165, 165);
@@ -776,7 +781,7 @@ text-shadow: 2px 1px 3px black;
   background-color: #fff;
 }
 .time-block{
-  height: 16vh;
+  height: 8vh;
   border:1px  dotted gray;
   border-left:none;
   background-color: #fff;

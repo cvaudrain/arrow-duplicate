@@ -112,6 +112,48 @@ function toggleView(){
     // Week view, option
     function Week(props){
 
+      const hours = []
+      for(var i=6;i<12;i++){ //fill hours array so we can .map. for loops don't work in JSX expressions
+        hours.push(i + ":00am")
+      }
+      hours.push(12 + ":00pm")
+      for(var i=1;i<12;i++){ //fill hours array so we can .map. for loops don't work in JSX expressions
+        hours.push(i + ":00pm")
+      }
+      hours.push(12 + ":00am")
+      for(var i=1;i<6;i++){ //fill hours array so we can .map. for loops don't work in JSX expressions
+        hours.push(i + ":00am")
+      }
+    
+      // event listener for onClick events
+      function targetTimeWeek(e){
+        console.log(hours)
+        console.log("click event on time block")
+        console.log(e.target)
+      }
+
+
+      function HourPerDay(props){ //24 of these mapped instead of just plain rows per hour. Props.hour for every hour on clock.
+        
+        function targetTime(e){
+          console.log(e.target.value)
+          
+          props.getTimeValue(e) //needed to pass the event UP to week in order to register the click event, to READ the e.target.name in week level, bc it's value comes from props not yet determined here
+        }
+        return(
+          <div hour={props.hour} className="row time-block">
+          <div value="a value" name={"mon"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div value="a value" name={"tue" + " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div value="a value" name={"wed"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div value="a value" name={"thu"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div value="a value" name={"fri"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div value="a value" name={"sat"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div value="a value" name={"sun"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+  
+          </div>
+          )
+        }
+        // Week Render Statement
         return(
             <div className="">
   <div className="container-xl">
@@ -147,20 +189,33 @@ function toggleView(){
             </div>
   <div className="col days-col">
   <div className="row days-row">
-    <div className="col weekday no-border-left">monday</div>
-    <div className="col weekday no-border-left">tuesday</div>
-    <div className="col weekday no-border-left">wednesday</div>
-    <div className="col weekday no-border-left">thursday</div>
-    <div className="col weekday no-border-left">friday</div>
-    <div className="col weekend no-border-left">saturday</div>
-    <div className="col weekend no-border-left">sunday</div>
+    <div name="mon" className="col weekday no-border-left">monday</div>
+    <div name="tue" className="col weekday no-border-left">tuesday</div>
+    <div name="wed" className="col weekday no-border-left">wednesday</div>
+    <div name="thu" className="col weekday no-border-left">thursday</div>
+    <div name="fri" className="col weekday no-border-left">friday</div>
+    <div name="sat" className="col weekend no-border-left">saturday</div>
+    <div name="sun" className="col weekend no-border-left">sunday</div>
     </div>
 
     <div className="row events">
     <div className="col">
-   
-    <div className="row time-block no-border"></div>
+    { hours.map((val,ind)=>{
+      return <HourPerDay 
+        hour={val} //format back from "military" time
+        getTimeValue={targetTimeWeek}
+      />
+
+    })
+        
+      
     
+    
+    
+    }
+   
+
+    {/* <div className="row time-block no-border"></div>
     <div className="row time-block"></div>
               <div className="row time-block"></div>
               <div className="row time-block"></div>
@@ -183,7 +238,7 @@ function toggleView(){
               <div className="row time-block"></div>
               <div className="row time-block"></div>
               <div className="row time-block"></div>
-              <div className="row time-block"></div>
+              <div className="row time-block"></div> */}
               
    
     </div>
@@ -199,6 +254,9 @@ function toggleView(){
         )
     }
    
+   
+    
+      //Top Level render statement
     return(
         <div>
         <Header
