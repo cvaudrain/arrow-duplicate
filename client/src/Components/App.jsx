@@ -206,6 +206,7 @@ history.push("/scheduler")
   <Events />
 </Route>
 
+
 <Route exact path="/settings">
 <Header
   logout={logout}

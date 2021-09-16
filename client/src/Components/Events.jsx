@@ -1,11 +1,17 @@
 import {useContext, useState} from "react"
 import React from "react"
 import Header from "./Header";
+import Calendar from "react-calendar"
 import {userContext} from "./App"
 import {dayContext} from "./Scheduler" //access date value for selected day
 
 
 function Events(props){
+  const [view,setView] = useState("day")
+  const [evEditor, setEvEditor] = useState(false)
+  const [multi,setMulti] = useState(false)
+  const [startDate,setStartDate] = useState("")
+  const [endDate,setEndDate] = useState("")
     let currDate;
 let weekday;
 if(sessionStorage.getItem("day") != undefined){ //avoid returning undefined on refresh (state refreshes)
@@ -21,14 +27,61 @@ weekday= dayContext.weekday
 function toggleView(){
     console.log("toggle view fired")
 }
+function addEvent(){
+  console.log("add event")
+setEvEditor(true)
+
+}
+function saveEvent(e){
+e.preventDefault()
+  console.log("save event")
+}
+function clickRange(value){
+  
+  
+}
     // Day View, default
     function Day(props){
-
+function toggleMulti(){
+multi ? setMulti(false) : setMulti(true)
+}
         return(
             
             <div className="br-white">
             <div className="day-title centered">
-            <span onClick={toggleView}>Toggle View</span>
+            <span><button onClick={addEvent}>New Event</button> </span>
+            {evEditor && 
+            <div>
+              <form>
+                <input id="evName" placeholder="Event Name"></input>
+                <textarea id="evDescription" placeholder="Description"></textarea>
+                <div >
+                <label for="multi-yes">Multiple Day Event</label>
+                <input onClick={toggleMulti} id="multi-yes" type="radio"></input>
+              
+                
+                </div>
+                <button type="submit" method="post" onClick={saveEvent}>Save</button>
+                
+              </form>
+              {multi &&
+              <div>
+              <div>
+              <h3 id="startDate" name="startDate">Start: {startDate} </h3>
+              <h3 id="endDate" name="endDate">End: {endDate}</h3>
+              </div>
+    
+                <Calendar
+                selectRange={true}
+                showWeekNumbers={false}
+               onClickDay={clickRange(props.value)}
+              
+                 />
+                 </div>
+                }
+            </div>
+
+           }
             <div className="title-card">
             
             <p>{weekday} <span style={{color:"#224663"}}> {currDate}</span></p>
@@ -126,29 +179,30 @@ function toggleView(){
       }
     
       // event listener for onClick events
-      function targetTimeWeek(e){
+      function targetTimeWeek(e,id){
         console.log(hours)
         console.log("click event on time block")
-        console.log(e.target)
+        console.log(id)
       }
 
 
       function HourPerDay(props){ //24 of these mapped instead of just plain rows per hour. Props.hour for every hour on clock.
         
         function targetTime(e){
-          console.log(e.target.value)
-          
-          props.getTimeValue(e) //needed to pass the event UP to week in order to register the click event, to READ the e.target.name in week level, bc it's value comes from props not yet determined here
+          console.log("targetTime")
+          console.log(e.target.id)
+          const passedId = e.target.id
+          props.getTimeValue(e,passedId) //needed to pass the event UP to week in order to register the click event, to READ the e.target.name in week level, bc it's value comes from props not yet determined here
         }
         return(
           <div hour={props.hour} className="row time-block">
-          <div value="a value" name={"mon"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
-          <div value="a value" name={"tue" + " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
-          <div value="a value" name={"wed"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
-          <div value="a value" name={"thu"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
-          <div value="a value" name={"fri"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
-          <div value="a value" name={"sat"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
-          <div value="a value" name={"sun"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div id={"mon"+ " " + props.hour} name={"mon"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div id={"tue"+ " " + props.hour} name={"tue" + " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div id={"wed"+ " " + props.hour} name={"wed"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div id={"thu"+ " " + props.hour} name={"thu"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div id={"fri"+ " " + props.hour} name={"fri"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div id={"sat"+ " " + props.hour} name={"sat"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
+          <div id={"sun"+ " " + props.hour} name={"sun"+ " " + props.hour} onClick={targetTime} className="col hour-per-day"></div>
   
           </div>
           )
@@ -161,7 +215,8 @@ function toggleView(){
   <div className="row">
   <div className="col-1 time-col centered">
             
-  <div onClick={toggleView} className="timestamp">Toggle View</div>
+  {/* <div onClick={toggleView} className="timestamp">Toggle View</div> */}
+
   <div className="timestamp">6:00a</div>
               <div className="timestamp">7:00a</div>
               <div className="timestamp">8:00a</div>
@@ -207,39 +262,8 @@ function toggleView(){
       />
 
     })
-        
-      
-    
-    
     
     }
-   
-
-    {/* <div className="row time-block no-border"></div>
-    <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div> */}
-              
    
     </div>
     </div>
@@ -262,8 +286,9 @@ function toggleView(){
         <Header
             userNameGreeting={useContext(userContext)}
         />
-        <Day/>
-        <Week/>
+        {view === "day" && <Day/>}
+        
+        {view ==="week" &&<Week/>}
             
         </div>
     )
