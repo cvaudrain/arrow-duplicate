@@ -217,6 +217,13 @@ app.post("/api/addNotes",(req, res) => {
      res.json("Received at server.")
   })
 
+  app.post("/events/save",(req,res)=>{
+   console.log("save function fired")
+   console.log(req.body)
+
+   res.json("Received event at server.")
+})
+
 app.listen(PORT, () => {
    console.log(app.get("env").toUpperCase() + " Server started on port " + (PORT));
 });

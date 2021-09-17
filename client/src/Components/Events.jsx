@@ -1,17 +1,18 @@
-import {useContext, useState} from "react"
+import {useContext, useState,useEffect} from "react"
 import React from "react"
 import Header from "./Header";
 import Calendar from "react-calendar"
 import {userContext} from "./App"
 import {dayContext} from "./Scheduler" //access date value for selected day
+import axios from "axios";
 
 
 function Events(props){
   const [view,setView] = useState("day")
   const [evEditor, setEvEditor] = useState(false)
   const [multi,setMulti] = useState(false)
-  const [startDate,setStartDate] = useState("")
-  const [endDate,setEndDate] = useState("")
+  
+
     let currDate;
 let weekday;
 if(sessionStorage.getItem("day") != undefined){ //avoid returning undefined on refresh (state refreshes)
@@ -27,24 +28,99 @@ weekday= dayContext.weekday
 function toggleView(){
     console.log("toggle view fired")
 }
+
 function addEvent(){
   console.log("add event")
 setEvEditor(true)
 
 }
-function saveEvent(e){
-e.preventDefault()
-  console.log("save event")
-}
-function clickRange(value){
-  
-  
-}
+
+
+
+
+
+
     // Day View, default
     function Day(props){
 function toggleMulti(){
 multi ? setMulti(false) : setMulti(true)
 }
+let formData;
+if(sessionStorage.getItem("form")!=undefined){
+  formData = JSON.parse(sessionStorage.getItem("form"))
+  formData.startDate= ""
+  formData.endDate= ""
+}else{
+  formData = {
+    evName: "",
+    evDescription: "",
+    startDate:"",
+    endDate:"",
+    timeStart: "",
+    timeEnd: "",
+  }
+}
+const [value, onChange] = useState(new Date()); //per React Calendar Docs: current date value returned from value state
+
+const [form, setForm] = useState(formData)
+useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered values are preserved i nsessionStorage.
+  sessionStorage.setItem("form",JSON.stringify(form))
+  console.log(sessionStorage.getItem("form"))
+  
+},[form])
+
+
+function handleChange(e){ //form data change tracking
+  const {name,value}=e.target
+setForm(prev=>{
+  return {
+    ...prev,
+    [name]: value
+  }
+})
+
+
+console.log("Form State:")
+console.log(form)
+}
+
+const [startEnd, setStartEnd] = useState("startDate") //determinant for whether click event sets start or end date.
+function toggleStartEnd(e){
+setStartEnd(e.target.id)
+console.log("startEnd triggered")
+console.log(startEnd)
+}
+
+function clickRange(value, event){
+  
+  console.log("cal current value is:")
+  console.log(value)
+ 
+    setForm(prev=>{
+      return {
+        ...prev,
+        [startEnd]: value.toString()
+      }
+    })
+    
+   
+    setStartEnd("endDate")
+    
+    
+  }
+
+  function saveEvent(e){
+    e.preventDefault()
+      console.log("save event")
+      console.log(form)
+      axios.post("/events/save",form)
+      .then((res)=>{
+        console.log(res.data)
+      })
+    }
+
+
+
         return(
             
             <div className="br-white">
@@ -52,12 +128,16 @@ multi ? setMulti(false) : setMulti(true)
             <span><button onClick={addEvent}>New Event</button> </span>
             {evEditor && 
             <div>
-              <form>
-                <input id="evName" placeholder="Event Name"></input>
-                <textarea id="evDescription" placeholder="Description"></textarea>
+              <form onChange={handleChange}>
+                <input name="evName" id="evName" placeholder="Event Name" value={form.evName}></input>
+                <textarea name="evDescription" id="evDescription" placeholder="Description" value={form.evDescription}></textarea>
+                <label for="timeStart">Start Time:</label>
+                <input name="timeStart" id="timeStart" type="time" style={{textAlign:"center"}} value={form.timeStart}></input>
+                <label for="timeEnd">End Time:</label>
+                <input name="timeEnd" id="timeEnd" type="time" style={{textAlign:"center"}} value={form.timeEnd}></input>
                 <div >
-                <label for="multi-yes">Multiple Day Event</label>
-                <input onClick={toggleMulti} id="multi-yes" type="radio"></input>
+                <label for="multi">Multiple Day Event</label>
+                <input name="multi" onClick={toggleMulti} id="multi" type="radio" value={form.multi}></input>
               
                 
                 </div>
@@ -67,14 +147,16 @@ multi ? setMulti(false) : setMulti(true)
               {multi &&
               <div>
               <div>
-              <h3 id="startDate" name="startDate">Start: {startDate} </h3>
-              <h3 id="endDate" name="endDate">End: {endDate}</h3>
+              <h3 name="startDate" id="startDate" name="startDate">Start Date: {form.startDate} </h3><button onClick={toggleStartEnd} id="startDate" name="toggleStart">Select</button>
+              <h3 name="endDate" id="endDate" name="endDate">End Date: {form.endDate}</h3><button onClick={toggleStartEnd} id="endDate" name="toggleEnd">Select</button>
               </div>
     
                 <Calendar
-                selectRange={true}
+                value={value}
+                onChange={onChange}
+                selectRange={false}
                 showWeekNumbers={false}
-               onClickDay={clickRange(props.value)}
+               onClickDay={clickRange}
               
                  />
                  </div>
