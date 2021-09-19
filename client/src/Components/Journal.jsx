@@ -12,14 +12,17 @@ function Journal(props){
 const history = useHistory()
 let currDate;
 let weekday;
+let fullDate;
 if(sessionStorage.getItem("day") != undefined){ //avoid returning undefined on refresh (state refreshes)
     currDate = sessionStorage.getItem("day")
    console.log(sessionStorage.getItem("day"))
    weekday = sessionStorage.getItem("weekday")
    console.log(weekday)
+   fullDate = sessionStorage.getItem("fullDate")
 }else{ //after click date, i.e NOT after refreshing the /events route
 currDate = dayContext.day //Must be PARSED bc export/import is JSON. Avoids invariant violation
 weekday= dayContext.weekday
+fullDate = dayContext.fullDate
 }
 
 const styles = {
@@ -56,7 +59,7 @@ function getStats(value){
 
 function saveJournal(){ //save function is TOP level ( <Journal />)
     const data = { //stats is passed via prop function from StatLog />, & entry is passed via prop function from JounralEntry />. 
-        currDate,
+        fullDate,
         stats,     
         entry    
     }

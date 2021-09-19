@@ -20,6 +20,7 @@ function Scheduler(){
         console.log(value.toString().split(" "))
         let parsedDate = value.toString().split(" ")
         console.log(parsedDate)
+        const fullDate = parsedDate.join(" ")
         const weekday = parsedDate[0]
         parsedDate = [parsedDate[1],parsedDate[2],parsedDate[3]]
        
@@ -29,11 +30,14 @@ function Scheduler(){
         console.log(weekday)
         dayContext = {
             day: parsedDate,
-            weekday: weekday
+            weekday: weekday,
+            fullDate:fullDate
         } //obj format to import/export properly
-        
+       console.log("FULL Date")
+        console.log(dayContext.fullDate)
         sessionStorage.setItem("day", parsedDate)
         sessionStorage.setItem("weekday",weekday)
+        sessionStorage.setItem("fullDate",fullDate)
         console.log("from local storage")
 console.log(sessionStorage.getItem("day"))
         history.push("/scheduler/date") //nav to date view 

@@ -751,10 +751,9 @@ text-decoration: none;
     font-size: 1.2rem;
 }
 .time-col{
-  background-color: rgb(165, 165, 165);
+  background-color: rgba(160, 159, 219);
   color: white;
-  
-
+  font-family:"McLaren";
   text-shadow: 2px 1px 3px black;
   border-right:1px solid black;
 }
@@ -774,7 +773,7 @@ text-shadow: 2px 1px 3px black;
   height: 8vh;
   border-bottom:1px dotted black;
   padding-left: 5px;
-    background-color: rgb(165, 165, 165);
+  background-color: rgba(160, 159, 219);
 }
 
 .events{
@@ -782,11 +781,17 @@ text-shadow: 2px 1px 3px black;
 }
 .time-block{
   height: 8vh;
+  padding-left: 30px;;
   border:1px  dotted gray;
   border-left:none;
   background-color: #fff;
   border-bottom:none;
 }
+
+.ev-active{
+background: rgba(112, 12, 62, 0.513);
+}
+
 /* Formatting */
 .border-top{
   border-top: 1px dotted grey;

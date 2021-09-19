@@ -1,5 +1,5 @@
 import {useContext, useState} from "react"
-import {Link} from "react-router-dom"
+import {Link,useParams} from "react-router-dom"
 import React from "react"
 import Header from "./Header";
 import {userContext} from "./App"
@@ -33,14 +33,14 @@ function Date(props){
         <h1 className="card-div peach">{currDate}</h1>
 
         <div className="date-div">
-        <Link style={{textDecoration: "none" }} to="/scheduler/date/m-d-yy/events">
+        <Link style={{textDecoration: "none" }} to="/scheduler/date/mm-dd-yyyy/events">
     
         <p style={styles.header}>Events</p>
         </Link>
         </div>
 
         <div className="date-div">
-        <Link style={{textDecoration: "none"}} to="/scheduler/date/m-d-yy/journal">
+        <Link style={{textDecoration: "none"}} to="/scheduler/date/mm-dd-yyyy/journal">
 
         <p style={styles.header}>Journal</p>
         </Link>

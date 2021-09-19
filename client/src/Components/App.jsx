@@ -28,6 +28,8 @@ import axios from "axios";
 const API_ENDPOINT = process.env.PORT || "http://localhost:4747"
 let userContext; //global variable declaration. Will be defined after userNameFromAuth is defined from <Auth />
 
+
+
 function App() {
   //State Declarations
   const [editModeStatus,setEditModeStatus] = useState(false)
@@ -180,11 +182,11 @@ history.push("/scheduler")
 }
 
 
-//Render Phase
+//Render Phase beginning with Router
   return (
  
   <div>
-
+<Switch>
 <Route exact path="/scheduler">
 <Header
   logout={logout}
@@ -199,10 +201,10 @@ history.push("/scheduler")
 <Date />
 </Route>
 {/* paths below have placeholders for date variable as m-d-yy. Will have to originate in Scheduler, and pass up to App here for filepath*/}
-<Route exact path ="/scheduler/date/m-d-yy/journal"> 
+<Route exact path ="/scheduler/date/mm-dd-yyyy/journal"> 
   <Journal />
 </Route>
-<Route exact path ="/scheduler/date/m-d-yy/events">
+<Route exact path ="/scheduler/date/mm-dd-yyyy/events">
   <Events />
 </Route>
 
@@ -273,7 +275,7 @@ onEdit={editNote}
 </div>
 }
 </Route>
-
+</Switch>
 </div>
 
 )

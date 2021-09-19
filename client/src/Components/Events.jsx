@@ -12,17 +12,29 @@ function Events(props){
   const [evEditor, setEvEditor] = useState(false)
   const [multi,setMulti] = useState(false)
   
+// Placeholders in Session Data
+// !sessionStorage.getItem("form") && sessionStorage.setItem("formContext","placeholder for form")
+// let toContext = sessionStorage.getItem("formContext")
+// let eventContext = React.createContext(toContext)
+// console.log(eventContext)
 
-    let currDate;
+  let currDate;
 let weekday;
+let fullDate;
 if(sessionStorage.getItem("day") != undefined){ //avoid returning undefined on refresh (state refreshes)
+  //mm-dd-yyyy
     currDate = sessionStorage.getItem("day")
    console.log(sessionStorage.getItem("day"))
+   //Day of week
    weekday = sessionStorage.getItem("weekday")
    console.log(weekday)
+   //Full date compatible Date constructor setDate methods
+   fullDate = sessionStorage.getItem("fullDate")
+   console.log(fullDate)
 }else{ //after click date, i.e NOT after refreshing the /events route
 currDate = dayContext.day //Must be PARSED bc export/import is JSON. Avoids invariant violation
 weekday= dayContext.weekday
+fullDate = dayContext.fullDate
 } 
 
 function toggleView(){
@@ -36,26 +48,23 @@ setEvEditor(true)
 }
 
 
-
-
-
-
     // Day View, default
     function Day(props){
+
 function toggleMulti(){
 multi ? setMulti(false) : setMulti(true)
 }
 let formData;
 if(sessionStorage.getItem("form")!=undefined){
   formData = JSON.parse(sessionStorage.getItem("form"))
-  formData.startDate= ""
-  formData.endDate= ""
+  formData.startDate= fullDate
+  formData.endDate= fullDate
 }else{
   formData = {
     evName: "",
     evDescription: "",
-    startDate:"",
-    endDate:"",
+    startDate:fullDate,
+    endDate:fullDate,
     timeStart: "",
     timeEnd: "",
   }
@@ -68,6 +77,7 @@ useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered v
   console.log(sessionStorage.getItem("form"))
   
 },[form])
+let eventContext = React.createContext(form)
 
 
 function handleChange(e){ //form data change tracking
@@ -117,8 +127,113 @@ function clickRange(value, event){
       .then((res)=>{
         console.log(res.data)
       })
+      //function to render event blocks on day view UI
+      
+
+
+      //function to pass form data via props to scheduler parent
+
     }
 
+      //Event Row Component: <EventRows /> Parent: <Day/> Recieves: eventContext, drawing value from state variable "form"
+      function EventRows(props){
+        const importEv = useContext(eventContext)
+        console.log("event context")
+        console.log(importEv)
+        console.log(importEv.timeStart)
+        let stored = [
+        <div name="06:00" className="row time-block no-border"></div>,
+        <div name="07:00" className="row time-block"></div>,
+        <div name="08:00" className="row time-block"></div>,
+        <div name="09:00" className="row time-block"></div>,
+        <div name="10:00" className="row time-block"></div>,
+        <div name="11:00" className="row time-block"></div>,
+        <div name="12:00" className="row time-block"></div>,
+        <div name="13:00" className="row time-block"></div>,
+        <div name="14:00" className="row time-block"></div>,
+        <div name="15:00" className="row time-block"></div>,
+        <div name="16:00" className="row time-block"></div>,
+        <div name="17:00" className="row time-block"></div>,
+        <div name="8:00" className="row time-block"></div>,
+        <div name="19:00" className="row time-block"></div>,
+        <div name="20:00" className="row time-block"></div>,
+        <div name="21:00" className="row time-block"></div>,
+        <div name="22:00" className="row time-block"></div>,
+        <div name="23:00" className="row time-block"></div>,
+        <div name="24:00" className="row time-block"></div>,
+        <div name="1:00" className="row time-block"></div>,
+        <div name="2:00" className="row time-block"></div>,
+        <div name="3:00" className="row time-block"></div>,
+        <div name="4:00" className="row time-block"></div>,
+        <div name="5:00" className="row time-block"></div>]
+        let storedActive = [
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="06:00" className="row time-block no-border">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="07:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="08:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="09:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="10:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="11:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="12:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="13:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="14:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="15:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="16:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="17:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="8:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="19:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="20:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="21:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="22:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="23:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="24:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="1:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="2:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="3:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="4:00" className="row time-block">{importEv.evName}</div>,
+          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="5:00" className="row time-block">{importEv.evName}</div>]
+        console.log(stored)
+  
+        
+          let indexPos = { //track where event begins/ends to fill in between with visual indicator
+            startInd: 100,
+            endInd: 100
+          }
+          let renderArray = stored.map((n,index)=>{
+
+            if(n.props.name === importEv.timeStart){ //starting block
+             console.log(importEv.evName + "Starts at " + n.props.name)
+             indexPos.startInd = index
+            
+             return storedActive[index]
+            } else if( n.props.name===importEv.timeEnd){ //ending block
+           console.log(importEv.evName + "ends at " + n.props.name)
+           indexPos.endInd = index
+           return storedActive[index]
+            }else if(indexPos.startInd<index && indexPos.endInd > index){ //block in between (array order is appropriate for this)
+              return storedActive[index]
+            } else{
+             console.log(n.props.name) //return a NON-active class div
+            return n
+            }
+      
+          })
+          
+        
+
+        return (
+         <div className="row events">
+         <div className="col">
+
+
+         {renderArray.map((n)=>{
+           return n
+         })}
+        
+         </div>
+         </div>
+        )
+     
+         } 
 
 
         return(
@@ -173,7 +288,7 @@ function clickRange(value, event){
             <div className="container-xl">
           
             <div className="row border-top">
-            <div className="col-1 time-col centered">
+            <div className="col-2 time-col centered">
               <div className="timestamp">6:00a</div>
               <div className="timestamp">7:00a</div>
               <div className="timestamp">8:00a</div>
@@ -202,38 +317,8 @@ function clickRange(value, event){
             </div>
             <div className="col days-col">
             
-          
-              <div className="row events">
-              <div className="col">
-             
-              <div className="row time-block no-border"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-              <div className="row time-block"></div>
-             
-              </div>
-              </div>
-              
+           <EventRows/>
+
               </div>
               </div>
           
@@ -243,6 +328,9 @@ function clickRange(value, event){
           </div>
         )
     }
+    
+
+
 
     // Week view, option
     function Week(props){
@@ -295,7 +383,7 @@ function clickRange(value, event){
   <div className="container-xl">
 
   <div className="row">
-  <div className="col-1 time-col centered">
+  <div className="col-3 time-col centered">
             
   {/* <div onClick={toggleView} className="timestamp">Toggle View</div> */}
 
