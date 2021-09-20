@@ -221,7 +221,7 @@ app.post("/api/addNotes",(req, res) => {
    console.log("save function fired")
    console.log(req.body)
 
-   res.json("Received event at server.")
+   res.json("Received event list at server.")
 })
 
 app.listen(PORT, () => {

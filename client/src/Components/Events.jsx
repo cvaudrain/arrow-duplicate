@@ -54,6 +54,7 @@ setEvEditor(true)
 function toggleMulti(){
 multi ? setMulti(false) : setMulti(true)
 }
+//Get Individual Event Form Data
 let formData;
 if(sessionStorage.getItem("form")!=undefined){
   formData = JSON.parse(sessionStorage.getItem("form"))
@@ -69,16 +70,33 @@ if(sessionStorage.getItem("form")!=undefined){
     timeEnd: "",
   }
 }
+//Get Fuill List of saved events data
+let eventListData;
+if(sessionStorage.getItem("eventList")!= undefined){
+  eventListData = JSON.parse(sessionStorage.getItem("eventList"))
+} else{
+  eventListData=[]
+}
 const [value, onChange] = useState(new Date()); //per React Calendar Docs: current date value returned from value state
 
 const [form, setForm] = useState(formData)
+const [eventList,setEventList]  = useState(eventListData)
+
 useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered values are preserved i nsessionStorage.
   sessionStorage.setItem("form",JSON.stringify(form))
   console.log(sessionStorage.getItem("form"))
-  
+  setEventList(eventListData)
 },[form])
 let eventContext = React.createContext(form)
 
+useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered values are preserved i nsessionStorage.
+  sessionStorage.setItem("eventList",JSON.stringify(eventList))
+  console.log("event list")
+  console.log(sessionStorage.getItem("eventList"))
+  console.log("stateful eventList")
+  console.log(eventList)
+},[eventList])
+let eventListContext = React.createContext(eventList)
 
 function handleChange(e){ //form data change tracking
   const {name,value}=e.target
@@ -123,110 +141,292 @@ function clickRange(value, event){
     e.preventDefault()
       console.log("save event")
       console.log(form)
+      eventListData.push(form)
+      sessionStorage.setItem("eventList",JSON.stringify(eventListData))
+
       axios.post("/events/save",form)
       .then((res)=>{
         console.log(res.data)
       })
-      //function to render event blocks on day view UI
-      
-
-
-      //function to pass form data via props to scheduler parent
+      .catch((err)=>console.log(err))
+      // function to render event blocks on day view UI
+      setForm({
+        evName: "",
+        evDescription: "",
+        startDate:fullDate,
+        endDate:fullDate,
+        timeStart: "",
+        timeEnd: "",
+      })
 
     }
 
       //Event Row Component: <EventRows /> Parent: <Day/> Recieves: eventContext, drawing value from state variable "form"
       function EventRows(props){
-        const importEv = useContext(eventContext)
-        console.log("event context")
-        console.log(importEv)
-        console.log(importEv.timeStart)
-        let stored = [
-        <div name="06:00" className="row time-block no-border"></div>,
-        <div name="07:00" className="row time-block"></div>,
-        <div name="08:00" className="row time-block"></div>,
-        <div name="09:00" className="row time-block"></div>,
-        <div name="10:00" className="row time-block"></div>,
-        <div name="11:00" className="row time-block"></div>,
-        <div name="12:00" className="row time-block"></div>,
-        <div name="13:00" className="row time-block"></div>,
-        <div name="14:00" className="row time-block"></div>,
-        <div name="15:00" className="row time-block"></div>,
-        <div name="16:00" className="row time-block"></div>,
-        <div name="17:00" className="row time-block"></div>,
-        <div name="8:00" className="row time-block"></div>,
-        <div name="19:00" className="row time-block"></div>,
-        <div name="20:00" className="row time-block"></div>,
-        <div name="21:00" className="row time-block"></div>,
-        <div name="22:00" className="row time-block"></div>,
-        <div name="23:00" className="row time-block"></div>,
-        <div name="24:00" className="row time-block"></div>,
-        <div name="1:00" className="row time-block"></div>,
-        <div name="2:00" className="row time-block"></div>,
-        <div name="3:00" className="row time-block"></div>,
-        <div name="4:00" className="row time-block"></div>,
-        <div name="5:00" className="row time-block"></div>]
-        let storedActive = [
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="06:00" className="row time-block no-border">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="07:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="08:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="09:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="10:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="11:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="12:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="13:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="14:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="15:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="16:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="17:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="8:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="19:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="20:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="21:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="22:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="23:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="24:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="1:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="2:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="3:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="4:00" className="row time-block">{importEv.evName}</div>,
-          <div style={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} name="5:00" className="row time-block">{importEv.evName}</div>]
-        console.log(stored)
-  
-        
-          let indexPos = { //track where event begins/ends to fill in between with visual indicator
-            startInd: 100,
-            endInd: 100
-          }
-          let renderArray = stored.map((n,index)=>{
-
-            if(n.props.name === importEv.timeStart){ //starting block
-             console.log(importEv.evName + "Starts at " + n.props.name)
-             indexPos.startInd = index
-            
-             return storedActive[index]
-            } else if( n.props.name===importEv.timeEnd){ //ending block
-           console.log(importEv.evName + "ends at " + n.props.name)
-           indexPos.endInd = index
-           return storedActive[index]
-            }else if(indexPos.startInd<index && indexPos.endInd > index){ //block in between (array order is appropriate for this)
-              return storedActive[index]
-            } else{
-             console.log(n.props.name) //return a NON-active class div
-            return n
-            }
+        const eventNum = ["Event #1", "Event #2", "Event #3"]
+        const eventList = useContext(eventListContext)
+        console.log("event context in eventRows")
+        console.log(eventList)
       
-          })
+        let render1;
+        let render2;
+        let render3;
+
+        // let stored = [
+        // <div name="06:00" className="row time-block no-border"></div>,
+        // <div name="07:00" className="row time-block"></div>,
+        // <div name="08:00" className="row time-block"></div>,
+        // <div name="09:00" className="row time-block"></div>,
+        // <div name="10:00" className="row time-block"></div>,
+        // <div name="11:00" className="row time-block"></div>,
+        // <div name="12:00" className="row time-block"></div>,
+        // <div name="13:00" className="row time-block"></div>,
+        // <div name="14:00" className="row time-block"></div>,
+        // <div name="15:00" className="row time-block"></div>,
+        // <div name="16:00" className="row time-block"></div>,
+        // <div name="17:00" className="row time-block"></div>,
+        // <div name="8:00" className="row time-block"></div>,
+        // <div name="19:00" className="row time-block"></div>,
+        // <div name="20:00" className="row time-block"></div>,
+        // <div name="21:00" className="row time-block"></div>,
+        // <div name="22:00" className="row time-block"></div>,
+        // <div name="23:00" className="row time-block"></div>,
+        // <div name="24:00" className="row time-block"></div>,
+        // <div name="1:00" className="row time-block"></div>,
+        // <div name="2:00" className="row time-block"></div>,
+        // <div name="3:00" className="row time-block"></div>,
+        // <div name="4:00" className="row time-block"></div>,
+        // <div name="5:00" className="row time-block"></div>]
+        let storedActive = [
+          // render1,2 3 evaluated truthy/not on each iteration of storedActive.map, which will return each div and appropriate columns depending on evaluation of bool per column, per div
+          <div name="06:00" className="row time-block no-border">
+          {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="07:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="08:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="09:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="10:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="11:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="12:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="13:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="14:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="15:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="16:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="17:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="18:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="19:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="20:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="21:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="22:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="23:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="24:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="1:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="2:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="3:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="4:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>,
+          <div name="5:00" className="row time-block">
+            {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+          {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+          {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+          </div>]
+        // console.log(stored)
           
+        //Conditions to render event boxes active=
+      //time of event #n overlaps with column n
+      // storedActive.map((n)=>{
+      //   let render1;
+      //   let render2;
+      //   let render3;
+      //   let colTime = +n.props.name.slice(0,2)
+      //   console.group(colTime)
+      //   console.log(+eventList[1].timeStart.slice(0,2))
+      //   //determine if ev col 1 renders in div
+      //   if(render1 && +eventList[0].timeStart.slice(0,2) <= colTime && +eventList[0].timeEnd.slice(0,2) >= colTime){
+      //     render1 = true
+      //   }else render1 = false
+      //   //and column for event 2
+      //   if(render2 && +eventList[1].timeStart.slice(0,2) <= colTime && +eventList[1].timeEnd.slice(0,2) >= colTime){
+      //     render2 = true
+      //   }else render2 = false
+      //   //and 3rd event
+      //   if(render3 && +eventList[2].timeStart.slice(0,2) <= colTime && +eventList[2].timeEnd.slice(0,2) >= colTime){
+      //     render3 = true
+      //   }else render3 = false
+      //   return n //render div n, which will evaluate the values of render1, render2 etc before rendering any columns. render1 etc reset after each iteration, giving fresh start for evaluation
+      // }
+      // )
         
+      
+        
+          // let indexPos = { 
+          //   startInd: 100,
+          //   endInd: 100
+          // }
+          // const renderArrayHold = []
+         
+          // for(var i=0;i<eventList.length;i++){
+           
+          //   let temp = stored.map((n,index)=>{
+
+
+          //   if(n.props.name === eventList[i].timeStart){ //starting block
+          //    console.log(eventList[i].evName + "Starts at " + n.props.name)
+          //    indexPos.startInd = index
+            
+          //    return storedActive[index]
+          //   } else if( n.props.name===eventList[i].timeEnd){ //ending block
+          //  console.log(eventList[i].evName + "ends at " + n.props.name)
+          //  indexPos.endInd = index
+          //  return storedActive[index]
+          //   }else if(indexPos.startInd<index && indexPos.endInd > index){ //block in between (array order is appropriate for this)
+          //     return storedActive[index]
+          //   } else{
+          //    console.log(n.props.name) //return a NON-active class div
+          //   return n
+          //   }
+      
+          // })
+          // renderArrayHold.push(temp)
+        // }
+ 
+      
+          
+        const mapResults = []
+        storedActive.map((n)=>{ //iterate through array of divs (n=div[n]) ONCE, evaluating which event column if any to render based on ternaries, when div renders (return n)
+        
+          let colTime = +n.props.name.slice(0,2)
+          {/* console.group(colTime) */}
+          {/* eventList.length > 0 && console.log(+eventList[1].timeStart.slice(0,2)) */}
+          //determine if ev col 1 renders in div
+          if(eventList.length>=1){ //make sure it exists or .timeStart etc will return undefined and crash. If length not met, no  nested evalations. faster and no undefined erors
+            if( +eventList[0].timeStart.slice(0,2) <= colTime && +eventList[0].timeEnd.slice(0,2) >= colTime){
+            render1 = true
+          }else render1 = false
+          }
+           //and column for event 2
+          if(eventList.length >=2){
+            if(+eventList[1].timeStart.slice(0,2) <= colTime && +eventList[1].timeEnd.slice(0,2) >= colTime){
+            render2 = true
+          }else render2 = false
+          }
+          //and 3rd event
+          if(eventList.length>= 3){
+            if(+eventList[2].timeStart.slice(0,2) <= colTime && +eventList[2].timeEnd.slice(0,2) >= colTime){
+            render3 = true
+          }else render3 = false
+          }
+          console.log(render1)
+          n= <div name="4:00" className="row time-block">
+          {render1 && <div className="col" style ={{backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}} >{eventList[0].evName}</div>}
+        {render2 && <div className="col" style ={{backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[1].evName}</div>}
+        {render3 && <div className="col" style ={{backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"30px",fontFamily:"McLaren",fontSize:"1.2rem"}}>{eventList[2].evName}</div>}
+        </div>
+          //if all render variables are false, div renders just like "stored", with no "active" colored columns
+          mapResults.push(n) //render div n, which will evaluate the values of render1, render2 etc before rendering any columns. render1 etc reset after each iteration, giving fresh start for evaluation
+        }
+        )
 
         return (
          <div className="row events">
          <div className="col">
 
 
-         {renderArray.map((n)=>{
+         {/* {renderArrayHold.map((n)=>{
            return n
+         })} */}
+         {mapResults.map((n)=>{
+           console.log(n)
+          return n
          })}
         
          </div>
