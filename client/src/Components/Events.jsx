@@ -82,6 +82,7 @@ let eventContext = React.createContext(form)
 
 useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered values are preserved i nsessionStorage.
   sessionStorage.setItem("eventList",JSON.stringify(eventList))
+  eventListData = eventList
   console.log("event list")
   console.log(sessionStorage.getItem("eventList"))
   console.log("stateful eventList")
@@ -145,7 +146,7 @@ function clickRange(value, event){
   }
 
   function saveEvent(e){
-    e.preventDefault()
+    e && e.preventDefault()
       console.log("save event")
       console.log(form)
       let validTime = form.timeStart.slice(0,2) + form.timeStart.slice(4) < form.timeEnd.slice(0,2) + form.timeEnd.slice(4)
@@ -160,6 +161,7 @@ function clickRange(value, event){
       })
       .catch((err)=>console.log(err))
       // function to render event blocks on day view UI
+      
       setForm({
         evName: "",
         evDescription: "",
@@ -169,22 +171,28 @@ function clickRange(value, event){
         timeEnd: "",
         evNumber:""
       })
+      setEvEditor(false)
+      
           } else{ console.log("Please complete form / too many events")}
     }
 
     function editEvent(obj){
-      deleteEvent(obj)
-      // setForm(obj)
+     deleteEvent(obj)
+      setForm(obj)
      addEvent()
      setEventCard("")
-     sessionStorage.setItem("form",JSON.stringify(obj))
-     setForm(obj)
+    //  sessionStorage.setItem("form",JSON.stringify(obj))
+    //  setForm(obj)
+    // saveEvent()
      console.log("form currently: ")
      console.log(form)
-   
+    
+     
+     setEventCard("")
     }
 
     function deleteEvent(obj){ //passes eventInfo object to be compared against each event entry. Deletes match
+     console.log("delete function called")
       let updated = eventListData.filter((eventDetails)=>{
         if (eventDetails != obj){
           return eventDetails
@@ -192,14 +200,17 @@ function clickRange(value, event){
         }
       })
       console.log(updated)
+      eventListData = updated
+      console.log(eventListData)
       setEventList(updated)
       setEventCard("")
+      
       
     }
 
       //Event Row Component: <EventRows /> Parent: <Day/> Recieves: eventContext, drawing value from state variable "form"
       // function EventRows(props){
-        const eventNum = ["Event #1", "Event #2", "Event #3"]
+    
         // const eventList = useContext(eventListContext)
         
         let eventInfo; //changes based on currently selected event & used to re-populate form on editForm()
@@ -215,7 +226,7 @@ function clickRange(value, event){
             eventNum =i //sets event number to specify for deletion
            return i== eventId && n
           })
-          setSelectedEvNum(eventNum)
+          // setSelectedEvNum(eventNum)
           eventInfo = eventInfo[0]
           console.log(eventInfo)
           let keyList = Object.keys(eventInfo)
@@ -457,13 +468,14 @@ function clickRange(value, event){
                 <label for="timeEnd">End Time:</label>
                 <input name="timeEnd" id="timeEnd" type="time" style={{textAlign:"center"}} value={form.timeEnd}></input>
                 <div >
-                <label for="multi">Multiple Day Event</label>
-                <input name="multi" onClick={toggleMulti} id="multi" type="radio" value={form.multi}></input>
-              
+                {/* <label for="multi">Multiple Day Event</label>
+                <input name="multi" onClick={toggleMulti} id="multi" type="radio" value={form.multi}></input> */}
                 
-                </div>
                 <button type="submit" method="post" onClick={saveEvent}>Save</button>
+                </div>
                 
+                
+                <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"50%",padding:"1px",background:"rgba(195, 70, 97)",color:"white",width:"30px",height:"30px",marginTop:"10px"}} onClick={()=>setEvEditor(false)}>X</button>
               </form>
               {multi &&
               <div>
