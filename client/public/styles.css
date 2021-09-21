@@ -16,8 +16,8 @@ body {
 }
 
 header {
-  /* background-color: #0b7a75; */
   background-color: #224663;
+  /* background: -webkit-gradient(linear, left top, right top, from(#224663), to(#1d2961)); */
   margin: auto -16px;
   padding: 15px 30px 0 30px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
@@ -465,7 +465,7 @@ bottom: 35px;;
   background: #a66511;
 }
 .react-calendar__tile--hasActive {
-  background: #76baff;
+  background: rgb(118, 186, 255);
 }
 .react-calendar__tile--hasActive:enabled:hover,
 .react-calendar__tile--hasActive:enabled:focus {
@@ -644,8 +644,8 @@ bottom: 35px;;
 /* JOURNAL and STATLOG Components */
 
 .journal-header{
-  color:rgb(44, 44, 46);
-  text-shadow: 2px, 2px, 3px black;
+  /* color:rgb(44, 44, 46); */
+  text-shadow: 2px, 2px, 3px rgb(0, 0, 0);
   font-family: "McLaren";
   
 }
@@ -660,14 +660,20 @@ bottom: 35px;;
   position: relative;
   width: 60vw;
   margin: 30px auto 30px auto;
-  background: #fff;
+  color: #fff;
   padding: 15px;
-  
+  background: -webkit-gradient(linear, left top, right top, from(#f29263), to(#eea15a));
   border-radius: 7px;
   box-shadow: 0 1px 5px rgb(138, 137, 137);
   text-align: center;
+  text-shadow: 2px 1px 2px black;
 }
-
+.collect-thoughts{
+  color:#fff;
+  /* text-shadow: 5px 5px, 5px, 3px black; */
+  font-family: "McLaren";
+  
+}
 .date-div{
   font-family: "McLaren";
   font-size: 3rem;
@@ -676,7 +682,8 @@ bottom: 35px;;
   width: 40vw;
   height:40vh;
   margin: 30px auto 20px auto;
-  background: rgba(195, 70, 97, 0.616);
+  /* background: rgba(195, 70, 97, 0.616); */
+  background: -webkit-gradient(linear, left top, right top, from(rgba(195, 70, 97, 0.616)), to(rgba(182, 94, 197, 0.712)));
   padding-top:15vh;
 text-decoration: none;
   border-radius: 7px;
@@ -686,11 +693,12 @@ text-decoration: none;
   /* In-Line text decoration applied- Link styling needed to be removed */
 }
 .peach{
-  background-color: rgb(221, 167, 104);
+  /* background-color: rgb(221, 167, 104); */
   color: white;
   text-shadow: 2px 1px 3px black;
   margin-bottom: 20px;
   border-radius: 7px;
+  background: -webkit-gradient(linear, left top, right top, from(#f29263), to(#eea15a));
 }
 .paper{
   text-decoration: underline;
@@ -702,6 +710,25 @@ text-decoration: none;
   font-size: 1.5rem;;
 }
 
+.add-btn{
+  position: relative;
+  padding:20px;
+  margin:15px;
+  /* right: 18px;
+  bottom: -18px; */
+  /* right: 45%; */
+  /* bottom: 11px; */
+  background: #274c6b;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 85px;
+  height: 85px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 3px 3px 1px rgba(0, 0, 0, 0.5);
+}
 
 /* Scheduler-Week & Day View */
 
@@ -769,11 +796,12 @@ text-shadow: 2px 1px 3px black;
   border: 1px dotted lightgray;
 }
 .timestamp{
+  font-size: 0.7rem;
   padding-top:3vh;
   height: 8vh;
   border-bottom:1px dotted black;
   padding-left: 5px;
-  background-color: rgba(160, 159, 219);
+  background-color:rgba(160, 159, 219);
 }
 
 .events{
@@ -790,6 +818,32 @@ text-shadow: 2px 1px 3px black;
 
 .ev-active{
 background: rgba(112, 12, 62, 0.513);
+}
+
+.ev-modal {
+ 
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  
+}
+
+/* Modal Content/Box */
+.ev-modal-content {
+  background-color: #274c6b;
+  color:white;
+ text-shadow: 2px 1px 3px black;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  border-radius: 15px;
 }
 
 /* Formatting */

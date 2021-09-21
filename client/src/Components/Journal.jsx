@@ -33,9 +33,11 @@ const styles = {
             fontSize: "1.4rem"
         },
         medium: {
-            color: "purple",
+            color: "#fff",
             fontFamily: "McLaren",
-            fontSize: "1.4rem"
+            fontSize: "1.4rem",
+            fontWeight:"bold"
+            
         },
         high: {
             color: "blue",
@@ -101,8 +103,8 @@ return (
         <h1 className="journal-header card-div peach">Journal Entry Page for: {currDate}</h1>
         <div className="card-div">
         <ul className="plain-list">
-        <h3 className="journal-header">So, how's it going?</h3>
-        <h3 className="journal-header">On a scale of 0-10 how's your:</h3>
+        <h3 className="journal-header" style={{color: "#5185c9"}}>So, how's it going?</h3>
+        <h3 className="journal-header" style={{color: "#fff"}}>On a scale of <span style={{color: "#5185c9"}}>0-10 </span>how's your:</h3>
         <li style={styles.slider.medium}>Mood: {sliderValues.mood}</li>
         <input style={{width:"40vw"}} onChange={handleSlider} name="mood" placeholder="1-10" type="range" min="0" max = "10" value={sliderValues.mood}></input>
         <li style={styles.slider.medium}>Motivation: {sliderValues.motivation}</li>
@@ -144,7 +146,7 @@ const [entry,setEntry] = useState({
         return (
             <div className="centered">
             <div className=" card-div journal-header" style={{width: "30vw"}}>
-            <h4>Collect your thoughts...</h4>
+            <h4 className="collect-thoughts"> Collect your thoughts...</h4>
             </div>
                 <form style={{width:"89vw", height:"75vh"}}>
                     <input onChange={handleChange}
@@ -170,7 +172,7 @@ const [entry,setEntry] = useState({
     //END JournalEntry />
 
     return(
-        <div >
+        <div style={{background:"rgba(118, 186, 255,0.444)"}}>
         <Header
             userNameGreeting={useContext(userContext)}
         />

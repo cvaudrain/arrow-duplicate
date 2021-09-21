@@ -45,9 +45,7 @@ console.log(sessionStorage.getItem("day"))
     }
     return(
         <div className="calendar-container">
-        <div className="card-div">
-           
-        </div>
+        
             <Calendar 
                 value={value}
                 onChange={onChange}
