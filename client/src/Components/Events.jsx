@@ -176,9 +176,16 @@ function clickRange(value, event){
           } else{ console.log("Please complete form / too many events")}
     }
 
-    function editEvent(obj){
-     deleteEvent(obj)
-      setForm(obj)
+    function editEvent(obj){ //setForm is called which triggers useEffect. The value we set with setEventList originates in session,->eventListData, THEN setState. 
+      //so we need to directly change the highest level, sesssionStorage list value, if we want that to continue using it or else it will reset the eventList to the prev val, from sessionStorage. Start by getting updated list, just like deleteEvent does
+      let updated = eventListData.filter((eventDetails)=>{ 
+        if (eventDetails != obj){
+          return eventDetails
+        }
+      })
+      sessionStorage.setItem("eventList",JSON.stringify(updated))  //Set session data here before state update, so that when setForm is called and code re-runs,  
+      //deleteEvent(obj) //delete is called which triggers useEffect for eventList. Remove this for now and delete using the logic that will happen in useEffetc
+      setForm(obj) //when state is changed, other statefuls don't have to change, but the vanilla code is run again. Ergo, eventList is set from SESSION.
      addEvent()
      setEventCard("")
     //  sessionStorage.setItem("form",JSON.stringify(obj))
@@ -187,7 +194,6 @@ function clickRange(value, event){
      console.log("form currently: ")
      console.log(form)
     
-     
      setEventCard("")
     }
 
