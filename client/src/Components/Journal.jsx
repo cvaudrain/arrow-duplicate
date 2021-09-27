@@ -63,7 +63,7 @@ let sessionData = {
         calm: "5"
     }
 }
-
+const [parentData,setParentData] = useState(sessionData) //set from sessionData, will be used to pass down values after inital fetch inside useEffect
 //Get and render previous entry (if any on file ) ...Wrap in useEffect to run AFTER initial render ONCE and subsequently cause re-render with updated values
 useEffect(()=>{
 axios.post("/journal/fetch",{
@@ -73,32 +73,34 @@ axios.post("/journal/fetch",{
 .then((res)=>{ //be sure to only pass 1 callback arg: res. NOT req,res if server is sending 1 obj i.e just res
     console.log("return res:")
     console.log(res.data)
+    
     entry = res.data.entry
     stats = res.data.stats
     sessionStorage.setItem("sessionData",JSON.stringify(res.data)) //set sessionStorage to values pulled from DB, if any.
     console.log(stats)
+    setParentData(res.data)
 })
 .catch((err)=>console.log(err))
-},[]) //Only fetch ONCE. After initial re-render from this useEffect, we set state from sessionStorage values
+},[]) //Only fetch ONCE. After initial re-render from this useEffect, we set state from sessionStorage
 //sessionStorage.setItem("sessionData",JSON.stringify(sessionData)) //resets sessionStorage to default; necessary to have accurate values if we nav to another date without a DB entry already.
 
-if(sessionStorage.getItem("sessionData") != undefined){
- sessionData = sessionStorage.getItem("sessionData")
- sessionData = JSON.parse(sessionData)
-}else{
- sessionData = {
-        entry : {
-            title: "",
-            content: ""
-        },
-        stats: {
-            mood: "5",
-            motivation: "5",
-            focus: "5",
-            calm: "5"
-        }
-    }
-}
+// if(sessionStorage.getItem("sessionData") != undefined){
+//  sessionData = sessionStorage.getItem("sessionData")
+//  sessionData = JSON.parse(sessionData)
+// }else{
+//  sessionData = {
+//         entry : {
+//             title: "",
+//             content: ""
+//         },
+//         stats: {
+//             mood: "5",
+//             motivation: "5",
+//             focus: "5",
+//             calm: "5"
+//         }
+//     }
+// }
 console.log("sessionData =")
 console.log(sessionData)
 console.log("sessionData.entry =")
@@ -116,7 +118,7 @@ console.log(stats.mood)
 
 
 
-    let journalContext = React.createContext(sessionData) //use to pass values down
+    let journalContext = React.createContext(parentData) //use to pass values down after fetch in useEffect
 function getEntry(value){ //the journal entry passed up from jounral component
     entry = value
     

@@ -301,8 +301,19 @@ app.post("/journal/fetch",(req,res)=>{
                   matchEntry = journObj 
                  
                } else{
-                  console.log("match NOT found")
-                  //  matchEntry = "nothing found"
+                  console.log("match NOT found") //set the response to default value
+                   matchEntry = {
+                     entry : {
+                     title: "",
+                     content: ""
+                 },
+                 stats: {
+                     mood: "5",
+                     motivation: "5",
+                     focus: "5",
+                     calm: "5"
+                 }
+               }
                  
                }
                  
