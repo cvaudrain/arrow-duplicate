@@ -27,7 +27,7 @@ import axios from "axios";
 
 const API_ENDPOINT = process.env.PORT || "http://localhost:4747"
 let userContext; //global variable declaration. Will be defined after userNameFromAuth is defined from <Auth />
-
+let credentialContext;
 
 
 function App() {
@@ -75,6 +75,11 @@ const [authStatus,setAuthStatus] = useState(sessionData.authStatus)
   const [usernameFromAuth, setUsernameFromAuth] = useState(sessionData.username)
   const [emailFromAuth, setEmailFromAuth] = useState(sessionData.email)
 userContext = React.createContext(usernameFromAuth) //create context for SwipeableDrawer to consume with useContext hook
+
+credentialContext = React.createContext({
+  username:usernameFromAuth,
+  email:emailFromAuth
+})
 
 
   useEffect(()=>{ //FIX: W/ conditional, initial GET w/ setNotes will NOT trigger this post.
@@ -284,3 +289,4 @@ onEdit={editNote}
 
 export default App;
 export {userContext}
+export {credentialContext}

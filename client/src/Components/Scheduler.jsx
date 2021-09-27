@@ -20,7 +20,7 @@ function Scheduler(){
         console.log(value.toString().split(" "))
         let parsedDate = value.toString().split(" ")
         console.log(parsedDate)
-        const fullDate = parsedDate.join(" ")
+        const fullDate = parsedDate.slice(0,4).join(" ")
         const weekday = parsedDate[0]
         parsedDate = [parsedDate[1],parsedDate[2],parsedDate[3]]
        

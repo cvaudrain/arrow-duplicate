@@ -71,19 +71,23 @@ const UserSchema = new mongoose.Schema( //1st Schema
       email: String,
       password: String,
       notesArray: Array,
-      dates: {
-         eventArray: Array,//contains obj event: {Title: String, location: String, Description: String}
-         journalEntry: {
+      eventsArray : Array,//contains the following object formats per date, formatted before save()
+      /* {
+         singleDate: String, // the full date value, used to sort datesArray, and to locate entries
+         eventArray: Array,//contains obj event: {Title: String, location: String, Description: String
+      },*/
+      journalArray : Array, //contains the following object formats sorted by date, formatted before save()
+      /*date: String,
             mood: Number,
             motivation: Number,
             focus: Number,
             calm: Number,
             powerLevel: Number,//(mood + motivation + sleepQuality / 3) x 1000. 
             entry: String
-         } 
-      },
+         }  
+      */
       theme: String
-   },
+   }, 
    {collection: "arrowUsers"} //custom collection name
 )
 
@@ -163,7 +167,7 @@ app.post("/api/authenticate", (req,res,next)=>{
    
 });
              
-//MAIN APP GET/POST
+//MAIN NOTE APP GET/POST
 app.get("/api/practiceNotes", (req, res) => { //REQ to client for res (notes arr)
    console.log("req.params object is:")
  console.log(req.headers.email) //use req.headers containing an OBJECT with email as VALUE instead of data or params
@@ -210,19 +214,106 @@ app.post("/api/addNotes",(req, res) => {
  
   })
 
-  app.post("/journal/save",(req,res)=>{
-     console.log("save function fired")
+  //EVENTS
+  app.post("/events/update",(req,res)=>{
+     console.log("updating events...")
      console.log(req.body)
-
-     res.json("Received at server.")
+     const eventList = req.body
+     res.json("Received event titled: " + eventList.evName + ", " + "scheduled on " + eventList.startDate + "." )
   })
-
+//SCHEDULER
   app.post("/events/save",(req,res)=>{
    console.log("save function fired")
    console.log(req.body)
 
    res.json("Received event list at server.")
 })
+
+//JOURNAL Entry
+app.post("/journal/save",(req,res)=>{
+   console.log("save function fired")
+   console.log(req.body)
+let journalEntry = {
+   fullDate: req.body.fullDate,
+   stats: req.body.stats,   
+   entry: req.body.entry
+}
+//Query DB 
+ UserModel.findOne({username:req.body.queryParams.username},(err,doc)=>{
+if(err){
+   console.log(err)
+}else if(!doc){
+   console.log("Query returned no user.. debug.")
+} else{
+   return doc 
+}
+})
+.then((doc)=>{
+   console.log("user found:")
+   console.log(doc)
+   let array = doc.journalArray
+   console.log(array)
+   let entry = {
+      journalEntry
+   }
+   array.map((pastEntry,index)=>{
+      if(pastEntry.fullDate != journalEntry.fullDate){
+         return pastEntry
+      }
+   })
+   array.push(journalEntry)
+   array.sort((a,b)=>new Date(a.fullDate)-new Date(b.fullDate))
+   doc.journalArray = array
+   doc.save()
+})
+.catch((err)=>console.log(err))
+
+
+
+
+   res.json("Received at server.")
+})
+
+app.post("/journal/fetch",(req,res)=>{
+   let matchEntry = {
+      entry: "",
+      stats: ""
+   } //both entry and stats in object
+   console.log(req.body) //queryParams and date
+   UserModel.findOne({username:req.body.queryParams.username},(err,doc)=>{ //add email into query
+      if(err){
+         console.log(err)
+      }else if(!doc){
+         console.log("Query returned no user.. debug.")
+      } else{
+         return doc 
+      }
+      })
+      .then((doc)=>{
+        
+         console.log("user found. populating journal entry")
+         let retrievedArray = doc.journalArray
+         console.log(retrievedArray)
+        
+           retrievedArray.forEach((journObj,ind)=>{
+               if (journObj.fullDate == req.body.fullDate){
+                  console.log("match found")
+                  matchEntry = journObj 
+                 
+               } else{
+                  console.log("match NOT found")
+                  //  matchEntry = "nothing found"
+                 
+               }
+                 
+            })
+            res.json(matchEntry)
+         })
+        
+         .catch((err)=>console.log(err))
+          
+      })
+    
 
 app.listen(PORT, () => {
    console.log(app.get("env").toUpperCase() + " Server started on port " + (PORT));

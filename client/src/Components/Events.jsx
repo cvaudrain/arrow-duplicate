@@ -2,19 +2,21 @@ import {useContext, useState,useEffect} from "react"
 import React from "react"
 import Header from "./Header";
 import Calendar from "react-calendar"
-import {userContext} from "./App"
+import {credentialContext, userContext} from "./App"
 import {dayContext} from "./Scheduler" //access date value for selected day
 import axios from "axios";
 
-
 function Events(props){
-
+const queryParams = useContext(credentialContext) //exported from <App />, gives username/email for db Queries
+console.log("queryParams:")
+console.log(queryParams)
   const [view,setView] = useState("day")
   const [evEditor, setEvEditor] = useState(false)
   const [multi,setMulti] = useState(false)
   const [eventCard, setEventCard] = useState("")
-  const [selectedEvNum, setSelectedEvNum] = useState("")
-let currDate;
+  // const [selectedEvNum, setSelectedEvNum] = useState("")
+
+  let currDate;
 let weekday;
 let fullDate;
 if(sessionStorage.getItem("day") != undefined){ //avoid returning undefined on refresh (state refreshes)
@@ -37,11 +39,6 @@ function toggleView(){
     console.log("toggle view fired")
 }
 
-// function addEvent(){
-//   console.log("add event")
-// setEvEditor(true)
-
-// }
 
 let formData;
 if(sessionStorage.getItem("form")!=undefined){
@@ -87,6 +84,13 @@ useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered v
   console.log(sessionStorage.getItem("eventList"))
   console.log("stateful eventList")
   console.log(eventList)
+
+  axios.post("/events/update",eventList) //update DB after every completion of UI CRUD to synchronize
+  .then((req,res)=>{
+console.log(res.data)
+  })
+  .catch((err)=>console.log(err))
+
 },[eventList])
 
     // Day View, default
@@ -96,8 +100,6 @@ function toggleMulti(){
 multi ? setMulti(false) : setMulti(true)
 }
 //Get Individual Event Form Data
-
-
 let eventListContext = React.createContext(eventList)
 
 function handleChange(e){ //form data change tracking
@@ -108,7 +110,6 @@ setForm(prev=>{
     [name]: value
   }
 })
-
 
 console.log("Form State:")
 console.log(form)
@@ -122,7 +123,6 @@ console.log(startEnd)
 }
 
 function clickRange(value, event){
-  
   console.log("cal current value is:")
   console.log(value)
  
@@ -133,10 +133,7 @@ function clickRange(value, event){
       }
     })
     
-   
     setStartEnd("endDate")
-    
-    
   }
 
   function addEvent(){
@@ -168,8 +165,7 @@ function clickRange(value, event){
         startDate:fullDate,
         endDate:fullDate,
         timeStart: "",
-        timeEnd: "",
-        evNumber:""
+        timeEnd: ""
       })
       setEvEditor(false)
       
@@ -195,6 +191,7 @@ function clickRange(value, event){
      console.log(form)
     
      setEventCard("")
+     alert("edit complete")
     }
 
     function deleteEvent(obj){ //passes eventInfo object to be compared against each event entry. Deletes match
@@ -286,7 +283,6 @@ function clickRange(value, event){
           
         }
         
-      
         let render1;
         let render2;
         let render3;
@@ -295,11 +291,7 @@ function clickRange(value, event){
           const storedActive = ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"]
         const mapResults = []
         storedActive.map((n)=>{ //iterate through array of divs (n=div[n]) ONCE, evaluating which event column if any to render based on ternaries, when div renders (return n)
-        
-          // let colTime = +n.props.name.slice(0,2)
           let colTime = +n
-          {/* console.group(colTime) */}
-          {/* eventList.length > 0 && console.log(+eventList[1].timeStart.slice(0,2)) */}
           //determine if ev col 1 renders in div
           if(eventList.length>=1){ //make sure it exists or .timeStart etc will return undefined and crash. If length not met, no  nested evalations. faster and no undefined erors
             if( +eventList[0].timeStart.slice(0,2) <= colTime && +eventList[0].timeEnd.slice(0,2) >= colTime){
@@ -329,124 +321,7 @@ function clickRange(value, event){
         }
         )
 
-        // return (
-        //  <div className="row events">
-        //  <div className="col">
-
-
-        //  {/* {renderArrayHold.map((n)=>{
-        //    return n
-        //  })} */}
-        //  {mapResults.map((n)=>{
-        //    console.log(n)
-        //   return n
-        //  })}
-        
-        //  </div>
-        //  </div>
-        // )
-     
-        //  } event rows />
-
-
-    //     return(
-            
-    //         <div className="br-white">
-    //         <div className="day-title centered">
-    //         <div className="title-card">
-            
-    //         <p>{weekday} <span style={{color:"#224663"}}> {currDate}</span></p>
-    //         </div>
-    //         {eventCard}
-    //         <span><button className={"add-btn"} onClick={addEvent}>New Event</button> </span>
-    //         {evEditor && 
-    //         <div>
-    //           <form onChange={handleChange}>
-    //             <input name="evName" id="evName" placeholder="Event Name" value={form.evName}></input>
-    //             <textarea name="evDescription" id="evDescription" placeholder="Description" value={form.evDescription}></textarea>
-    //             <label for="timeStart">Start Time:</label>
-    //             <input name="timeStart" id="timeStart" type="time" style={{textAlign:"center"}} value={form.timeStart}></input>
-    //             <label for="timeEnd">End Time:</label>
-    //             <input name="timeEnd" id="timeEnd" type="time" style={{textAlign:"center"}} value={form.timeEnd}></input>
-    //             <div >
-    //             <label for="multi">Multiple Day Event</label>
-    //             <input name="multi" onClick={toggleMulti} id="multi" type="radio" value={form.multi}></input>
-              
-                
-    //             </div>
-    //             <button type="submit" method="post" onClick={saveEvent}>Save</button>
-                
-    //           </form>
-    //           {multi &&
-    //           <div>
-    //           <div>
-    //           <h3 name="startDate" id="startDate" name="startDate">Start Date: {form.startDate} </h3><button onClick={toggleStartEnd} id="startDate" name="toggleStart">Select</button>
-    //           <h3 name="endDate" id="endDate" name="endDate">End Date: {form.endDate}</h3><button onClick={toggleStartEnd} id="endDate" name="toggleEnd">Select</button>
-    //           </div>
-    
-    //             <Calendar
-    //             value={value}
-    //             onChange={onChange}
-    //             selectRange={false}
-    //             showWeekNumbers={false}
-    //            onClickDay={clickRange}
-              
-    //              />
-    //              </div>
-    //             }
-    //         </div>
-
-    //        }
-           
-                
-    //         </div>
-    //         <div className="container-xl">
-          
-    //         <div className="row border-top">
-    //         <div className="col-2 time-col centered">
-    //         <div className="timestamp">12:00a</div>
-    //           <div className="timestamp">1:00a</div>
-    //           <div className="timestamp">2:00a</div>
-    //           <div className="timestamp">3:00a</div>
-    //           <div className="timestamp">4:00a</div>
-    //           <div className="timestamp">5:00a</div>
-    //           <div className="timestamp">6:00a</div>
-    //           <div className="timestamp">7:00a</div>
-    //           <div className="timestamp">8:00a</div>
-    //           <div className="timestamp">9:00a</div>
-    //           <div className="timestamp">10:00a</div>
-    //           <div className="timestamp">11:00a</div>
-    //           <div className="timestamp">12:00p</div>
-    //           <div className="timestamp">1:00p</div>
-    //           <div className="timestamp">2:00p</div>
-    //           <div className="timestamp">3:00p</div>
-    //           <div className="timestamp">4:00p</div>
-    //           <div className="timestamp">5:00p</div>
-    //           <div className="timestamp">6:00p</div>
-    //           <div className="timestamp">7:00p</div>
-    //           <div className="timestamp">8:00p</div>
-    //           <div className="timestamp">9:00p</div>
-    //           <div className="timestamp">10:00p</div>
-    //           <div className="timestamp">11:00p</div>
-              
-              
-    //         </div>
-    //         <div className="col days-col">
-            
-    //        <EventRows/>
-
-    //           </div>
-    //           </div>
-          
-    //         </div>
-            
-            
-    //       </div>
-    //     )
-    // }
-    
-    
-      //Top Level render statement
+      
     return(
         <div>
         <Header

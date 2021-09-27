@@ -3,12 +3,16 @@ import {useHistory} from "react-router-dom"
 import React from "react"
 import Header from "./Header";
 
-import {userContext} from "./App"
+import {credentialContext,userContext} from "./App"
 import {dayContext} from "./Scheduler" //access date value for selected day
 import axios from "axios";
+// import { application } from "express";
 
 function Journal(props){
 // const currDate = JSON.parse(dayContext)
+const queryParams = useContext(credentialContext) //exported from <App />, gives username/email to incl for all db Queries
+console.log("queryParams:")
+console.log(queryParams)
 const history = useHistory()
 let currDate;
 let weekday;
@@ -47,15 +51,77 @@ const styles = {
     }
 }
 
+let sessionData = {
+    entry : {
+        title: "",
+        content: ""
+    },
+    stats: {
+        mood: "5",
+        motivation: "5",
+        focus: "5",
+        calm: "5"
+    }
+}
 
-let entry; //declared but undefined until after saveJournal defines them. Top level bc their values come from child components. 
-let stats;
+//Get and render previous entry (if any on file ) ...Wrap in useEffect to run AFTER initial render ONCE and subsequently cause re-render with updated values
+useEffect(()=>{
+axios.post("/journal/fetch",{
+    queryParams: queryParams,
+    fullDate: fullDate
+})
+.then((res)=>{ //be sure to only pass 1 callback arg: res. NOT req,res if server is sending 1 obj i.e just res
+    console.log("return res:")
+    console.log(res.data)
+    entry = res.data.entry
+    stats = res.data.stats
+    sessionStorage.setItem("sessionData",JSON.stringify(res.data)) //set sessionStorage to values pulled from DB, if any.
+    console.log(stats)
+})
+.catch((err)=>console.log(err))
+},[]) //Only fetch ONCE. After initial re-render from this useEffect, we set state from sessionStorage values
+//sessionStorage.setItem("sessionData",JSON.stringify(sessionData)) //resets sessionStorage to default; necessary to have accurate values if we nav to another date without a DB entry already.
 
-function getEntry(value){
+if(sessionStorage.getItem("sessionData") != undefined){
+ sessionData = sessionStorage.getItem("sessionData")
+ sessionData = JSON.parse(sessionData)
+}else{
+ sessionData = {
+        entry : {
+            title: "",
+            content: ""
+        },
+        stats: {
+            mood: "5",
+            motivation: "5",
+            focus: "5",
+            calm: "5"
+        }
+    }
+}
+console.log("sessionData =")
+console.log(sessionData)
+console.log("sessionData.entry =")
+console.log(sessionData.entry)
+let entry = sessionData.entry
+console.log("sessionData.stats =")
+console.log(sessionData.stats)
+let stats = sessionData.stats
+console.log(stats.mood)
+
+// let entry = sessionData.entry
+
+// declared but undefined until after saveJournal defines them. Top level bc their values come from child components. 
+// let stats = sessionData.stats
+
+
+
+    let journalContext = React.createContext(sessionData) //use to pass values down
+function getEntry(value){ //the journal entry passed up from jounral component
     entry = value
     
 }
-function getStats(value){
+function getStats(value){ //the stats values passed up from the Statlog component
     stats = value
 }
 
@@ -63,28 +129,39 @@ function saveJournal(){ //save function is TOP level ( <Journal />)
     const data = { //stats is passed via prop function from StatLog />, & entry is passed via prop function from JounralEntry />. 
         fullDate,
         stats,     
-        entry    
+        entry,
+        queryParams    
     }
-    axios.post("/journal/save",data).then((req,res)=>{
+   
+    axios.post("/journal/save",data)
+    .then((req,res)=>{
         console.log(data)
         console.log(res)
         let sessionData = JSON.stringify(data)
         sessionStorage.setItem(currDate,sessionData)
         history.push("/scheduler")
-    })
-  
+})
+.catch((err)=>console.log(err))
 }
 
+// const {parentData, setParentData} = useState({
+//     entryState: entry,
+//     statsState: stats
+//     })
+//     useEffect(()=>{
+//         entry = parentData.entryState
+//         stats = parentData.statsState
+//     },[parentData])
 
 function StatLog(props){
+let context = useContext(journalContext)
+// console.log("context is: ")
+// console.log(context)
+// console.log("parentData is: ")
+// console.log(parentData)
 //Statefuls for Stat Log
-const [sliderValues, setSliderValues] = useState({
-    mood: "5",
-    motivation: "5",
-    focus: "5",
-    calm: "5"
-})
-    
+
+const [sliderValues, setSliderValues] = useState(context.stats)
 
 function handleSlider(e){
     const {name,value} = e.target
@@ -122,16 +199,20 @@ return (
 //END StatLog />
 
 function JournalEntry(props){
+    let context = React.useContext(journalContext)
+    console.log("context is")
+    console.log(context)
+    // console.log(context)
 //statefuls for Journal Entry 
-const [entry,setEntry] = useState({
-    title: currDate + ":",
-    content: ""
-})
+console.log("journal component entry value:")
+console.log(entry)
+const [entryState,setEntryState] = useState(context.entry)
+// const [entry,setEntry] = useState(entry)
      
         function handleChange(event){
           
             const {name,value} = event.target;
-            setEntry(prevEntry=> {
+            setEntryState(prevEntry=> {
                 return {
                     ...prevEntry,
                     [name]: value
@@ -141,7 +222,7 @@ const [entry,setEntry] = useState({
           
         }
     
-       props.fromJournalEntry(entry)
+       props.fromJournalEntry(entryState)
         
         return (
             <div className="centered">
@@ -150,12 +231,12 @@ const [entry,setEntry] = useState({
             </div>
                 <form style={{width:"89vw", height:"75vh"}}>
                     <input onChange={handleChange}
-                     name="title" value={entry.title}
+                     name="title" value={entryState.title}
                       
                        autoComplete="off"/>
                     <textarea className="paper"
                     type="submit" onChange={handleChange}
-                     name="content" value={entry.content}
+                     name="content" value={entryState.content}
                       placeholder="Today's journal entry..."
                        row="20"
                         autoComplete="off"/>
@@ -189,5 +270,6 @@ const [entry,setEntry] = useState({
         </div>
     )
 }
+
 
 export default Journal;
