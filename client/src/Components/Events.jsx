@@ -85,7 +85,13 @@ useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered v
   console.log("stateful eventList")
   console.log(eventList)
 
-  axios.post("/events/update",eventList) //update DB after every completion of UI CRUD to synchronize
+let data = {
+  eventList: eventList,
+  fullDate: fullDate,
+  queryParams: queryParams
+}
+
+  axios.post("/events/update",data) //update DB after every completion of UI CRUD to synchronize
   .then((req,res)=>{
 console.log(res.data)
   })
@@ -152,11 +158,11 @@ function clickRange(value, event){
       eventListData.push(form)
       sessionStorage.setItem("eventList",JSON.stringify(eventListData))
 
-      axios.post("/events/save",form)
-      .then((res)=>{
-        console.log(res.data)
-      })
-      .catch((err)=>console.log(err))
+      // axios.post("/events/save",form)
+      // .then((res)=>{
+      //   console.log(res.data)
+      // })
+      // .catch((err)=>console.log(err))
       // function to render event blocks on day view UI
       
       setForm({

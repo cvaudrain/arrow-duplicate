@@ -215,19 +215,84 @@ app.post("/api/addNotes",(req, res) => {
   })
 
   //EVENTS
+  app.post("/events/fetch",(req,res)=>{
+        console.log("fetching events")
+        let fetchedEvents = []
+        console.log("req.body:")
+       console.log(req.body)//should be queryParams and fullDate
+       UserModel.findOne({username:req.body.queryParams.username},(err,doc)=>{
+          if(err){
+             console.log(err)
+          } else if(!doc){
+             console.log("query returned no user, debug")
+          } else return doc
+       })
+       .then((doc)=>{
+          let retrievedArray = doc.eventsArray
+         //  console.log("retrieved array is:")
+         //  console.log(retrievedArray)
+          
+          retrievedArray.forEach((eventArr,ind)=>{
+            if (eventArr.startDate == req.body.fullDate){
+               console.log("match found")
+               console.log(eventArr)
+               fetchedEvents.push(eventArr)
+               
+            } else{
+               console.log("match NOT found") //set the response to default value
+             
+            }
+              
+         })
+         console.log(fetchedEvents)
+         console.log("returning events to client")
+         fetchedEvents[0] ? res.json(fetchedEvents[0]) : res.json([])
+      })
+       })
   app.post("/events/update",(req,res)=>{
      console.log("updating events...")
      console.log(req.body)
-     const eventList = req.body
-     res.json("Received event titled: " + eventList.evName + ", " + "scheduled on " + eventList.startDate + "." )
-  })
-//SCHEDULER
-  app.post("/events/save",(req,res)=>{
-   console.log("save function fired")
-   console.log(req.body)
+     const eventList = req.body.eventList //events for single date
+     const fullDate = req.body.fullDate
+     const queryParams = req.body.queryParams
+   //   res.json("Received event list: " + eventList.evName + ", " + "scheduled on " + eventList.startDate + "." )
+     UserModel.findOne({username:req.body.queryParams.username},(err,doc)=>{
+      if(err){
+         console.log(err)
+      }else if(!doc){
+         console.log("Query returned no user.. debug.")
+      } else{
+         return doc 
+      }
+      })
+      .then((doc)=>{
+         // doc.eventsArray = []
+         // doc.save()
+         console.log(doc.eventsArray)
+         let array = doc.eventsArray //ALL dates, each with event arrays
+         array.map((pastEntry,index)=>{
+            if (pastEntry.startDate != fullDate){ //currently start/end date are the same- both = fullDate
+               // console.log(pastEntry)
+               return pastEntry 
+            }
+         })
+         eventList.length > 0 && array.push(eventList)
+         array.sort((a,b)=>new Date(a.startDate)-new Date(b.startDate))
+         doc.eventsArray = array
+         doc.save()
+         res.json("eventList updated successfully")
+      })
+      .catch((err)=>console.log(err))
+      // res.json("received at server")
+   })
 
-   res.json("Received event list at server.")
-})
+//SCHEDULER
+//   app.post("/events/save",(req,res)=>{
+//    console.log("save function fired")
+//    console.log(req.body)
+
+//    res.json("Received event list at server.")
+// })
 
 //JOURNAL Entry
 app.post("/journal/save",(req,res)=>{
@@ -268,9 +333,6 @@ if(err){
 })
 .catch((err)=>console.log(err))
 
-
-
-
    res.json("Received at server.")
 })
 
@@ -302,22 +364,12 @@ app.post("/journal/fetch",(req,res)=>{
                  
                } else{
                   console.log("match NOT found") //set the response to default value
-                   matchEntry = {
-                     entry : {
-                     title: "",
-                     content: ""
-                 },
-                 stats: {
-                     mood: "5",
-                     motivation: "5",
-                     focus: "5",
-                     calm: "5"
-                 }
-               }
+                   
                  
                }
                  
             })
+            console.log(matchEntry)
             res.json(matchEntry)
          })
         
