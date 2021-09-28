@@ -8,6 +8,7 @@ const path = require("path");
 var cors = require('cors')
 const { response } = require("express");
 const { ServerResponse } = require("http");
+const { match } = require("assert");
 const app = express();
 
 // const SECRET = process.env.SECRET //passport.js local strategy secret key- cookie signature
@@ -228,25 +229,28 @@ app.post("/api/addNotes",(req, res) => {
           } else return doc
        })
        .then((doc)=>{
+         //  doc.eventsArray = []
+         //  doc.save()
           let retrievedArray = doc.eventsArray
          //  console.log("retrieved array is:")
-         //  console.log(retrievedArray)
+          console.log(retrievedArray)
           
           retrievedArray.forEach((eventArr,ind)=>{
-            if (eventArr.startDate == req.body.fullDate){
+            if (eventArr[0].startDate == req.body.fullDate){ //compare startDate from any of the 3 events
                console.log("match found")
                console.log(eventArr)
-               fetchedEvents.push(eventArr)
-               
+               fetchedEvents = eventArr //entire array
+               // res.json(fetchedEvents)
             } else{
-               console.log("match NOT found") //set the response to default value
-             
+               console.log("match NOT found") 
+            //  res.json(["none found"])
             }
               
          })
          console.log(fetchedEvents)
          console.log("returning events to client")
-         fetchedEvents[0] ? res.json(fetchedEvents[0]) : res.json([])
+         res.json(fetchedEvents)// if no match, will be empty array as is appropriate to reset given date
+         // fetchedEvents ? res.json(fetchedEvents) : res.json([])
       })
        })
   app.post("/events/update",(req,res)=>{

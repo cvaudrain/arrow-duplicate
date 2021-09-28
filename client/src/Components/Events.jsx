@@ -67,6 +67,24 @@ const [value, onChange] = useState(new Date()); //per React Calendar Docs: curre
 const [form, setForm] = useState(formData)
 const [eventList,setEventList]  = useState(eventListData)
 
+useEffect(()=>{
+  let fetchData={
+    fullDate:fullDate,
+    queryParams:queryParams
+  }
+  
+  axios.post("/events/fetch",fetchData)
+  .then((res)=>{
+    console.log("FETCH RESPONSE:")
+    console.log(res.data)
+    sessionStorage.setItem("eventList",JSON.stringify(res.data))
+    eventListData = JSON.parse(sessionStorage.getItem("eventList"))
+    // setEventList(res.data)
+    // location.reload() LOOP
+  })
+  .catch((err)=>console.log(err))
+},[])
+
 
 useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered values are preserved i nsessionStorage.
   sessionStorage.setItem("form",JSON.stringify(form))
@@ -85,17 +103,13 @@ useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered v
   console.log("stateful eventList")
   console.log(eventList)
 
-let data = {
-  eventList: eventList,
-  fullDate: fullDate,
-  queryParams: queryParams
-}
 
-  axios.post("/events/update",data) //update DB after every completion of UI CRUD to synchronize
-  .then((req,res)=>{
-console.log(res.data)
-  })
-  .catch((err)=>console.log(err))
+
+//   axios.post("/events/update",data) //update DB after every completion of UI CRUD to synchronize
+//   .then((res)=>{
+// console.log(res.data)
+//   })
+//   .catch((err)=>console.log(err))
 
 },[eventList])
 
@@ -164,7 +178,16 @@ function clickRange(value, event){
       // })
       // .catch((err)=>console.log(err))
       // function to render event blocks on day view UI
-      
+      let data = {
+        eventList: eventList,
+        fullDate: fullDate,
+        queryParams: queryParams
+      }
+      axios.post("/events/update",data) //update DB after every completion of UI CRUD to synchronize
+      .then((res)=>{
+    console.log(res.data)
+      })
+      .catch((err)=>console.log(err))
       setForm({
         evName: "",
         evDescription: "",
