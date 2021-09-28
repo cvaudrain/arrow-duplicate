@@ -67,7 +67,7 @@ const [value, onChange] = useState(new Date()); //per React Calendar Docs: curre
 const [form, setForm] = useState(formData)
 const [eventList,setEventList]  = useState(eventListData)
 
-useEffect(()=>{
+// useEffect(()=>{
   let fetchData={
     fullDate:fullDate,
     queryParams:queryParams
@@ -79,11 +79,11 @@ useEffect(()=>{
     console.log(res.data)
     sessionStorage.setItem("eventList",JSON.stringify(res.data))
     eventListData = JSON.parse(sessionStorage.getItem("eventList"))
-    // setEventList(res.data)
+    // setEventList(res.data) WORKS but causes Infinite loop which is awful for server load.
     // location.reload() LOOP
   })
   .catch((err)=>console.log(err))
-},[])
+// },[])
 
 
 useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered values are preserved i nsessionStorage.
@@ -102,14 +102,6 @@ useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered v
   console.log(sessionStorage.getItem("eventList"))
   console.log("stateful eventList")
   console.log(eventList)
-
-
-
-//   axios.post("/events/update",data) //update DB after every completion of UI CRUD to synchronize
-//   .then((res)=>{
-// console.log(res.data)
-//   })
-//   .catch((err)=>console.log(err))
 
 },[eventList])
 
