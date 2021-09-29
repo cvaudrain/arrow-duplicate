@@ -284,7 +284,7 @@ app.post("/api/addNotes",(req, res) => {
          array.sort((a,b)=>new Date(a.startDate)-new Date(b.startDate))
          doc.eventsArray = array
          doc.save()
-         res.json("eventList updated successfully")
+         res.json("successful update to DB")
       })
       .catch((err)=>console.log(err))
       // res.json("received at server")

@@ -6,14 +6,16 @@ import {credentialContext, userContext} from "./App"
 import {dayContext} from "./Scheduler" //access date value for selected day
 import axios from "axios";
 
-function Events(props){
+function Events(props){ //testing to see in synchronous form when renders occur
+  
+
 const queryParams = useContext(credentialContext) //exported from <App />, gives username/email for db Queries
 console.log("queryParams:")
 console.log(queryParams)
   const [view,setView] = useState("day")
   const [evEditor, setEvEditor] = useState(false)
   const [multi,setMulti] = useState(false)
-  const [eventCard, setEventCard] = useState("")
+  const [eventCard, setEventCard] = useState("") //the JSX for ev-modal hover box will be set as state to return value
   // const [selectedEvNum, setSelectedEvNum] = useState("")
 
   let currDate;
@@ -66,8 +68,9 @@ const [value, onChange] = useState(new Date()); //per React Calendar Docs: curre
 
 const [form, setForm] = useState(formData)
 const [eventList,setEventList]  = useState(eventListData)
+const [fetchComplete,setFetchComplete] = useState(false)
 
-// useEffect(()=>{
+useEffect(()=>{
   let fetchData={
     fullDate:fullDate,
     queryParams:queryParams
@@ -79,11 +82,14 @@ const [eventList,setEventList]  = useState(eventListData)
     console.log(res.data)
     sessionStorage.setItem("eventList",JSON.stringify(res.data))
     eventListData = JSON.parse(sessionStorage.getItem("eventList"))
-    // setEventList(res.data) WORKS but causes Infinite loop which is awful for server load.
+    !fetchComplete && setEventList(res.data) //prevent loop by setting conditional-should only setEventList once.
+    setFetchComplete(true) 
+    console.log("fetchComplete =")
+    console.log(fetchComplete)
     // location.reload() LOOP
   })
   .catch((err)=>console.log(err))
-// },[])
+},[])
 
 
 useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered values are preserved i nsessionStorage.
@@ -105,6 +111,13 @@ useEffect(()=>{ //if re-render to render calendar for nmulti-day, form entered v
 
 },[eventList])
 
+// useEffect(()=>{
+//   console.log("RENDER has just occurred")
+//   console.log("value of eventList:")
+//   console.log(eventList)
+//   console.log("value of eventListData:")
+//   console.log(eventListData)
+// })
     // Day View, default
     // function Day(props){
 
@@ -193,43 +206,66 @@ function clickRange(value, event){
           } else{ console.log("Please complete form / too many events")}
     }
 
-    function editEvent(obj){ //setForm is called which triggers useEffect. The value we set with setEventList originates in session,->eventListData, THEN setState. 
-      //so we need to directly change the highest level, sesssionStorage list value, if we want that to continue using it or else it will reset the eventList to the prev val, from sessionStorage. Start by getting updated list, just like deleteEvent does
-      let updated = eventListData.filter((eventDetails)=>{ 
-        if (eventDetails != obj){
-          return eventDetails
+    function editEvent(obj){ 
+      //first, delete the selected event locally (updated eventList will be set when save() function fires after user edits and save)
+      let updated = []
+      let copyOfEvents = eventListData.slice(0)
+       copyOfEvents.map((event,ind)=>{
+         console.log(event.evName == obj.evName ?  "MATCH" : "NO MATCH")
+        if (event.evName == obj.evName && event.evDescription == obj.evDescription && obj.timeStart == event.timeStart){
+          console.log("delete this one...")
+        }else{
+          updated.push(event)
         }
       })
-      sessionStorage.setItem("eventList",JSON.stringify(updated))  //Set session data here before state update, so that when setForm is called and code re-runs,  
-      //deleteEvent(obj) //delete is called which triggers useEffect for eventList. Remove this for now and delete using the logic that will happen in useEffetc
+      
+      sessionStorage.setItem("eventList",JSON.stringify(updated))
+      eventListData = updated
+      setEventList(updated)
+      setEventCard("") //remove modal box & revert to default view
+      document.body.scrollTop = 25; //scroll top, Safari
+      document.documentElement.scrollTop = 25; //scroll top, Chrome, FireFox, IE , Opera
+      console.log("eventListData:")
+      console.log(eventListData)
+ 
+      //deleteEvent(obj) //delete is called which trigers useEffect for eventList. Remove this for now and delete using the logic that will happen in useEffetc
       setForm(obj) //when state is changed, other statefuls don't have to change, but the vanilla code is run again. Ergo, eventList is set from SESSION.
      addEvent()
      setEventCard("")
-    //  sessionStorage.setItem("form",JSON.stringify(obj))
-    //  setForm(obj)
-    // saveEvent()
-     console.log("form currently: ")
-     console.log(form)
     
-     setEventCard("")
-     alert("edit complete")
     }
 
     function deleteEvent(obj){ //passes eventInfo object to be compared against each event entry. Deletes match
-     console.log("delete function called")
-      let updated = eventListData.filter((eventDetails)=>{
-        if (eventDetails != obj){
-          return eventDetails
-
+     console.log("DELETE function called")
+      let updated = []
+      let copyOfEvents = eventListData.slice(0)
+       copyOfEvents.map((event,ind)=>{
+         console.log(event.evName == obj.evName ?  "MATCH" : "NO MATCH")
+        if (event.evName == obj.evName && event.evDescription == obj.evDescription && obj.timeStart == event.timeStart){
+          console.log("delete this one...")
+        }else{
+          updated.push(event)
         }
       })
-      console.log(updated)
+      
+      sessionStorage.setItem("eventList",JSON.stringify(updated))
       eventListData = updated
-      console.log(eventListData)
       setEventList(updated)
       setEventCard("")
-      
-      
+      console.log("eventListData:")
+      console.log(eventListData)
+      //send updated to server
+        let dataObj = {
+        eventList: eventListData,
+        fullDate: fullDate,
+        queryParams: queryParams
+      }
+      axios.post("/events/update",dataObj) //update DB after every completion of UI CRUD to synchronize
+      .then((res)=>{
+    console.log(res.data)
+   
+      })
+      .catch((err)=>console.log(err))
     }
 
       //Event Row Component: <EventRows /> Parent: <Day/> Recieves: eventContext, drawing value from state variable "form"
@@ -255,9 +291,9 @@ function clickRange(value, event){
           console.log(eventInfo)
           let keyList = Object.keys(eventInfo)
           let valueList = Object.values(eventInfo)
-          console.log(" keys and values:")
-          console.log(keyList)
-          console.log(valueList)
+          // console.log(" keys and values:")
+          // console.log(keyList)
+          // console.log(valueList)
           
           function convertMilitary(str){
             
@@ -331,7 +367,7 @@ function clickRange(value, event){
             render3 = true
           }else render3 = false
           }
-          console.log(render1)
+          // console.log(render1)
           n= <div name="4:00" className="row time-block">
           {render1 ? <div id="0" name="event1" onClick={showEvent} className="col-3" style ={{cursor:"pointer", boxShadow: "inset", margin:"0 4px", borderRadius:"1px",backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"4%",fontFamily:"McLaren",fontSize:"1rem"}} >{eventList[0].evName}</div> : <div className="col-3"style={{margin:"0 4px",paddingTop:"5px"}}></div>}
         {render2 ? <div id="1" name="event2" onClick={showEvent} className="col-3" style ={{cursor:"pointer", boxShadow: "inset", margin:"0 4px", borderRadius:"1px",backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"4%",fontFamily:"McLaren",fontSize:"1rem"}}>{eventList[1].evName}</div> : <div className="col-3"style={{margin:"0 4px",paddingTop:"5px"}}></div>}
@@ -352,7 +388,7 @@ function clickRange(value, event){
         
         {view ==="week" &&<Week/>} */}
         {/* <Day/> */}
-        <div className="br-white">
+         <div className="br-white">
             <div className="day-title centered">
             <div className="title-card">
             
@@ -444,7 +480,7 @@ function clickRange(value, event){
            return n
          })} */}
          {mapResults.map((n)=>{
-           console.log(n)
+           {/* console.log(n) */}
           return n
          })}
         
@@ -457,8 +493,8 @@ function clickRange(value, event){
             </div>
             
             
-          </div>
-        
+          </div> 
+       
             
         </div>
     )
