@@ -451,6 +451,13 @@ else{stats.rank="Unranked"}
          })
 
 
+         //Profile Maintenance
+         app.post("/settings/edit",(req,res)=>{
+            console.log(req.body)
+            res.json("Data received by server")
+         })
+
+
       
 
 app.listen(PORT, () => {

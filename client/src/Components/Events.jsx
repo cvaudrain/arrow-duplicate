@@ -291,9 +291,6 @@ function clickRange(value, event){
           console.log(eventInfo)
           let keyList = Object.keys(eventInfo)
           let valueList = Object.values(eventInfo)
-          // console.log(" keys and values:")
-          // console.log(keyList)
-          // console.log(valueList)
           
           function convertMilitary(str){
             

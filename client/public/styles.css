@@ -52,6 +52,15 @@ footer {
   padding-bottom:5px;
   font-size:3rem;
 }
+
+.br-indigo{
+  background-color:#224663 ;
+  color:#fff
+}
+.br-yt{
+  background:#fff
+}
+
 .greeting{
   font-family: "McLaren",sans-serif;
 }
@@ -553,13 +562,17 @@ bottom: 35px;;
   border-radius: 5px
 }
 .pfp{
-  width:150px;
-  height:150px;
+ 
+  width:100px;
+  height:100px;
   box-shadow: 0 1px 3px black;
   border-radius:50%;
 
 }
 
+.glowtext{
+  text-shadow:0 1px 3px white;
+}
 .h6 {
   font-size: 18px
 }
@@ -640,6 +653,11 @@ bottom: 35px;;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out
 }
+
+.options{
+  color:"white"
+}
+
 
 /* JOURNAL and STATLOG Components */
 

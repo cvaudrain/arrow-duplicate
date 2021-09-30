@@ -8,7 +8,7 @@ import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';false
+import ListItemText from '@material-ui/core/ListItemText';
 
 import ProfileTray from "./ProfileTray"
 import {userContext} from "./App"
@@ -31,6 +31,12 @@ function SwipeableDrawerCustom(props){
       setState({ ...state, [anchor]: open });
     };
   
+    function logout(){
+      console.log("drawer logout called...")
+      props.drawerLogout()
+      
+    }
+
     function assignRoute(string){ //used in .map() to assign path attr values to <Link> wrappers
         if(string=="Dashboard"){
             return "/"
@@ -40,6 +46,7 @@ function SwipeableDrawerCustom(props){
             return "/settings"
         } 
     }
+   
     const list = (anchor) => (
 
       <div
@@ -53,7 +60,7 @@ function SwipeableDrawerCustom(props){
       <div className="mclaren">
       {anchor != globalUser &&
         <List >
-          {["Dashboard", "Scheduler", ].map((text, index) => (
+          {["Dashboard", "Scheduler" ].map((text, index) => (
             <Link
             to={assignRoute(text)} 
             style={{textDecoration:"none",
@@ -65,6 +72,7 @@ function SwipeableDrawerCustom(props){
             </ListItem>
             </Link>
           ))}
+          
         </List>
       }
       
@@ -73,24 +81,31 @@ function SwipeableDrawerCustom(props){
         <div>
         <Divider />
         <List>
-          {[useContext(userContext),"Settings","Logout"].map((text, index) => (
+          {[useContext(userContext),"Settings"].map((text, index) => (
             <Link
             to={assignRoute(text)} 
             style={{textDecoration:"none",
             color:"inherit"}}
             >
-            <ListItem button key={text}>
+            <ListItem button key={text} >
               
               <ListItemText primary={text} />
             </ListItem>
             </Link>
           ))}
+          
+          <ListItem button={true} onClick={logout} key={"Logout"} >
+              
+              <ListItemText primary={"Logout"} />
+            </ListItem>
+          
         </List>
-        
+       
         </div>
         }
         {anchor == useContext(userContext) &&
         <div>
+        
       
         <ProfileTray
           username={globalUser.username}

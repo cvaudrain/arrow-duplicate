@@ -171,14 +171,15 @@ userProfile = JSON.stringify(userProfile)
 sessionStorage.setItem( "userData", userProfile )
 }
 function logout(){
-  axios.get("/logout",function(req,res){
-    req.logout;
-  })
+  // axios.get("/logout",function(req,res){
+  //   req.logout;
+  // })
   sessionStorage.clear()
   setNotes([])
   setUsernameFromAuth("nameless user")
   setEmailFromAuth("no email")
   setAuthStatus(false)
+  history.push("/")
   // window.location.reload()
 }
 

@@ -15,14 +15,15 @@ function Header(props){
     <SwipeableDrawerCustom
        drawerLogout={props.logout}
        drawerToCalendar={props.toCalendar}
+       
     />
     
 <p className="indigo">{props.headerText}</p> <h3 className="greeting">Hello, {props.userNameGreeting}.</h3>
 
 
-<Link to="/authenticate">
+{/* <Link to="/authenticate">
 <button onClick={props.logout} className="logout-button align-r" >Logout</button>
-</Link>
+</Link> */}
     </header>
     )
 }
