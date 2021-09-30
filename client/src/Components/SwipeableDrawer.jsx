@@ -12,7 +12,7 @@ import ListItemText from '@material-ui/core/ListItemText';false
 
 import ProfileTray from "./ProfileTray"
 import {userContext} from "./App"
-
+import {credentialContext} from "./App"
 function SwipeableDrawerCustom(props){
     const classes = makeStyles();
     const [state, setState] = React.useState({
@@ -92,7 +92,10 @@ function SwipeableDrawerCustom(props){
         {anchor == useContext(userContext) &&
         <div>
       
-        <ProfileTray/>
+        <ProfileTray
+          username={globalUser.username}
+          email={credentialContext.email}
+        />
         
         </div>
         }

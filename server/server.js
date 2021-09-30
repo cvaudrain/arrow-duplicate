@@ -381,6 +381,77 @@ app.post("/journal/fetch",(req,res)=>{
           
       })
     
+      //Get stats and power level info for pf card in slideout / profile page
+      app.post("/profile/stats",(req,res)=>{
+         let credentials = req.body
+         console.log(credentials)
+         UserModel.findOne({username:credentials.username},(err,doc)=>{
+            if(err){
+               console.log(err)
+            } else if(!doc){
+               console.log("User not found.. Please debug.")
+            }else{
+               return doc
+            }
+            })
+            .then((doc)=>{
+               console.log("returning stats...")
+               let journalEntries = doc.journalArray.slice(0) //no mutating here...
+
+               const stats = {
+               mood: 0,
+               motivation: 0,
+               focus: 0,
+               calm: 0,
+               powerLevel:0,
+               rank:""
+               }
+               const statsAggregate = {
+                  moodAgg: 0,
+               motivationAgg: 0,
+               focusAgg: 0,
+               calmAgg: 0,
+               kaioken:0,
+               powerLevel:0
+               }
+               //iterate through stats
+               journalEntries.forEach((entry)=>{
+                statsAggregate.moodAgg = statsAggregate.moodAgg +parseInt(entry.stats.mood)
+                statsAggregate.motivationAgg = statsAggregate.motivationAgg +parseInt(entry.stats.motivation)
+                statsAggregate.focusAgg = statsAggregate.focusAgg +parseInt(entry.stats.focus)
+                statsAggregate.calmAgg = statsAggregate.calmAgg +parseInt(entry.stats.calm)
+                entry.entry.content.length > 50 ? statsAggregate.kaioken+=5 : null
+                console.log("statsAgg currently:")
+                console.log(statsAggregate)
+               })
+               console.log("statsAggregate after iteration:")
+               console.log(statsAggregate)
+               //Calc stats and power level (ea stat = per stat sum of all days, / # of entries, x 100 for sizzle)
+               //...Plus a bonus modifier of +4 per each day where journal entry.content > 50 chars for extra sizzle
+               console.log(statsAggregate)
+               const divisor = journalEntries.length
+               console.log("divisor =")
+               console.log(divisor)
+               stats.mood = Math.floor(parseInt(statsAggregate.moodAgg)/divisor * 10)
+               stats.motivation = Math.floor(parseInt(statsAggregate.motivationAgg)/divisor * 10)
+               stats.focus = Math.floor(parseInt(statsAggregate.focusAgg)/divisor * 10)
+               stats.calm = Math.floor(parseInt(statsAggregate.calmAgg)/divisor * 10)
+               stats.powerLevel = Math.floor(parseInt(stats.mood + stats.motivation + stats.focus + stats.calm + statsAggregate.kaioken))
+               if(doc.username=="Blue Kirby"){stats.rank="Lvl.100 White Knight Paladin"}
+                else if(stats.powerLevel<10){stats.rank="Novice"}
+else if(stats.powerLevel<100){stats.rank="Acolyte"}               
+else if(stats.powerLevel<300){stats.rank="Adventurer"}
+else if(stats.powerLevel<500){stats.rank="Hero"}               
+else if(stats.powerLevel<1000){stats.rank="Champion"}
+else if(stats.powerLevel<2000){stats.rank="Paladin"}  
+else{stats.rank="Unranked"}             
+               console.log(stats)
+               res.json(stats)
+            })
+         })
+
+
+      
 
 app.listen(PORT, () => {
    console.log(app.get("env").toUpperCase() + " Server started on port " + (PORT));
