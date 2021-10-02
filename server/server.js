@@ -395,7 +395,7 @@ app.post("/journal/fetch",(req,res)=>{
             }
             })
             .then((doc)=>{
-               console.log("returning stats...")
+               // console.log("returning stats...")
                let journalEntries = doc.journalArray.slice(0) //no mutating here...
 
                const stats = {
@@ -421,17 +421,17 @@ app.post("/journal/fetch",(req,res)=>{
                 statsAggregate.focusAgg = statsAggregate.focusAgg +parseInt(entry.stats.focus)
                 statsAggregate.calmAgg = statsAggregate.calmAgg +parseInt(entry.stats.calm)
                 entry.entry.content.length > 50 ? statsAggregate.kaioken+=5 : null
-                console.log("statsAgg currently:")
-                console.log(statsAggregate)
+               //  console.log("statsAgg currently:")
+               //  console.log(statsAggregate)
                })
-               console.log("statsAggregate after iteration:")
-               console.log(statsAggregate)
+               // console.log("statsAggregate after iteration:")
+               // console.log(statsAggregate)
                //Calc stats and power level (ea stat = per stat sum of all days, / # of entries, x 100 for sizzle)
                //...Plus a bonus modifier of +4 per each day where journal entry.content > 50 chars for extra sizzle
-               console.log(statsAggregate)
+               // console.log(statsAggregate)
                const divisor = journalEntries.length
-               console.log("divisor =")
-               console.log(divisor)
+               // console.log("divisor =")
+               // console.log(divisor)
                stats.mood = Math.floor(parseInt(statsAggregate.moodAgg)/divisor * 10)
                stats.motivation = Math.floor(parseInt(statsAggregate.motivationAgg)/divisor * 10)
                stats.focus = Math.floor(parseInt(statsAggregate.focusAgg)/divisor * 10)
@@ -445,7 +445,7 @@ else if(stats.powerLevel<500){stats.rank="Hero"}
 else if(stats.powerLevel<1000){stats.rank="Champion"}
 else if(stats.powerLevel<2000){stats.rank="Paladin"}  
 else{stats.rank="Unranked"}             
-               console.log(stats)
+               // console.log(stats)
                res.json(stats)
             })
          })
@@ -453,8 +453,34 @@ else{stats.rank="Unranked"}
 
          //Profile Maintenance
          app.post("/settings/edit",(req,res)=>{
+            console.log("settings/edit")
             console.log(req.body)
-            res.json("Data received by server")
+            
+            if(req.body.editType==="password"){ //regardless of form data, editType is specific to the submission functions for each respective type of edit
+               UserModel.findOne({username:req.body.queryParams.username},(err,user)=>{
+                  if(err){
+                     console.log(err)
+                  } else if(!user){
+                     console.log("User not found.. Please debug.")
+                  }else{
+                     return user
+                  }
+                  })
+                  .then((user)=>{
+                    
+                     user.setPassword(req.body.password,(err)=>{
+                        console.log(req.body.password)
+                        if(err){
+                           console.log(err)
+                        }
+                        else{
+                           user.save()
+                           res.json("Password Reset Successfully")
+                        }
+                     })
+                  })
+            }
+            
          })
 
 

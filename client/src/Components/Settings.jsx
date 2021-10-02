@@ -2,8 +2,12 @@ import React, {useState, useContext, useEffect} from "react";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect, useHistory } from "react-router-dom";
 import { credentialContext } from "./App"
 import axios from "axios"
-function Settings(props){
 
+import validate from "../validation.js"
+
+function Settings(props){
+const [passVisible,setPassVisible] = useState(false) //use for conditional renders 
+const [emailVisible,setEmailVisible] = useState(false)
     const credentials = useContext(credentialContext)
     const [userStats,setUserStats]=useState({ //placeholder values while awaiting axios API call to fetch data
         mood: 0,
@@ -14,10 +18,10 @@ function Settings(props){
         rank:""
     })
     
-    
+    const [pass,setPass] = useState()
     useEffect(()=>{
     
-    
+    //fetch stats/pf info
     axios.post("/profile/stats",credentials)
     .then((res)=>{
     console.log("res.data:")
@@ -25,76 +29,102 @@ function Settings(props){
     
     })
     },[])
-const [editScreen,setEditScreen] = useState("")
+const [emailEditor,setEmailEditor] = useState("")
+const [passwordEditor,setPasswordEditor] = useState("")
+const queryParams = useContext(credentialContext)
 
-function saveEdits(){
+const [edits,setEdits] = useState({ //handles all input changes for submission to server
+    userName: "",
+    email: "",
+    password: "",
+    confirmUserName: "",
+    confirmEmail: "",
+    confirmPassword: ""
+})
+
+function handleChange(event){
+    console.log(edits)
+    const {name,value} = event.target; //name/value are the html keys name = and value =
+setEdits(preVal=>{
+return {
+    ...preVal,
+    [name]: value
+}
+})
+console.log(event.target.value)
+}
+//API calls to POST changes
+let submitEmail=(e)=>{
+   e.preventDefault()
     console.log("edits saved")
+    console.log(edits.email)
     let data = {
-        userName:username.value,
-        email:email.value
+        email:edits.email,
+        queryParams:queryParams,
+        editType:"email" //use same path for any pf edit by specifying name of user doc obj key to change
     }
+    if(validate.validateEmail(data.email)){
     axios.post("/settings/edit",data)
     .then((res)=>{
         console.log(res.data)
-        setEditScreen("")
+        setEdits({ 
+            userName: "",
+            email: "",
+            password: "",
+            confirmUserName: "",
+            confirmEmail: "",
+            confirmPassword: ""
+        })
     })
+}else alert("not a valid email!")
 }
 
-    function settings(){
-        console.log("settings")
-        setEditScreen(
-            <div className="ev-modal">
-            <div className="ev-modal-content ">
-            <div className="row">
-              <div className="col">
-              <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"10px",padding:"3px",background:"#76baff",color:"white"}} onClick={()=>setEditScreen("")}><p style={{textShadow:"2px 1px 2px black",paddingTop:"5px"}}>Close</p></button>
-              </div>
-              
-              </div>
-              <div className="row">
-
-              <div className="col-12">
-              <label for="username">Edit Username</label>
-              <input name="username" type="text"></input>
-              <label for="confirmUsername">Confirm New Username</label>
-              <input name="confirmUsername" type="text"></input>
-              </div>
-              </div>
-            <div className="row">
-              <div className="col-12">
-              <label for="email">Edit Email Address</label>
-              <input name="email" type="text"></input>
-              <label for="confirmEmail">Confirm New Email</label>
-              <input name="confirmEmail" type="text"></input>
-              </div>
-              
-              </div>
-
-              {/* PFP Select */}
-              <div className="row">
-
-              <div className="col-6">
-              </div>
-              <div className="col-6">
-              </div>
-              
-              </div>
-            </div>
-            
-            
-              </div>
-            
-          )
+let submitPassword = (e)=>{
+    e.preventDefault()
+    console.log("edits saved")
+    let data = ""
+    if(edits.password === edits.confirmPassword){ //ensure confirmation matches
+     data = {
+        password: edits.password,
+        queryParams:queryParams,
+        editType:"password"
     }
+    console.log(validate.validatePassword(data.password))
+    if(validate.validatePassword(data.password)==true){
+
+    axios.post("/settings/edit",data)
+    .then((res)=>{
+       console.log(res.data) 
+       setEdits({ 
+        userName: "",
+        email: "",
+        password: "",
+        confirmUserName: "",
+        confirmEmail: "",
+        confirmPassword: ""
+    })
+    })
+}else {
+    return(alert("Ensure password contains at least 1 uppercase, 1 lowercase,a number, and is 6 characters or more in length"))
+}
+}else {
+    return(alert("Passwords do not match- please review."))
+}
+}
+
+
+
+//Dynamic UI Modal Overlay functions
+// function editEmail(){
+//     setEmailVisible(true)
+// }
+
+//     function editPassword(){
+//        setPassVisible(true)
+//     }
+
     return (
         <div className="mclaren">
-      
-        {editScreen}
-        
-        
-
-
-   
             <div className="card user-card-full">
              
                 <div className="row m-l-0 m-r-0">
@@ -108,7 +138,7 @@ function saveEdits(){
                             <img src="/beluga.jpg" className="img-radius pfp" alt="User-Profile-Image" /> 
                             
                             </div>
-                            <i style={{color:"whites"}} className="fas fa-2x fa-edit options" onClick={settings}></i>
+                            
                             <h4 className="f-w-600">{props.username}</h4>
                             <h4>{credentials.username=="7"|| credentials.username=="Blue Kirbyy"?"Creator King" : userStats.rank}</h4> 
                             <h6>Power Level:</h6>
@@ -145,7 +175,73 @@ function saveEdits(){
                        </div>
                         </div>
                     </div>
+<div id="editSettings" className="centered">
+<div className="br-indigo">
+    <p2>Change Email</p2>
+   
+</div>
 
+          <div className="row br-indigo">
+
+          <div className="col-xs-12 col-xl-12">
+          <form className="br-yt">
+          <div className="centered">
+        <div>
+          <label for="email">New Email </label>
+        </div>  <div>
+          <input style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="email" name="email" type="text" onChange={handleChange}></input>
+        </div>
+          </div>
+          <div className="centered">
+        <div>
+          <label for="confirmEmail">Confirm New Email</label>
+        </div>  <div>
+          <input style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="confirmEmail" name="confirmEmail" type="text" onChange={handleChange}></input>
+            </div>
+          </div>
+          <div className="centered">
+              <button onClick={submitEmail}>Save</button>
+              </div>
+              </form>
+          </div>
+          
+          </div>
+
+          
+          <div className="br-indigo">
+    <p2>Change Password</p2>
+</div>
+
+              <div className="row br-indigo">
+
+              <div className="col-xs-12 col-xl-12">
+              <form className="br-yt">
+              <div className="centered">
+            <div>
+              <label for="password">New Password </label>
+            </div>  <div>
+              <input style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="password" name="password" type="password" onChange={handleChange}></input>
+            </div>
+              </div>
+              <div className="centered">
+            <div>
+              <label for="confirmPassword">Confirm New Password</label>
+            </div>  <div>
+              <input style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="confirmPassword" name="confirmPassword" type="password" onChange={handleChange}></input>
+                </div>
+              </div>
+              <div className="centered">
+              <button onClick={submitPassword}>Save</button>
+              </div>
+              </form>
+              </div>
+              
+              </div>
+
+            
+              
+
+</div>
 
         </div>
     )

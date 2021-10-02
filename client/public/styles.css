@@ -58,7 +58,8 @@ footer {
   color:#fff
 }
 .br-yt{
-  background:#fff
+  background:#fff;
+  color:black;
 }
 
 .greeting{
@@ -157,6 +158,9 @@ form button {
 }
 .centered{
   text-align: center;
+}
+.align-l{
+  text-align:left;
 }
 .pad-b{
   padding-bottom:100px;
@@ -861,6 +865,18 @@ background: rgba(112, 12, 62, 0.513);
   padding: 20px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
+  border-radius: 15px;
+}
+
+.ev-modal-content-sm {
+  background-color: #274c6b;
+  color:white;
+ text-shadow: 2px 1px 3px black;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 55%; /* Could be more or less, depending on screen size */
+  height:auto;
   border-radius: 15px;
 }
 
