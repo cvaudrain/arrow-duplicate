@@ -5,7 +5,8 @@ import {
     Switch,
     Route,
     Link,
-    Redirect
+    Redirect,
+    useHistory
   } from "react-router-dom";
   import isEmail from "validator/lib/isEmail"
 
@@ -16,7 +17,7 @@ function Auth(props){
     const [alreadyRegistered, setAlreadyRegistered] = useState(false)
     const [failedReg, setFailedReg] = useState(false) 
     const [usernameTaken, setUsernameTaken] = useState(false)
-    
+    let history = useHistory();
 const [credentials, setCredentials] = useState({
     name:"",
     email: "",
@@ -225,6 +226,9 @@ nameError == "UserExistsError" && setUsernameTaken(true)
             <div className="register">
             <h3 className="regtext"><i>First time here?</i></h3>
             <button onClick= {toggleReg} className="to-register-btn">Go Register</button>
+            <div className="forgot-password">
+        <button className = "" onClick={()=>history.push("/passwordrecovery")}>Forgot Password?</button>
+        </div>
             </div>
             :
             <div className="register">
@@ -233,6 +237,8 @@ nameError == "UserExistsError" && setUsernameTaken(true)
           
             </div>
         }
+        
+
         <div className="about-arrow">
         <div><h1 className="about-header">About Arrow...</h1></div>
             <h2 className="paragraph">Arrow is an ever-growing, productivity-focused web application to help you stay on target (pun 1/2). Developed as a personal project by a

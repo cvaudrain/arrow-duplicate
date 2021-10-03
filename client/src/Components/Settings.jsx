@@ -43,7 +43,6 @@ const [edits,setEdits] = useState({ //handles all input changes for submission t
 })
 
 function handleChange(event){
-    console.log(edits)
     const {name,value} = event.target; //name/value are the html keys name = and value =
 setEdits(preVal=>{
 return {
@@ -51,7 +50,6 @@ return {
     [name]: value
 }
 })
-console.log(event.target.value)
 }
 //API calls to POST changes
 let submitEmail=(e)=>{
@@ -89,7 +87,7 @@ let submitPassword = (e)=>{
         queryParams:queryParams,
         editType:"password"
     }
-    console.log(validate.validatePassword(data.password))
+    // console.log(validate.validatePassword(data.password))
     if(validate.validatePassword(data.password)==true){
 
     axios.post("/settings/edit",data)
@@ -111,17 +109,6 @@ let submitPassword = (e)=>{
     return(alert("Passwords do not match- please review."))
 }
 }
-
-
-
-//Dynamic UI Modal Overlay functions
-// function editEmail(){
-//     setEmailVisible(true)
-// }
-
-//     function editPassword(){
-//        setPassVisible(true)
-//     }
 
     return (
         <div className="mclaren">

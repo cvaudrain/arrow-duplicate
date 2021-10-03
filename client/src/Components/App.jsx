@@ -12,6 +12,7 @@ import noteValue from "./CreateArea";
 import NoteEditor from "./NoteEditor";
 import Auth from "./Auth"
 import Settings from "./Settings"
+import PasswordRecovery from "./PasswordRecovery"
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -233,6 +234,10 @@ history.push("/scheduler")
    authFunction = {authStateFunction}
    />
  </Route>
+
+<Route exact path = "/passwordrecovery">
+<PasswordRecovery/>
+</Route>
 
 <Route exact path= "/" >
  {!authStatus && <Redirect from="/" to="/authenticate" />} 

@@ -10,7 +10,8 @@ const { response } = require("express");
 const { ServerResponse } = require("http");
 const { match } = require("assert");
 const app = express();
-
+const nodemailer = require("nodemailer");
+var getRandomValues = require("get-random-values")
 // const SECRET = process.env.SECRET //passport.js local strategy secret key- cookie signature
 const PORT     = process.env.PORT || 4747;
 const DB       = "arrowDB";
@@ -87,7 +88,8 @@ const UserSchema = new mongoose.Schema( //1st Schema
             entry: String
          }  
       */
-      theme: String
+      theme: String,
+      recoveryCode: String
    }, 
    {collection: "arrowUsers"} //custom collection name
 )
@@ -483,7 +485,126 @@ else{stats.rank="Unranked"}
             
          })
 
+            //PASSWORD RECOVERY//   
 
+//global scope for password recovery variables (used for sendmail and submitcode endpoints)
+let recoveryCreds={
+username:"",
+code:""
+}
+
+         app.post("/passwordrecovery/submitemail",(req,res)=>{
+            console.log("received request")
+            console.log(req.body)
+
+            const email = req.body.email
+            console.log(email)
+            UserModel.findOne({email:email},(err,user)=>{
+               if(err){
+                  console.log(err)
+                  res.json("Error-email not registered.")
+               } else {
+                  
+                  return user
+               }
+               })
+               .then((user)=>{
+                
+//Nodemailer Transporter Obj
+let transporter = nodemailer.createTransport({
+   service:"gmail",
+   auth:{
+      user:process.env.NODEMAIL_USER,
+      pass:process.env.NODEMAIL_PASS
+   }
+})
+//Generate random num for recovery code
+let array = new Uint8Array(8) //returns an array of 8 numbers
+let num = getRandomValues(array)
+num = num[0].toString() + num[1].toString() //takes the stringified versions of first 2 numbers (gives longer random number instead of only 2-3 chars each)
+console.log(email)
+console.log(num)
+
+    recoveryCreds= {
+      username:user.username,
+      code: num
+   }
+console.log(user.email)
+                  let options = { //now email will send
+                     from:'"Arrow Support"',
+                     to:user.email,
+                     subject:"Arrow Password Recovery",
+                     priority:"high",
+                    secure:"false",
+                     html:`<div>
+                     <div>
+                         <h3>Hello, ${recoveryCreds.username}</h3>
+                     </div>
+                     <div>
+                          This message is sent to you per your request to recover your account with Arrow.
+                          Your confirmation code is: <strong> ${recoveryCreds.code} </strong>.  
+                          <div>Thanks for using Arrow!</div> 
+                          <div>Best,</div>
+                          <div>Arrow Support</div>
+                          (If you did not request this reset, ignore this email.)
+                     </div>
+                 </div>`
+                  }
+                  console.log(options)
+                  transporter.sendMail(options,function(err,info){
+                     if(err){
+                        console.log(err)
+                     } else{
+                        console.log("email sent")
+                     }
+                  })
+                  user.recoverycode = recoveryCreds.code
+                  res.json("success") 
+                  console.log("user saved after res.json")
+                  user.save()
+               })
+            })
+         
+
+         app.post("/passwordrecovery/submitcode",(req,res)=>{
+            const recoveryCode = req.body.recovery
+            console.log(email)
+            UserModel.findOne({email:email},(err,user)=>{
+               if(err){
+                  console.log(err)
+                  res.json("Error-email not registered.")
+               } else {
+                  
+                  return user
+               }
+               })
+               .then((user)=>{
+                  if(user.recoveryCode == recoveryCode){
+                     user.recoveryCode = ""
+                     let tempPass = "Arrow"+user.username+recoveryCode
+                     //resets user password to temp pass
+                     user.setPassword(tempPass,(err)=>{
+                        console.log(tempPass)
+                        if(err){
+                           console.log(err)
+                           res.json("error on server...")
+                        }
+                        
+                   //then send data to client
+                     res.json({
+                        recovered:true,
+                        tempPass:tempPass,
+                        message:`Successful recovery. your temporary password is ${tempPass}. Use it for your next login and for security purposes, reset your password from the settings page.`
+                     })
+                     //finally, save updated user info
+                     user.save()
+                  })
+
+                  } else{
+                     res.json("incorrect code. please try again")
+                  }
+               })
+         })
       
 
 app.listen(PORT, () => {
