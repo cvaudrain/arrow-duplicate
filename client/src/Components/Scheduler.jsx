@@ -1,17 +1,44 @@
 import React, {useState, useEffect, useContext} from "react"
 import {useHistory} from "react-router-dom"
 import Calendar from "react-calendar"
+import axios from "axios";
+import { credentialContext } from "./App";
 // import "react-calendar/dist/Calendar.css"
+
 let dayContext; 
 //Need a function that returns the Date component- have to go editing around in the imported Calendar child components
-function Scheduler(){
+function Scheduler(props){
     const history = useHistory() //redirects to Date view onClickDay
  
     const [value, onChange] = useState(new Date());
     const styling={
         width: "80vw"
     }
+ const [datesWithEv,setDatesWithEv] = useState([])
+ const allDates=[]
+
+ let credentials = useContext(credentialContext)
+ console.log("userObj is")
+ console.log(credentials)
+ useEffect(()=>{
+    axios.post("/scheduler/findevents",credentials)
+    .then((res)=>{
+        console.log("Fetched events:")
+        console.log(res.data)
+        console.log(res.data.length > 0)
+        setDatesWithEv(res.data)
+    })
+    .catch((err)=>console.log(err))
+ },[])
  
+
+
+    function formatDates(locale,date){
+        // console.log(locale.split(" "))
+        // console.log(date.toString(" ").split(" ")
+        allDates.push(date.toString(" ").split(" ").slice(0,4).join(" ") )
+        // console.log(allDates)
+    }
 
     function clickDay(value,event){
         
@@ -50,7 +77,7 @@ console.log(sessionStorage.getItem("day"))
                 value={value}
                 onChange={onChange}
                 onClickDay={clickDay}
-               
+               formatLongDate={formatDates}
                selectRange={false}
                 
             />

@@ -2,23 +2,28 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  
 }
+
 a {
   color: white;
 }
 
 html {
-  font-family: "Montserrat", sans-serif;
+  /* font-family: "Montserrat", sans-serif; */
+  font-family: 'Karla', sans-serif;
 }
 body {
   /* background:#c7d7ff; */
   /* padding: 0 16px; */
+  background-image: url("arrow-br.png")
 }
 
 header {
   background-color: #224663;
   /* background: -webkit-gradient(linear, left top, right top, from(#224663), to(#1d2961)); */
-  margin: auto -16px;
+  /* margin: auto -16px; */
+  margin:auto;
   padding: 15px 30px 0 30px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 }
@@ -40,16 +45,37 @@ footer {
   /* height: 2.5rem;  */
 }
 
-.mclaren{
+/* 
+FONT specs:
+Handwritten Style:
+  font-family: 'Indie Flower', cursive;
+  font-family: 'Kalam', cursive;
+Sans:
+  font-family: 'Karla', sans-serif;
   font-family: "McLaren", curssans-serif;
+   font-family: "Montserrat", sans-serif;
+ */
+/* COLOR pallettes
+ orange  #a66511;
+ orange2: #e09200;
+ indigo #224663;
+ sky: #a9d4ff;
+ red: #822a59;
+*/
+
+.mclaren{
+  /* Temp replacement */
+  font-family: 'Karla', sans-serif;
+  /* font-family: "McLaren", curssans-serif; */
 }
 .indigo{
   color: #fff;
   text-shadow: 0 0 1px #fff;
-  font-family: "McLaren", curssans-serif;
+  /* font-family: "McLaren", curssans-serif; */
+  font-family: 'Karla', sans-serif;
   font-weight: 200;
-  padding-left: 20px;
-  padding-bottom:5px;
+  padding-left: 5px;
+  /* padding-bottom:5px; */
   font-size:3rem;
 }
 
@@ -63,25 +89,29 @@ footer {
 }
 
 .greeting{
-  font-family: "McLaren",sans-serif;
+  /* font-family: "McLaren",sans-serif; */
+  font-family: 'Karla', sans-serif;
+  margin-bottom: 0;
+  padding-left: 7px;
 }
 
 @media(max-width:768px){
   .note{
     width:50px;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 }
 .note {
   background: #fff;
   border-radius: 7px;
-  box-shadow: 0 2px 5px #ccc;
+  box-shadow: 0 1px 7px rgb(138, 137, 137);
   padding: 10px;
   width: 25vw;
   max-width: 450px;
   margin: 20px;
   
   float:left;
+  overflow:hidden;
 }
 @media(max-width:600px){
   .note{
@@ -127,7 +157,7 @@ form {
   padding: 15px;
   padding-bottom: 0;
   border-radius: 7px;
-  box-shadow: 0 1px 5px rgb(138, 137, 137);
+  box-shadow: 0 1px 7px rgb(138, 137, 137);
   text-align: center;
 }
 form input,
@@ -142,17 +172,15 @@ form textarea {
 }
 form button {
   position: relative;
-  /* right: 18px;
-  bottom: -18px; */
-  /* right: 45%; */
+  
   bottom: -15px;
   background: #274c6b;
   color: #fff;
-  border: none;
+  /* border: 1px solid rgb(167, 154, 154); */
   border-radius: 50%;
   width: 46px;
   height: 46px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); */
   cursor: pointer;
   outline: none;
 }
@@ -165,7 +193,9 @@ form button {
 .pad-b{
   padding-bottom:100px;
 }
-
+.pad-t-sm{
+  padding-top: 15px;;
+}
 
 /* Logo */
 .arrow{
@@ -205,29 +235,27 @@ form button {
   /* border-radius: 50%; */
   box-shadow: 0 1px 5px rgb(138, 137, 137);
 }
-/* @media(max-width:576px){
-  .errMessage{
-    width:80vw;
-  }
-} */
-
-.logout-button{
-background-color: #822a59;
-color: #fff;
-text-shadow: 0 0 1px #fff;
-border: 1px solid white;
-padding: 5px;
-/* box-shadow: 0 0 2px white; */
-border-radius: 10%;
-
-position: relative;
-left:90%;
-/* right:10%; */
-bottom: 35px;;
+.successMessage{
+  text-align: center;
+  background-color:#4d946b;
+  border-radius:7px;
+  color: white;
+  width: 50vw;
+  padding:15px;
+  position:relative;
+  left:24.9%;
+  margin-top:40px;
+  margin-bottom: 10px;
+  /* border-radius: 50%; */
+  box-shadow: 0 1px 5px rgb(138, 137, 137);
 }
+
+
+
 
 .calendar-button{
   background-color: #822a59;
+  
   color: #fff;
   text-shadow: 0 0 1px #fff;
   border: 1px solid white;
@@ -242,13 +270,6 @@ bottom: 35px;;
   }
 
 
-@media(max-width:576px){
-  .logout-button{
-    position: relative;
-    left:80%;
-  }
-}
-
 /* My Classes & Styling */
 .auth-header-text{
   text-align: center;
@@ -261,11 +282,17 @@ bottom: 35px;;
 .auth-header{
   margin-bottom: 50px;
   text-align: center;
+  margin: auto -16px;
 }
 .auth-sub-heading{
   text-align: center;
-  color: #0b517a;
+  /* font-family: 'Karla', sans-serif; */
+  color: #274c6b;
+  /* color: #0b517a; */
   text-align:center;
+  text-shadow: 1px 1px 1px gray;
+  /* font-weight: bold; */
+  
 }
 .auth-form{
   height: auto;
@@ -276,44 +303,43 @@ bottom: 35px;;
 }
 
 
-.auth-login-btn{
-   /* position: absolute; */
- font-size: 0.7rem;
-  /* background: #0b7a75; */
-  background: #274c6b;
-  color: #fff;
- /* margin: auto; */
-  
-  /* padding: 12px 7px; */
-  /* height: 36px; */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-.register{
-  /* position: absolute;; */
-  /* margin: 0 auto; */
-  /* padding: 50px;; */
+.content-card{
+  background: #fff;
+ 
+  border-radius: 7px;
+  box-shadow: 0 2px 5px #ccc;
+  /* padding: 10px; */
+  width: 25vw;
+  max-width: 450px;
+  margin:30px auto 20px auto;
   text-align: center;
   margin-top: 30px;
+  overflow: hidden;
 }
-.reg-text{
-  color:black;
+.content-card-indigo{
+  background: #274c6b;
+  color:#fff;
+  border-radius: 7px;
+ box-shadow: 0 1px 7px rgb(138, 137, 137);
+  /* padding: 10px; */
+  width: 25vw;
+  max-width: 450px;
+  margin:30px auto 20px auto;
+  text-align: center;
+  margin-top: 30px;
+  overflow: hidden;
 }
-.to-register-btn{
-  position: relative;
-  top: 50%;
-  background-color: #a66511;
-  color: #fff;
-  padding: 9px;
-  border-radius: 50%;
-  padding: 7px;
-  height: 50px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  outline: none;
-  border: none;
-  margin: 0 auto;
-  margin-top: 5px;
-  margin-bottom: 100px;
-  cursor: pointer;
+.content-card-lg{
+  /* background: #fff; */
+  border-radius: 7px;
+  box-shadow: 0 1px 7px rgb(138, 137, 137);
+  /* padding: 10px; */
+  width: 65vw;
+  /* max-width: 450px; */
+  margin: auto;
+  text-align: center;
+  margin-top: 30px;
+  overflow: hidden;
 }
 
 
@@ -329,10 +355,14 @@ bottom: 35px;;
 .about-header{
   padding-bottom:50px;
   color:#e09200;
+  text-shadow: 0 0 2px white;
 }
+
+
 .paragraph{
   padding:15px 0;
   text-align: left;
+  text-shadow: 0 1px 1px black;
 }
 .br{
   padding-top:20px;
@@ -342,8 +372,6 @@ bottom: 35px;;
 [contentEditable]{
   outline: 0px solid transparent;
 }
-
-
 
 /* React CALENDAR Imported */
 
@@ -356,9 +384,11 @@ bottom: 35px;;
   padding: 15px;
   padding-bottom: 0;
   border-radius: 7px;
-  box-shadow: 0 1px 5px rgb(138, 137, 137);
+  /* box-shadow: 0 1px 5px rgb(138, 137, 137); */
   font-size: 1.2rem;
-  font-family: "McLaren", curssans-serif;
+  /* font-family: "McLaren", curssans-serif; */
+  font-family: 'Karla', sans-serif;
+  box-shadow: 1px 5px 15px rgb(17, 17, 17);
 }
 /* .react-calendar {
   position: relative;
@@ -501,12 +531,6 @@ bottom: 35px;;
   background-color: #e6e6e6;
 }
 
-
-/* color pallettes
- orange  #a66511;
- indigo 
-*/
-
 /* Profile Tray */
 
 
@@ -550,6 +574,7 @@ bottom: 35px;;
   background: linear-gradient(to right, #ee5a6f, #f29263)
 }
 
+
 .user-profile {
   padding: 20px 0
 }
@@ -585,11 +610,6 @@ bottom: 35px;;
   line-height: 25px
 }
 
-/* @media only screen and (min-width: 1400px) {
-  p {
-      font-size: 14px
-  }
-} */
 
 .card-block {
   padding: 1.25rem
@@ -662,17 +682,14 @@ bottom: 35px;;
   color:"white"
 }
 
-
 /* JOURNAL and STATLOG Components */
 
 .journal-header{
   /* color:rgb(44, 44, 46); */
   text-shadow: 2px, 2px, 3px rgb(0, 0, 0);
-  font-family: "McLaren";
-  
+  /* font-family: "McLaren"; */
+  font-family: 'Karla', sans-serif;
 }
-
-
 
 .plain-list{
   list-style: none;
@@ -693,11 +710,13 @@ bottom: 35px;;
 .collect-thoughts{
   color:#fff;
   /* text-shadow: 5px 5px, 5px, 3px black; */
-  font-family: "McLaren";
+  /* font-family: "McLaren"; */
+  font-family: 'Karla', sans-serif;
   
 }
 .date-div{
-  font-family: "McLaren";
+  /* font-family: "McLaren"; */
+  font-family: 'Karla', sans-serif;
   font-size: 3rem;
   color: black;
   position: relative;
@@ -730,26 +749,6 @@ text-decoration: none;
   padding:8px;
   border-radius: 7px;
   font-size: 1.5rem;;
-}
-
-.add-btn{
-  position: relative;
-  padding:20px;
-  margin:15px;
-  /* right: 18px;
-  bottom: -18px; */
-  /* right: 45%; */
-  /* bottom: 11px; */
-  background: #274c6b;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 85px;
-  height: 85px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  outline: none;
-  box-shadow: 0 3px 3px 1px rgba(0, 0, 0, 0.5);
 }
 
 /* Scheduler-Week & Day View */
@@ -802,7 +801,8 @@ text-decoration: none;
 .time-col{
   background-color: rgba(160, 159, 219);
   color: white;
-  font-family:"McLaren";
+  /* font-family:"McLaren"; */
+  font-family: 'Karla', sans-serif;
   text-shadow: 2px 1px 3px black;
   border-right:1px solid black;
 }
@@ -900,3 +900,226 @@ padding-left:0'
 .no-border-bottom{
   border-bottom:none;
 }
+
+
+/* 
+Refactoring
+*/
+
+/* Positioning */
+.top-space{
+margin-top:12vh;
+}
+.bottom-space{
+  margin-bottom:12vh;
+  }
+
+
+.rm-mg-row{
+  margin: 0;
+}
+
+/* center-wrap is applied to a div that wraps elements you want centered. */
+.center-wrap{ 
+  width:50%;
+  margin: auto;
+  padding: 20px;;
+  text-align: center;
+}
+/* BACKROUNDS */
+
+/* .arrow-br{
+  background-image: url("arrow-br.png")
+} */
+
+/* BUTTONS */
+
+.red-button{
+  font-family: 'Karla', sans-serif;
+top: 50%;
+  height: 50px;
+  min-width: 100px;
+color: #fff;
+text-shadow: 0 0 1px #fff;
+background-color: #822a59;
+background: rgb(143,51,100);
+background: linear-gradient(128deg, rgba(143,51,100,1) 25%, rgba(133,42,90,1) 37%, rgba(85,18,54,1) 80%);
+border-radius: 10000px;
+margin-bottom:15px;
+box-shadow: 1px 1px 2px black;
+padding:10px;
+cursor: pointer;
+border:none;
+box-shadow: 5px 5px 20px black;
+text-shadow: 0 1px 1px black;
+line-height: 0.9rem;
+/* margin-top:10vh; */
+}
+
+.to-register-btn{
+  font-family: 'Karla', sans-serif;
+  top: 50%;
+  height: 50px;
+  min-width: 120px;
+  color: #fff;
+  background: rgb(177,91,36);
+background: linear-gradient(355deg, rgba(177,91,36,1) 10%, rgba(201,110,59,1) 32%, rgba(226,147,75,1) 66%);
+  border-radius: 10000px;
+  margin-bottom: 15px;
+  padding: 10px;
+  cursor: pointer;
+  border:none;
+  box-shadow: 5px 5px 20px black;
+  text-shadow: 0 1px 1px black;
+}
+
+.auth-login-btn{
+  font-family: "Karla",sans-serif;
+ font-size: 0.7rem;
+ /* text-shadow: lightgray; */
+ text-shadow: 0 0 1px black;
+/* box-shadow: 1px 1px 2px black; */
+  background: #274c6b;
+  background: -webkit-gradient(linear, left top, right top, from(#446682), to(#2d506b));
+  background: rgb(68,102,130);
+background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60%, rgba(45,80,107,1) 71%);
+  color: #fff;
+ 
+  border:none;
+  box-shadow: 1px 5px 12px black;
+  text-shadow: 0 1px 1px black;
+}
+.pill{
+  font-family: 'Karla', sans-serif;
+  color: #fff;
+text-shadow: 0 0 1px black;
+  border-radius: 10000px;
+    /* padding: 5px;
+ min-width: 100px;; */
+  cursor: pointer;
+  border:none;
+  /* box-shadow: 5px 5px 20px; */
+  text-shadow: 0 1px 1px black;
+  overflow: hidden;
+}
+.add-btn{
+  position: relative;
+  padding:20px;
+  margin:15px;
+  background: #274c6b;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 85px;
+  height: 85px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 3px 3px 1px rgba(0, 0, 0, 0.5);
+}
+.save-btn{
+  position: relative;
+  bottom:5px;
+  padding:20px;
+  margin:15px;
+  border: none;
+  border-radius: 50%;
+  width: 85px;
+  height: 85px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  background: -webkit-gradient(linear, left top, right top, from(#446682), to(#2d506b));
+  background: rgb(68,102,130);
+background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60%, rgba(45,80,107,1) 71%);
+  color: #fff;
+ 
+  border:none;
+  box-shadow: 1px 5px 12px black;
+  text-shadow: 0 1px 1px black;
+}
+
+.circle{
+  
+    font-family: 'Karla', sans-serif;
+    color: #fff;
+  text-shadow: 0 0 1px black;
+  padding: 5px;
+  height: 50px;
+  cursor: pointer;
+  border:none;
+  box-shadow: 5px 5px 20px;
+  text-shadow: 0 1px 1px black;
+  border-radius: 50%;
+}
+
+/* TEXT */
+.reg-text{
+  /* font-size: 1.1rem; */
+  font-weight:600;
+  color:black;
+  text-shadow: 0 1px 5px rgb(138, 137, 137);
+  overflow: hidden;
+  padding:3px;
+}
+.shade-div{
+  background: rgba(0, 0, 0, 0.082) ;
+  width:18%;
+  margin:auto;
+  border-radius:1000px;
+ /* padding:2px; */
+}
+.text-sm{
+  font-size:0.8rem;
+}
+.signature{
+  /* font-family: 'Indie Flower', cursive; */
+  font-family: 'Kalam', cursive;
+}
+
+/* COLOR */
+.red{
+color:#822a59
+}
+.orange{
+  color: #a66511;
+}
+
+/* 
+Button shadows
+#5
+box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+#14
+box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+*/
+/* 
+FONT specs:
+Handwritten Style:
+  font-family: 'Indie Flower', cursive;
+  font-family: 'Kalam', cursive;
+Sans:
+  font-family: 'Karla', sans-serif;
+  font-family: "McLaren", curssans-serif;
+   font-family: "Montserrat", sans-serif;
+ */
+
+/* COLOR pallettes
+ orange  #a66511;
+ orange2: #e09200;
+ indigo #224663;
+ sky: #a9d4ff;
+ red: #822a59;
+*/
+
+/*
+GRADIENTS
+Fire:
+.fire-gradient {
+  background: -webkit-gradient(linear, left top, right top, from(#f29263), to(#ee5a6f));
+  background: linear-gradient(to right, #ee5a6f, #f29263)
+}
+Indigo
+indigo-gradient{
+   background: -webkit-gradient(linear, left top, right top, from(#446682), to(#2d506b));
+  background: rgb(68,102,130);
+background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60%, rgba(45,80,107,1) 71%);
+*/

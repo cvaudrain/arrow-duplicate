@@ -18,7 +18,8 @@ function Header(props){
        
     />
     
-<p className="indigo">{props.headerText}</p> <h3 className="greeting">Hello, {props.userNameGreeting}.</h3>
+<p className="indigo">{props.headerText}</p>
+ <h3 className="greeting">Hello, {props.userNameGreeting}.</h3>
 
 
 {/* <Link to="/authenticate">

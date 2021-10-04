@@ -112,7 +112,7 @@ let submitPassword = (e)=>{
 
     return (
         <div className="mclaren">
-            <div className="card user-card-full">
+            <div className="card user-card-full ">
              
                 <div className="row m-l-0 m-r-0">
             
@@ -136,7 +136,7 @@ let submitPassword = (e)=>{
                     <div className="col-md-7">
                         <div className="card-block centered">
                             <h4 className="m-b-20 p-b-5 b-b-default f-w-600" h6>Info</h4>
-                            <div className="row">
+                            <div className="row rm-mg-row">
                                 <div className="col-sm-6">
                                     <p className="m-b-10 f-w-600">User</p>
                                     <h4 className="text-muted f-w-400 h6">{credentials.username}</h4>
@@ -147,7 +147,7 @@ let submitPassword = (e)=>{
                                 </div>
                             </div>
                             <h4 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600 h6">Membership</h4>
-                            <div className="row">
+                            <div className="row rm-mg-row">
                                 <div className="col-sm-6">
                                     <p className="m-b-10 f-w-600">Member Type</p>
                                     <h4 className="text-muted f-w-400 h6">{credentials.username=="7"|| credentials.username=="Blue Kirby"?"Admin" : "User"}</h4>
@@ -163,13 +163,16 @@ let submitPassword = (e)=>{
                         </div>
                     </div>
 <div id="editSettings" className="centered">
-<div className="br-indigo">
+{/* <div className="content-card-indigo ">
     <p2>Change Email</p2>
    
+</div> */}
+
+          <div className=" br-indigo content-card-lg">
+          <div className=" ">
+    <h4 className="pad-t-sm">Change Email</h4>
+   
 </div>
-
-          <div className="row br-indigo">
-
           <div className="col-xs-12 col-xl-12">
           <form className="br-yt">
           <div className="centered">
@@ -187,7 +190,7 @@ let submitPassword = (e)=>{
             </div>
           </div>
           <div className="centered">
-              <button onClick={submitEmail}>Save</button>
+              <button className="save-btn" onClick={submitEmail}>Save</button>
               </div>
               </form>
           </div>
@@ -195,12 +198,12 @@ let submitPassword = (e)=>{
           </div>
 
           
-          <div className="br-indigo">
-    <p2>Change Password</p2>
+         
+
+              <div className="content-card-lg  br-indigo bottom-space">
+              <div className="br-indigo">
+    <h4 className="pad-t-sm">Change Password</h4>
 </div>
-
-              <div className="row br-indigo">
-
               <div className="col-xs-12 col-xl-12">
               <form className="br-yt">
               <div className="centered">
@@ -218,7 +221,7 @@ let submitPassword = (e)=>{
                 </div>
               </div>
               <div className="centered">
-              <button onClick={submitPassword}>Save</button>
+              <button className="save-btn br-yt" onClick={submitPassword}>Save</button>
               </div>
               </form>
               </div>

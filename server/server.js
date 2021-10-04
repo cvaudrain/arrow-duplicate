@@ -217,6 +217,24 @@ app.post("/api/addNotes",(req, res) => {
  
   })
 
+
+  //SCHEDULER
+app.post("/scheduler/findevents",(req,res)=>{
+console.log(req.body)
+UserModel.findOne({username:req.body.username},(err,doc)=>{
+   if(err){
+      console.log(err)
+   } else if(!doc){
+      console.log("query returned no user, debug")
+   } else return doc
+})
+.then((doc)=>{
+   const events = doc.eventsArray
+   res.json(events)
+})
+.catch((err)=>console.log(err))
+})
+
   //EVENTS
   app.post("/events/fetch",(req,res)=>{
         console.log("fetching events")
@@ -558,7 +576,7 @@ console.log(user.email)
                         console.log("email sent")
                      }
                   })
-                  user.recoverycode = recoveryCreds.code
+                  user.recoveryCode = recoveryCreds.code
                   res.json("success") 
                   console.log("user saved after res.json")
                   user.save()
@@ -568,7 +586,8 @@ console.log(user.email)
 
          app.post("/passwordrecovery/submitcode",(req,res)=>{
             const recoveryCode = req.body.recovery
-            console.log(email)
+            const email = req.body.email
+            console.log(req.body)
             UserModel.findOne({email:email},(err,user)=>{
                if(err){
                   console.log(err)
@@ -589,13 +608,14 @@ console.log(user.email)
                            console.log(err)
                            res.json("error on server...")
                         }
-                        
+                        else{
                    //then send data to client
                      res.json({
                         recovered:true,
                         tempPass:tempPass,
                         message:`Successful recovery. your temporary password is ${tempPass}. Use it for your next login and for security purposes, reset your password from the settings page.`
                      })
+                  }
                      //finally, save updated user info
                      user.save()
                   })

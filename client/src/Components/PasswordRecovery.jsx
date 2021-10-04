@@ -50,13 +50,17 @@ function submitEmail(e){
 }
 function submitCode(e){
     e.preventDefault()
-        axios.post("/passwordrecovery/submitcode",data.recovery)
+    console.log("submitCode called")
+    console.log(data)
+        axios.post("/passwordrecovery/submitcode",data)
         .then((res)=>{
             console.log(res.data)
             if(res.data.recovered==true){
+                console.log("code match")
+                setMessageState(res.data.message)
             setSuccessMessage(res.data.recovered)
-            setMessageState(res.data.message)
-            }
+            
+            }else{alert("Invalid code- please try again.")}
         })
         .catch((err)=>console.log(err))
     
@@ -87,11 +91,11 @@ function submitCode(e){
             <input onChange={handleChange} name="recovery" type="text" placeholder="Enter Recovery Code">
 
             </input>
-            <button>Send Code</button>
+            <button onClick={submitCode}>Send Code</button>
         </form>
         }
         {successMessage && 
-        <div className="centered">
+        <div className=" successMessage centered">
             
             <h4>{messageState}</h4>
 

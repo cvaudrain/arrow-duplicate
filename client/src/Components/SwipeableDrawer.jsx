@@ -81,7 +81,7 @@ function SwipeableDrawerCustom(props){
         <div>
         <Divider />
         <List>
-          {[useContext(userContext),"Settings"].map((text, index) => (
+          {[/*useContext(userContext),*/"Settings"].map((text, index) => (
             <Link
             to={assignRoute(text)} 
             style={{textDecoration:"none",

@@ -172,14 +172,14 @@ nameError == "UserExistsError" && setUsernameTaken(true)
        
          {!authStatus2 ? console.log("not logged in yet") : <Redirect to="/" />}
          
-        <div>
+        <div className="arrow-br">
         <header className="auth-header">
         <img className="arrow" src="arrow.png"></img>
         
         </header>
-        <h1 className = "auth-sub-heading">{isRegistered ? "Login" : "Register"}</h1>
+        
         <form method="post" className="auth-form" id="authForm">
-            
+        <h2 className = "auth-sub-heading">{isRegistered ? "-Login-" : "-Register-"}</h2>
             {!isRegistered && //extra field for name if unregistered
             <input onChange={handleChange}
             type="email"
@@ -223,17 +223,23 @@ nameError == "UserExistsError" && setUsernameTaken(true)
 {failedReg==true &&  <div className="errMessage centered"><div><h2>Invalid credentials.</h2> <h3 className="br">Please confirm that:</h3> <h5 className="br">Password contains 1 uppercase letter</h5> <h5 className="br">Password contains 1 lowercase letter</h5> <h5 className="br">Password contains 1 number</h5> <h5 className="br">Password is at least 6 characters long</h5> <h5 className="br">Your email is not already registered</h5></div></div>}
         
         {isRegistered ? 
-            <div className="register">
-            <h3 className="regtext"><i>First time here?</i></h3>
-            <button onClick= {toggleReg} className="to-register-btn">Go Register</button>
-            <div className="forgot-password">
-        <button className = "" onClick={()=>history.push("/passwordrecovery")}>Forgot Password?</button>
+            <div >
+            <div className="center-wrap">
+            {/* <p className="reg-text"><i>First time here?</i></p> */}
+           
+            <button onClick= {toggleReg} className="to-register-btn pill"><p>Register</p></button>
+           
+            </div>
+            <div className="center-wrap">
+            {/* <p className="reg-text"><i>Forgot Password?</i></p> */}
+        <button className = "red-button pill" onClick={()=>history.push("/passwordrecovery")}><p className="text-sm">Forgot <br/> Password</p></button>
         </div>
+       
             </div>
             :
-            <div className="register">
-            <h3 className="regtext"><i>Already registered?</i></h3>
-            <button onClick= {toggleReg} className="to-register-btn"> Go to Login</button>
+            <div className="center-wrap">
+            {/* <p className="reg-text"><i>Already registered?</i></p> */}
+            <button onClick= {toggleReg} className="to-register-btn pill">To Login</button>
           
             </div>
         }
@@ -241,11 +247,10 @@ nameError == "UserExistsError" && setUsernameTaken(true)
 
         <div className="about-arrow">
         <div><h1 className="about-header">About Arrow...</h1></div>
-            <h2 className="paragraph">Arrow is an ever-growing, productivity-focused web application to help you stay on target (pun 1/2). Developed as a personal project by a
-             new face in web development, Arrow is meant to serve as a cohesive collection of productivity apps for personal organization and task management.</h2> <h2 className="paragraph">Launched
-             initially as a notetaking app, the Arrow collection is continually expanding to include more tools to help you keep life just a little more functional... 
-             Arrow functional! (pun 2/2, for our fellow javascript enthusiasts).</h2> <h2 className="paragraph">If you'd like to give it a try, rest assured you'll get no email spam from this app and your email will be used solely to secure your user experience. If there were too many puns and you'd rather not, that's also pretty valid.</h2> 
-             <h2 className="paragraph">As always, thanks a ton for stopping by and best wishes to all visitors!</h2>
+            <h4 className="paragraph">Arrow is a productivity-focused web application to help organize your tasks as well as your thoughts. It's intended as a cohesive collection of productivity apps for personal organization and personal reflection, with a growing set of features to make it all a bit more fun.</h4>
+               <h4 className="paragraph">If you'd like to give it a try, rest assured you'll get no email spam from this app and your email will be used solely to secure your account.</h4> 
+             <h4 className="paragraph"> Thanks for stopping by, and I hope you enjoy the site.</h4>
+             <h3 className="paragraph signature"> -Chris </h3>
         </div>
         </div>
           </Route> 

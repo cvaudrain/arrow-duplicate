@@ -196,6 +196,7 @@ history.push("/scheduler")
 <Switch>
 <Route exact path="/scheduler">
 <Header
+headerText="Scheduler"
   logout={logout}
     userNameGreeting={usernameFromAuth}
     toCalendar={toCalendar}
@@ -218,6 +219,7 @@ history.push("/scheduler")
 
 <Route exact path="/settings">
 <Header
+headerText="Settings"
   logout={logout}
     userNameGreeting={usernameFromAuth}
     toCalendar={toCalendar}
