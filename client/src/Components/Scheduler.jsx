@@ -30,15 +30,59 @@ function Scheduler(props){
     })
     .catch((err)=>console.log(err))
  },[])
+
+
+//  function populateEvs(startDate,date,view){
+//      console.log("populateEvs")
+//      console.log(date)
+     
+//  }
  
-
-
-    function formatDates(locale,date){
+    function formatDates(locale,date){ //whatever we return will be the <abbr> label value. if no return, no label.
         // console.log(locale.split(" "))
         // console.log(date.toString(" ").split(" ")
         allDates.push(date.toString(" ").split(" ").slice(0,4).join(" ") )
-        // console.log(allDates)
+        return date.toString(" ").split(" ").slice(0,4).join(" ") 
+        
     }
+    function showEvs({startDate,date,view}){
+        console.log(datesWithEv)
+        console.log("date") //Args must be inside object to access in your function
+       if(view=="month"){
+        let formatDate=date.toString(" ").split(" ").slice(0,4).join(" ")
+        console.log(formatDate)
+        let val;
+        // for(var j=0;j<datesWithEv.length;j++){
+         datesWithEv.forEach((n,i)=>{ //n is an array of obhjects.
+             console.log("ENTRY =")
+             console.log(n)
+             console.log(n[0].startDate)
+            if(n[0].startDate == formatDate){ //each entry we created is an object with startDate, evTitle etc, inside an array with up to 3 event obj
+                //console.log(n[0].startDate) //n[i] represents an array with up to 3 event objects, n[0], n[1] n[2]
+                //console.log(formatDate)
+                console.log("day with event found")
+               
+                 val = 
+                 <div>
+                 <div><p className="event-a">{n[0].evName}</p></div> 
+                 {n.length>1 && <div><p className="event-b">{n[1].evName}</p></div>} 
+                {n.length>2 && <div><p className="event-c">{n[2].evName}</p></div> }
+                 </div>
+                 
+            }else{
+                console.log("NONE")
+                //console.log(n)
+                //console.log(n.startDate)
+                //console.log(formatDate)
+                val = <p>None</p>
+            }
+          
+        })
+        return val 
+    // }
+       } //closing for if view==month
+    }
+
 
     function clickDay(value,event){
         
@@ -79,7 +123,7 @@ console.log(sessionStorage.getItem("day"))
                 onClickDay={clickDay}
                formatLongDate={formatDates}
                selectRange={false}
-                
+                tileContent = {showEvs}
             />
         </div>
     );

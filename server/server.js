@@ -278,6 +278,7 @@ UserModel.findOne({username:req.body.username},(err,doc)=>{
      console.log(req.body)
      const eventList = req.body.eventList //events for single date
      const fullDate = req.body.fullDate
+     console.log("fulldate:  " + fullDate)
      const queryParams = req.body.queryParams
    //   res.json("Received event list: " + eventList.evName + ", " + "scheduled on " + eventList.startDate + "." )
      UserModel.findOne({username:req.body.queryParams.username},(err,doc)=>{
@@ -294,15 +295,16 @@ UserModel.findOne({username:req.body.username},(err,doc)=>{
          // doc.save()
          console.log(doc.eventsArray)
          let array = doc.eventsArray //ALL dates, each with event arrays
-         array.map((pastEntry,index)=>{
-            if (pastEntry.startDate != fullDate){ //currently start/end date are the same- both = fullDate
+         array = array.filter((pastEntry,index)=>{
+            if (pastEntry[0].startDate != fullDate){ //currently start/end date are the same- both = fullDate
                // console.log(pastEntry)
                return pastEntry 
             }
          })
          eventList.length > 0 && array.push(eventList)
-         array.sort((a,b)=>new Date(a.startDate)-new Date(b.startDate))
+         array = array.sort((a,b)=>new Date(a.startDate)-new Date(b.startDate))
          doc.eventsArray = array
+         //doc.eventsArray=[] //used to reset user Array during debugging
          doc.save()
          res.json("successful update to DB")
       })

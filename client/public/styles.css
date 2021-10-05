@@ -1076,6 +1076,33 @@ background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60
   font-family: 'Kalam', cursive;
 }
 
+/* Calendar button (days) text/style for showing events, matches colors used in day view */
+
+.event-a{
+font-size:0.6rem;
+font-weight:bold;
+background:#76baff;
+color:white;
+  text-shadow: 0 1px 1px black;
+   margin:1px;;
+}
+.event-b{
+font-size:0.6rem;
+font-weight:bold;
+background:#eea15a;
+color:white;;
+  text-shadow: 0 1px 1px black;
+   margin:1px;;
+}
+
+.event-c{
+font-size:0.6rem;
+font-weight:bold;
+background:rgba(195, 70, 97);
+color:white;;
+  text-shadow: 0 1px 1px black;
+   margin:1px;;
+}
 /* COLOR */
 .red{
 color:#822a59
