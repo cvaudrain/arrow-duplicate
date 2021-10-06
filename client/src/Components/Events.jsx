@@ -313,16 +313,16 @@ function clickRange(value, event){
 
         }
           setEventCard(
-            <div class="ev-modal">
-            <div class="ev-modal-content">
-            <div class="row">
-              <div class="col">
-              <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"10px",padding:"3px",background:"#76baff",color:"white"}} onClick={()=>setEventCard("")}><p style={{textShadow:"2px 1px 2px black",paddingTop:"5px"}}>Close</p></button>
+            <div className="ev-modal">
+            <div className="ev-modal-content">
+            <div className="row">
+              <div className="col">
+              <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"10px",padding:"3px",background:"#518bc5",color:"white"}} onClick={()=>setEventCard("")}><p style={{textShadow:"2px 1px 2px black",paddingTop:"5px"}}>Close</p></button>
               </div>
-              <div class="col">
+              <div className="col">
               <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"10px",padding:"3px",background:"#eea15a",color:"white"}} onClick={()=>editEvent(eventInfo)}><p style={{textShadow:"2px 1px 2px black",paddingTop:"5px"}}>Edit</p></button>
               </div>
-              <div class="col">
+              <div className="col">
               <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"10px",padding:"3px",background:"rgba(195, 70, 97)",color:"white"}} onClick={()=>deleteEvent(eventInfo)}><p style={{textShadow:"2px 1px 2px black",paddingTop:"5px"}}>Delete</p></button>
               </div>
             </div>
@@ -342,7 +342,7 @@ function clickRange(value, event){
         let render3;
         let render4;
         
-          const storedActive = ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"]
+          const storedActive = ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"]
         const mapResults = []
         storedActive.map((n)=>{ //iterate through array of divs (n=div[n]) ONCE, evaluating which event column if any to render based on ternaries, when div renders (return n)
           let colTime = +n
@@ -365,10 +365,10 @@ function clickRange(value, event){
           }else render3 = false
           }
           // console.log(render1)
-          n= <div name="4:00" className="row time-block">
-          {render1 ? <div id="0" name="event1" onClick={showEvent} className="col-3" style ={{cursor:"pointer", boxShadow: "inset", margin:"0 4px", borderRadius:"1px",backgroundColor:"rgba(112, 12, 62, 0.413)",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"4%",fontFamily:"McLaren",fontSize:"1rem"}} >{eventList[0].evName}</div> : <div className="col-3"style={{margin:"0 4px",paddingTop:"5px"}}></div>}
-        {render2 ? <div id="1" name="event2" onClick={showEvent} className="col-3" style ={{cursor:"pointer", boxShadow: "inset", margin:"0 4px", borderRadius:"1px",backgroundColor:"#0b819e",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"4%",fontFamily:"McLaren",fontSize:"1rem"}}>{eventList[1].evName}</div> : <div className="col-3"style={{margin:"0 4px",paddingTop:"5px"}}></div>}
-        {render3 ? <div id="2" name="event3" onClick={showEvent} className="col-3" style ={{cursor:"pointer", boxShadow: "inset", margin:"0 4px", borderRadius:"1px",backgroundColor:"#31b08a",textAlign:"center",textShadow: "2px 3px 5px rgba(0,0,0,0.5)",color:"#fff",paddingLeft:"4%",fontFamily:"McLaren",fontSize:"1rem"}}>{eventList[2].evName}</div> : <div className="col-3"style={{margin:"0 4px",paddingTop:"5px"}}></div>}
+          n= <div name="4:00" className="row time-block">  
+          {render1 ? <div id="0" name="event1" onClick={showEvent} className="col-3 render-event indigo-gradient shadowtext-sm" style={{textAlign:"center",color:"white",margin:"0 4px"}} >{eventList[0].evName}</div> : <div className="col-3"style={{margin:"0 4px",paddingTop:"5px"}}></div>}
+        {render2 ? <div id="1" name="event2" onClick={showEvent} className="col-3 render-event peach-gradient shadowtext-sm" style={{textAlign:"center",color:"white",margin:"0 4px"}}>{eventList[1].evName}</div> : <div className="col-3"style={{margin:"0 4px",paddingTop:"5px"}}></div>}
+        {render3 ? <div id="2" name="event3" onClick={showEvent} className="col-3 render-event magenta-gradient shadowtext-sm" style={{textAlign:"center",color:"white",margin:"0 4px"}}>{eventList[2].evName}</div> : <div className="col-3"style={{margin:"0 4px",paddingTop:"5px"}}></div>}
         </div>
           //if all render variables are false, div renders just like "stored", with no "active" colored columns
           mapResults.push(n) //render div n, which will evaluate the values of render1, render2 etc before rendering any columns. render1 etc reset after each iteration, giving fresh start for evaluation
@@ -385,14 +385,14 @@ function clickRange(value, event){
         
         {view ==="week" &&<Week/>} */}
         {/* <Day/> */}
-         <div className="br-white">
+         <div className="br-white mclaren">
             <div className="day-title centered">
-            <div className="title-card">
+            <div className="title-card peach-gradient">
             
-            <p>{weekday} <span style={{color:"#224663"}}> {currDate}</span></p>
+            <p className="">{weekday} <span className=""style={{color:"#224663"}}> {currDate}</span></p>
             </div>
             {eventCard}
-            <span><button className={"add-btn"} onClick={addEvent}>New Event</button> </span>
+            <span><button className={"save-btn title-card-btn"} onClick={addEvent}>New Event</button> </span>
             {evEditor && 
             <div>
               <form onChange={handleChange}>

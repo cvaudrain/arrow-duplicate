@@ -3,6 +3,7 @@ import { Switch, Route, Link, Redirect,useLocation, useHistory } from "react-rou
 import { credentialContext } from "./App"
 import axios from "axios"
 
+
 function ProfileTray(props){
     const history = useHistory()
 const credentials = useContext(credentialContext)
@@ -15,7 +16,11 @@ const [userStats,setUserStats]=useState({ //placeholder values while awaiting ax
     rank:""
 })
 const [pfEditor,setPfEditor] = useState(false)
-
+let pfpVal = "/pfpblank.png"
+if(localStorage.getItem("profilePicture") !=undefined){
+pfpVal = localStorage.getItem("profilePicture")
+}
+const [pfp,setpfp] = useState(pfpVal)
 useEffect(()=>{
 
 
@@ -33,12 +38,12 @@ res.data.powerLevel != undefined && setUserStats(res.data) //statefuls fill in v
 
 
     return(
-        <div className="page-content page-container mclaren" id="page-content">
+        <div className="page-content page-container mclaren " id="page-content">
 
     <div className="padding">
-        <div className="row container d-flex justify-content-center">
+        <div className="row container d-flex justify-content-center ">
             <div className="col-xl-12 col-md-12">
-                <div className="card user-card-full">
+                <div className="card user-card-full ">
                  
                     <div className="row m-l-0 m-r-0">
                 
@@ -48,7 +53,7 @@ res.data.powerLevel != undefined && setUserStats(res.data) //statefuls fill in v
                             <div className="card-block text-center text-white">
 
                                 <div className="m-b-25"> 
-                                <img src="/beluga.jpg" className="img-radius pfp" alt="User-Profile-Image" /> 
+                                <img src={pfp} className="img-radius pfp" alt="User-Profile-Image" /> 
                                 
                                 </div>
                                 {/* <i style={{color:"whites"}} className="fas fa-2x fa-edit options" onClick={toSettings}></i> */}

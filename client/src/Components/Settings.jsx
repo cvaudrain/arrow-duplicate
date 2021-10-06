@@ -4,7 +4,7 @@ import { credentialContext } from "./App"
 import axios from "axios"
 
 import validate from "../validation.js"
-
+let pfpContext;
 function Settings(props){
 const [passVisible,setPassVisible] = useState(false) //use for conditional renders 
 const [emailVisible,setEmailVisible] = useState(false)
@@ -41,6 +41,47 @@ const [edits,setEdits] = useState({ //handles all input changes for submission t
     confirmEmail: "",
     confirmPassword: ""
 })
+let pfpInitialVal = "/pfpblank.png" //generic pfp if no localStorage value pulled
+if(localStorage.getItem("profilePicture")!=undefined){
+    pfpInitialVal = localStorage.getItem("profilePicture") //checks on each load. 
+}
+
+const [urlTracker,setUrlTracker] = useState({url:""}) //tracks changes
+const [pfpLink,setPfpLink] = useState(pfpInitialVal) //state value of pfp url 
+const [pfpEditor,setPfpEditor] = useState(false)
+
+// useEffect(()=>{
+//     localStorage.setItem("profilePicture",pfpLink)
+// },pfpLink)
+
+function handleChangePfp(e){
+    const {name,value}= e.target;
+    console.log(urlTracker)
+    setUrlTracker(previous=>{
+        return {
+            ...previous,
+            [name]:value
+        }
+    })
+    
+}
+function pfpSave(e){
+e.preventDefault()
+localStorage.setItem("profilePicture",urlTracker.url) //sets PFP to localstorage, where stateful pulls it's value from on refresh
+setPfpLink(urlTracker.url)
+
+
+setPfpEditor(false)
+
+
+}
+function alertImage(){
+    localStorage.setItem("profilePicture","/pfpblank.png") //ensures that profileTray also gets updated value, not undefined
+setPfpLink("/pfpblank.png")
+    
+console.log("Invalid image source. Please try another source")
+}
+
 
 function handleChange(event){
     const {name,value} = event.target; //name/value are the html keys name = and value =
@@ -50,6 +91,7 @@ return {
     [name]: value
 }
 })
+
 }
 //API calls to POST changes
 let submitEmail=(e)=>{
@@ -122,12 +164,17 @@ let submitPassword = (e)=>{
                         <div className="card-block text-center text-white">
 
                             <div className="m-b-25"> 
-                            <img src="/beluga.jpg" className="img-radius pfp" alt="User-Profile-Image" /> 
-                            
+                            <img onError={alertImage} src={pfpLink} className="img-radius pfp" alt="User-Profile-Image" /> 
+                            <div className="pad-t-sm"><i class="fas fa-2x fa-pencil-alt " onClick={()=>setPfpEditor(true)}></i></div>
+                            {pfpEditor && <form style={{width:"30vw",fontSize:"0.8rem"}}>
+                                <input name="url" onChange={handleChangePfp} placeholder="Image url here"></input><button onClick={pfpSave} className="save-btn-sm">Save</button>
+                            </form>
+
+                            }
                             </div>
                             
                             <h4 className="f-w-600">{props.username}</h4>
-                            <h4>{credentials.username=="7"|| credentials.username=="Blue Kirbyy"?"Creator King" : userStats.rank}</h4> 
+                            <h4>{credentials.username=="7"|| credentials.username=="Blue Kirby"?"Creator King" : userStats.rank}</h4> 
                             <h6>Power Level:</h6>
                             <h3 className="glowtext">{userStats.powerLevel}</h3>
                             

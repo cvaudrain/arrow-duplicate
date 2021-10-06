@@ -111,12 +111,6 @@ console.log(sessionData.stats)
 let stats = sessionData.stats
 console.log(stats.mood)
 
-// let entry = sessionData.entry
-
-// declared but undefined until after saveJournal defines them. Top level bc their values come from child components. 
-// let stats = sessionData.stats
-
-
 
     let journalContext = React.createContext(parentData) //use to pass values down after fetch in useEffect
 function getEntry(value){ //the journal entry passed up from jounral component
@@ -146,21 +140,10 @@ function saveJournal(){ //save function is TOP level ( <Journal />)
 .catch((err)=>console.log(err))
 }
 
-// const {parentData, setParentData} = useState({
-//     entryState: entry,
-//     statsState: stats
-//     })
-//     useEffect(()=>{
-//         entry = parentData.entryState
-//         stats = parentData.statsState
-//     },[parentData])
 
 function StatLog(props){
 let context = useContext(journalContext)
-// console.log("context is: ")
-// console.log(context)
-// console.log("parentData is: ")
-// console.log(parentData)
+
 //Statefuls for Stat Log
 
 const [sliderValues, setSliderValues] = useState(context.stats)
@@ -179,8 +162,8 @@ function handleSlider(e){
 props.fromStatLog(sliderValues)
 return (
     <div >
-        <h1 className="journal-header card-div peach">Journal Entry Page for: {currDate}</h1>
-        <div className="card-div">
+        <h1 className="journal-header card-div peach theGoodShading">Journal Entry Page for: {currDate}</h1>
+        <div className="card-div theGoodShading">
         <ul className="plain-list">
         <h3 className="journal-header" style={{color: "#5185c9"}}>So, how's it going?</h3>
         <h3 className="journal-header" style={{color: "#fff"}}>On a scale of <span style={{color: "#5185c9"}}>0-10 </span>how's your:</h3>
@@ -228,15 +211,16 @@ const [entryState,setEntryState] = useState(context.entry)
         
         return (
             <div className="centered">
-            <div className=" card-div journal-header" style={{width: "30vw"}}>
+            <div className=" card-div journal-header theGoodShading" style={{width: "30vw"}}>
             <h4 className="collect-thoughts"> Collect your thoughts...</h4>
             </div>
-                <form style={{width:"89vw", height:"75vh"}}>
-                    <input onChange={handleChange}
+           
+                <form className="theGoodShading paper-br" style={{width:"89vw", height:"75vh"}}>
+                    <input className="kalam paper-br" onChange={handleChange}
                      name="title" value={entryState.title}
-                      
+                      placeholder="Entry Title"
                        autoComplete="off"/>
-                    <textarea className="paper"
+                    <textarea className="kalam paper-br"
                     type="submit" onChange={handleChange}
                      name="content" value={entryState.content}
                       placeholder="Today's journal entry..."
@@ -244,8 +228,9 @@ const [entryState,setEntryState] = useState(context.entry)
                         autoComplete="off"/>
                      
                 </form>
+                
                 <div className="centered">
-                <button className="peach button-pad" name="saveJournalBtn" onClick={saveJournal}>Save Journal Entry</button>
+                <button className="peach button-pad pill" name="saveJournalBtn" onClick={saveJournal}>Save Journal Entry</button>
                 </div>
                 
             </div>
@@ -255,7 +240,7 @@ const [entryState,setEntryState] = useState(context.entry)
     //END JournalEntry />
 
     return(
-        <div style={{background:"rgba(118, 186, 255,0.444)"}}>
+        <div >
         <Header
             userNameGreeting={useContext(userContext)}
         />

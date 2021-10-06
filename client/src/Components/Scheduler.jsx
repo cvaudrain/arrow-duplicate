@@ -6,6 +6,7 @@ import { credentialContext } from "./App";
 // import "react-calendar/dist/Calendar.css"
 
 let dayContext; 
+let eventDatesContext;
 //Need a function that returns the Date component- have to go editing around in the imported Calendar child components
 function Scheduler(props){
     const history = useHistory() //redirects to Date view onClickDay
@@ -17,6 +18,7 @@ function Scheduler(props){
  const [datesWithEv,setDatesWithEv] = useState([])
  const allDates=[]
 
+ let eventDatesContext = React.createContext(datesWithEv)
  let credentials = useContext(credentialContext)
  console.log("userObj is")
  console.log(credentials)
@@ -74,7 +76,7 @@ function Scheduler(props){
                 //console.log(n)
                 //console.log(n.startDate)
                 //console.log(formatDate)
-                val = <p>None</p>
+                
             }
           
         })
@@ -131,3 +133,4 @@ console.log(sessionStorage.getItem("day"))
 
 export default Scheduler
 export {dayContext}
+export {eventDatesContext}

@@ -438,13 +438,13 @@ app.post("/journal/fetch",(req,res)=>{
                }
                //iterate through stats
                journalEntries.forEach((entry)=>{
-                statsAggregate.moodAgg = statsAggregate.moodAgg +parseInt(entry.stats.mood)
-                statsAggregate.motivationAgg = statsAggregate.motivationAgg +parseInt(entry.stats.motivation)
-                statsAggregate.focusAgg = statsAggregate.focusAgg +parseInt(entry.stats.focus)
-                statsAggregate.calmAgg = statsAggregate.calmAgg +parseInt(entry.stats.calm)
+                statsAggregate.moodAgg = statsAggregate.moodAgg + parseInt(entry.stats.mood)
+                statsAggregate.motivationAgg = statsAggregate.motivationAgg + parseInt(entry.stats.motivation)
+                statsAggregate.focusAgg = statsAggregate.focusAgg + parseInt(entry.stats.focus)
+                statsAggregate.calmAgg = statsAggregate.calmAgg + parseInt(entry.stats.calm)
                 entry.entry.content.length > 50 ? statsAggregate.kaioken+=5 : null
-               //  console.log("statsAgg currently:")
-               //  console.log(statsAggregate)
+                console.log("statsAgg currently:")
+                console.log(statsAggregate)
                })
                // console.log("statsAggregate after iteration:")
                // console.log(statsAggregate)
@@ -467,7 +467,7 @@ else if(stats.powerLevel<500){stats.rank="Hero"}
 else if(stats.powerLevel<1000){stats.rank="Champion"}
 else if(stats.powerLevel<2000){stats.rank="Paladin"}  
 else{stats.rank="Unranked"}             
-               // console.log(stats)
+               console.log(stats)
                res.json(stats)
             })
          })

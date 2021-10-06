@@ -31,7 +31,8 @@ header {
 header h2, header h3 {
   color: #fff;
   text-shadow: 0 0 1px #fff;
-  font-family: "McLaren", curssans-serif;
+  /* font-family: "McLaren", curssans-serif; */
+  font-family: 'Karla', sans-serif;
   font-weight: 200;
   padding-left: 25px;
   padding-bottom:5px;
@@ -62,7 +63,9 @@ Sans:
  sky: #a9d4ff;
  red: #822a59;
 */
-
+.kalam{
+  font-family: 'Kalam', cursive;
+}
 .mclaren{
   /* Temp replacement */
   font-family: 'Karla', sans-serif;
@@ -592,8 +595,8 @@ form button {
 }
 .pfp{
  
-  width:100px;
-  height:100px;
+  width:140px;
+  height:140px;
   box-shadow: 0 1px 3px black;
   border-radius:50%;
 
@@ -601,6 +604,9 @@ form button {
 
 .glowtext{
   text-shadow:0 1px 3px white;
+}
+.shadowtext-sm{
+  text-shadow:0 1px 1px black;
 }
 .h6 {
   font-size: 18px
@@ -754,21 +760,48 @@ text-decoration: none;
 /* Scheduler-Week & Day View */
 
 /* Day view only */
+.render-event{
+  cursor:pointer;
+   box-shadow: inset;
+   margin:0 4px;
+    border-radius:1px;
+    /* background-color:#518bc5; */
+    text-align:center;
+    text-shadow: 2px 3px 5px rgba(0,0,0,0.5);
+    color:#fff;
+    padding-left:4%;
+    font-family:Karla;
+    font-size:1rem;
+   box-shadow: 0 1px 9px rgb(75, 75, 75)
+}
+
 .day-title{
-  background-color: white;
-  padding: 50px auto
+  background-image: url("arrow-br.png");
+  padding: 70px auto
 }
 .title-card{
+  position: relative;
+  top:10px;
   font-size: 2.2rem;
   padding: 10px 0;
   border-radius: 7px;
   box-shadow: 0 1px 5px rgb(75, 75, 75);
   text-align: center;
-  text-shadow: 2px 1px 2px black;
-  width:75vw;
- margin: 10px auto;
- background-color: rgb(221, 167, 104);
+  width:65vw;
+ margin:  auto;
+
+ /* background-color: rgb(221, 167, 104); */
   color: white;
+  /* background: -webkit-gradient(linear, left top, right top, from(#f29263), to(#ee905a));
+  background: linear-gradient(138deg, #ee905a 47%, #e0885c 60%,#d47b4e 70% ); */
+  box-shadow: 1px 4px 9px black;
+  text-shadow: 2px 1px 2px black;
+}
+.title-card-btn{
+  
+  position: relative;
+  top:5px;
+  margin-bottom:0;
 }
 /* Week and Day Shared styles */
 
@@ -832,10 +865,12 @@ text-shadow: 2px 1px 3px black;
 .time-block{
   height: 8vh;
   padding-left: 30px;;
-  border:1px  dotted gray;
+  border:1px  solid lightgrey;
   border-left:none;
   background-color: #fff;
   border-bottom:none;
+  /* border:none; */
+ 
 }
 
 .ev-active{
@@ -880,6 +915,10 @@ background: rgba(112, 12, 62, 0.513);
   border-radius: 15px;
 }
 
+.paper-br{
+  background-image: url("/paper-br.jpg");
+  background-attachment:local
+}
 /* Formatting */
 .border-top{
   border-top: 1px dotted grey;
@@ -928,9 +967,9 @@ margin-top:12vh;
 }
 /* BACKROUNDS */
 
-/* .arrow-br{
+.arrow-br{
   background-image: url("arrow-br.png")
-} */
+}
 
 /* BUTTONS */
 
@@ -955,7 +994,10 @@ text-shadow: 0 1px 1px black;
 line-height: 0.9rem;
 /* margin-top:10vh; */
 }
-
+.theGoodShading{
+  box-shadow: 1px 5px 12px black;
+  text-shadow: 0 1px 1px black;
+}
 .to-register-btn{
   font-family: 'Karla', sans-serif;
   top: 50%;
@@ -999,6 +1041,7 @@ text-shadow: 0 0 1px black;
   cursor: pointer;
   border:none;
   /* box-shadow: 5px 5px 20px; */
+  box-shadow: 1px 5px 12px black;
   text-shadow: 0 1px 1px black;
   overflow: hidden;
 }
@@ -1034,7 +1077,27 @@ background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60
   color: #fff;
  
   border:none;
-  box-shadow: 1px 5px 12px black;
+  box-shadow: 1px 3px 9px black;
+  text-shadow: 0 1px 1px black;
+}
+.save-btn-sm{
+  position: relative;
+  /* bottom:5px; */
+  padding:2px;
+  margin:3px;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  background: -webkit-gradient(linear, left top, right top, from(#446682), to(#2d506b));
+  background: rgb(68,102,130);
+background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60%, rgba(45,80,107,1) 71%);
+  color: #fff;
+ 
+  border:none;
+  box-shadow: 1px 3px 9px black;
   text-shadow: 0 1px 1px black;
 }
 
@@ -1077,38 +1140,109 @@ background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60
 }
 
 /* Calendar button (days) text/style for showing events, matches colors used in day view */
-
+.hasEvent{
+  background:lightgreen
+}
 .event-a{
-font-size:0.6rem;
+  overflow:hidden;
+font-size:0.68rem;
 font-weight:bold;
-background:#76baff;
+background:#3e6b99c0;
 color:white;
   text-shadow: 0 1px 1px black;
    margin:1px;;
+   padding:3px;
+   font-family:"Karla",sans-serif;
 }
 .event-b{
-font-size:0.6rem;
+  overflow:hidden;
+font-size:0.68rem;
 font-weight:bold;
-background:#eea15a;
+background:#be771bb6;
+
 color:white;;
-  text-shadow: 0 1px 1px black;
+  text-shadow: 1px 1px 1px black;
    margin:1px;;
+   padding:3px;
+   font-family:"Karla",sans-serif;
 }
 
 .event-c{
-font-size:0.6rem;
+  overflow:hidden;
+font-size:0.68rem;
 font-weight:bold;
-background:rgba(195, 70, 97);
+background:rgba(158, 57, 88, 0.582);
+
 color:white;;
   text-shadow: 0 1px 1px black;
    margin:1px;;
+   padding:3px;
+   font-family:"Karla",sans-serif;
 }
+.react-calendar__tile--active {
+  background: #224663a4;
+}
+.react-calendar{
+  background:rgb(255, 255, 255);
+  font-family: "Karla",sans-serif;
+}
+
+/* .react-calendar__tile--hover {
+
+} */
 /* COLOR */
 .red{
 color:#822a59
 }
 .orange{
   color: #a66511;
+}
+
+.peach-gradient{
+  background-color: rgb(221, 167, 104);
+  color: white;
+  background: -webkit-gradient(linear, left top, right top, from(#f29263), to(#ee905a));
+  background: linear-gradient(160deg, #ee905a 47%, #e0885c 60%,#d47b4e 70% );
+}
+.indigo-gradient{
+  background: -webkit-gradient(linear, left top, right top, from(#446682), to(#2d506b));
+  background: rgb(68,102,130);
+background: linear-gradient(166deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60%, rgba(45,80,107,1) 71%);
+}
+.magenta-gradient{
+  background: rgb(223,75,128);
+background: linear-gradient(166deg, rgba(223,75,128,1) 10%, rgba(193,48,102,1) 41%, rgba(154,27,81,1) 77%);
+}
+/* UI Events/Messages */
+/* HTML for alert box: 
+<div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+  This is an alert box.
+</div>
+*/
+.alert {
+  padding: 20px;
+  background-color: #f44336; /* Red */
+  color: white;
+  margin-bottom: 15px;
+}
+
+/* The close button */
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
 }
 
 /* 

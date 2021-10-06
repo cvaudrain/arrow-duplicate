@@ -104,7 +104,7 @@ function SwipeableDrawerCustom(props){
         </div>
         }
         {anchor == useContext(userContext) &&
-        <div>
+        <div className="">
         
       
         <ProfileTray
@@ -119,7 +119,9 @@ function SwipeableDrawerCustom(props){
       </div>
       
     );
-  
+  function renderIcon(){
+    return <i class="fas fa-bars"></i>
+  }
     return (
       <div>
         {[useContext(userContext), 'menu'].map((anchor) => (
