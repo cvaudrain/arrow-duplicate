@@ -13,6 +13,7 @@ import NoteEditor from "./NoteEditor";
 import Auth from "./Auth"
 import Settings from "./Settings"
 import PasswordRecovery from "./PasswordRecovery"
+import Hud from "./Hud"
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -25,6 +26,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 
 import axios from "axios";
+import JournalReader from "./JournalReader";
 
 const API_ENDPOINT = process.env.PORT || "http://localhost:4747"
 let userContext; //global variable declaration. Will be defined after userNameFromAuth is defined from <Auth />
@@ -188,7 +190,6 @@ function toCalendar(){
 history.push("/scheduler")
 }
 
-
 //Render Phase beginning with Router
   return (
  
@@ -202,7 +203,9 @@ headerText="Scheduler"
     toCalendar={toCalendar}
    
 />
+
 <Scheduler/>
+
 </Route>
 
 <Route exact path="/scheduler/date"> 
@@ -215,7 +218,16 @@ headerText="Scheduler"
 <Route exact path ="/scheduler/date/mm-dd-yyyy/events">
   <Events />
 </Route>
-
+<Route exact path ="/journal/reader">
+<Header
+headerText="Journal History"
+  logout={logout}
+    userNameGreeting={usernameFromAuth}
+    toCalendar={toCalendar}
+   
+/>
+  <JournalReader />
+</Route>
 
 <Route exact path="/settings">
 <Header
@@ -252,6 +264,7 @@ headerText="Settings"
     toCalendar={toCalendar}
     user={usernameFromAuth}
   />
+ 
   <NoteEditor 
   populateId= {selectedNote.Id} //THIS wasn't included before, causing map function to fail.
   populateTitle={selectedNote.Title}
@@ -270,9 +283,14 @@ headerText="Dashboard"
 userNameGreeting={usernameFromAuth}
 logout={logout}
 />
+<Hud
+// fetchedEvents = {fetchedEvents}
+ />
 <CreateArea 
 onAdd={addNote} 
+
 /> 
+
 {notes.map((noteItem,index)=>{
 return <Note 
 key={index}
@@ -284,11 +302,15 @@ onEdit={editNote}
 />
 })
 }
-<Footer />
+
 </div>
 }
+
 </Route>
+
 </Switch>
+
+
 </div>
 
 )
@@ -298,3 +320,4 @@ onEdit={editNote}
 export default App;
 export {userContext}
 export {credentialContext}
+

@@ -217,10 +217,46 @@ app.post("/api/addNotes",(req, res) => {
  
   })
 
+//DASHBOARD/HUD
+app.post("/api/setdashboard",(req,res)=>{
+   console.log("FETCH DASHBOARD ITEMS")
+   console.log(req.body)
+   UserModel.findOne({email:req.body.email},(err,doc)=>{
+if(err){
+   console.log(err)
+}
+else if(!doc) {
+   res.json("No user found, revise query.")
+}
+else{
+   return doc
+}
+   })
+.then((doc)=>{
+   let currDate = new Date()
+   let array = doc.eventsArray
+   array = array.filter((n,i)=>{
+      if(n[0].startDate == currDate.toString().split(" ").slice(0,4).join(" ")){
+      return n} else{
+         null
+      }
+   })
+   if(array.length == 0) {
+      console.log("None")
+      res.json("None")
+    } else{
+       console.log("array found")
+        res.json(array[0])
+    }
+   
+})
+})
+
 
   //SCHEDULER
 app.post("/scheduler/findevents",(req,res)=>{
 console.log(req.body)
+
 UserModel.findOne({username:req.body.username},(err,doc)=>{
    if(err){
       console.log(err)
@@ -402,6 +438,60 @@ app.post("/journal/fetch",(req,res)=>{
          .catch((err)=>console.log(err))
           
       })
+      app.post("/journal/reader/fetch",(req,res)=>{
+         console.log("REQ.BODY")
+         console.log(req.body)
+         let matchEntry = {
+            entry: "",
+            stats: "",
+           
+         } //both entry and stats in object
+         let matchEntryInd;
+         console.log(req.body) //queryParams and date
+         UserModel.findOne({username:req.body.username},(err,doc)=>{ //add email into query
+            if(err){
+               console.log(err)
+            }else if(!doc){
+               console.log("Query returned no user.. debug.")
+            } else{
+               return doc 
+            }
+            })
+            .then((doc)=>{
+              
+               console.log("user found. populating journal entry")
+               let retrievedArray = doc.journalArray
+               console.log(retrievedArray)
+            //   doc.journalArray=[]
+            //   doc.save()
+               //   retrievedArray.forEach((journObj,ind)=>{
+               //       if (journObj.fullDate == req.body.fullDate){
+               //          console.log("match found")
+               //          matchEntry = journObj 
+               //         matchEntryInd = ind
+               //       } else{
+               //          console.log("match NOT found") //set the response to default value
+                         
+                       
+               //       }
+                       
+               //    })
+                  // console.log(matchEntry)
+                  // matchEntry = {
+                  //    ...matchEntry,
+                  //    entryIndex:matchEntryInd, //get our place in the order of entries
+                  //    retrievedArray: retrievedArray //add all journal entries for "page flipping" without other requests
+                  // }
+                  let response={
+                     retrievedArray:retrievedArray,
+                     currInd:retrievedArray.length
+                  }
+                  res.json(response)
+               })
+              
+               .catch((err)=>console.log(err))
+                
+            })
     
       //Get stats and power level info for pf card in slideout / profile page
       app.post("/profile/stats",(req,res)=>{

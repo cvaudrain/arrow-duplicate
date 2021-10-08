@@ -65,7 +65,7 @@ function Scheduler(props){
                 console.log("day with event found")
                
                  val = 
-                 <div>
+                 <div className="centered">
                  <div><p className="event-a">{n[0].evName}</p></div> 
                  {n.length>1 && <div><p className="event-b">{n[1].evName}</p></div>} 
                 {n.length>2 && <div><p className="event-c">{n[2].evName}</p></div> }

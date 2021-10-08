@@ -154,7 +154,7 @@ let submitPassword = (e)=>{
 
     return (
         <div className="mclaren">
-            <div className="card user-card-full ">
+            <div className="card user-card-full theGoodShading margin-all">
              
                 <div className="row m-l-0 m-r-0">
             
@@ -215,7 +215,7 @@ let submitPassword = (e)=>{
    
 </div> */}
 
-          <div className=" br-indigo content-card-lg">
+          <div className=" br-indigo content-card-lg theGoodShading">
           <div className=" ">
     <h4 className="pad-t-sm">Change Email</h4>
    
@@ -247,7 +247,7 @@ let submitPassword = (e)=>{
           
          
 
-              <div className="content-card-lg  br-indigo bottom-space">
+              <div className="content-card-lg  br-indigo bottom-space theGoodShading">
               <div className="br-indigo">
     <h4 className="pad-t-sm">Change Password</h4>
 </div>

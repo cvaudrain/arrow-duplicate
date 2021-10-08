@@ -295,8 +295,12 @@ function clickRange(value, event){
           function convertMilitary(str){
             
             console.log(str + "converted to: ")
-            if(str[0] == "0"){
+            if(str[0]+str[1] == "00"){
+              str="12" + str.slice(2) + "am"
+            }
+            else if(str[0] == "0"){
                str = str.slice(1) + "am"
+              
           } else if(+str.slice(0,2) > 12){
             let hours = +str.slice(0,2)
             hours-=12
@@ -313,24 +317,26 @@ function clickRange(value, event){
 
         }
           setEventCard(
-            <div className="ev-modal">
-            <div className="ev-modal-content">
+            <div className="ev-modal ">
+            <div className="ev-modal-content container indigo-gradient">
             <div className="row">
               <div className="col">
-              <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"10px",padding:"3px",background:"#518bc5",color:"white"}} onClick={()=>setEventCard("")}><p style={{textShadow:"2px 1px 2px black",paddingTop:"5px"}}>Close</p></button>
+              <button className="indigo-gradient save-btn-sm" onClick={()=>setEventCard("")}><i class="fas fa-times icon-pad"></i></button>
               </div>
               <div className="col">
-              <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"10px",padding:"3px",background:"#eea15a",color:"white"}} onClick={()=>editEvent(eventInfo)}><p style={{textShadow:"2px 1px 2px black",paddingTop:"5px"}}>Edit</p></button>
+              <button className="peach-gradient save-btn-sm" onClick={()=>editEvent(eventInfo)}><i class="fas fa-pencil-alt icon-pad"></i></button>
               </div>
               <div className="col">
-              <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"10px",padding:"3px",background:"rgba(195, 70, 97)",color:"white"}} onClick={()=>deleteEvent(eventInfo)}><p style={{textShadow:"2px 1px 2px black",paddingTop:"5px"}}>Delete</p></button>
+              <button className="magenta-gradient save-btn-sm" onClick={()=>deleteEvent(eventInfo)}><i class="fas fa-trash-alt icon-pad"></i></button>
               </div>
             </div>
+           
+            <p className="ev-modal-title">{eventInfo.evName}</p>
+              <p className="ev-modal-text">{eventInfo.evDescription}</p>
             
-              <h1>{eventInfo.evName}</h1>
-              <h2>{eventInfo.evDescription}</h2>
-              <h3>Start Time: {convertMilitary(eventInfo.timeStart)}</h3>
-              <h3>End Time: {convertMilitary(eventInfo.timeEnd)}</h3>
+             
+              <h4>Start Time: {convertMilitary(eventInfo.timeStart)}</h4>
+              <h4>End Time: {convertMilitary(eventInfo.timeEnd)}</h4>
               </div>
              </div>
           )
@@ -377,7 +383,7 @@ function clickRange(value, event){
 
       
     return(
-        <div>
+        <div className="">
         <Header
             userNameGreeting={useContext(userContext)}
         />
@@ -396,8 +402,8 @@ function clickRange(value, event){
             {evEditor && 
             <div>
               <form onChange={handleChange}>
-                <input name="evName" id="evName" placeholder="Event Name" value={form.evName}></input>
-                <textarea name="evDescription" id="evDescription" placeholder="Description" value={form.evDescription}></textarea>
+                <input name="evName" id="evName" placeholder="Event Name" value={form.evName} maxLength="35"></input>
+                <textarea name="evDescription" id="evDescription" placeholder="Description" value={form.evDescription} maxLength="70"></textarea>
                 <label for="timeStart">Start Time:</label>
                 <input name="timeStart" id="timeStart" type="time" style={{textAlign:"center"}} value={form.timeStart}></input>
                 <label for="timeEnd">End Time:</label>
@@ -406,11 +412,11 @@ function clickRange(value, event){
                 {/* <label for="multi">Multiple Day Event</label>
                 <input name="multi" onClick={toggleMulti} id="multi" type="radio" value={form.multi}></input> */}
                 
-                <button type="submit" method="post" onClick={saveEvent}>Save</button>
+                <button type="submit" method="post" onClick={saveEvent} className="save-btn-sm"><i class="fas fa-check"></i></button>
                 </div>
                 
                 
-                <button style = {{textShadow:"textShadow: 2px 1px 3px black",borderRadius:"50%",padding:"1px",background:"rgba(195, 70, 97)",color:"white",width:"30px",height:"30px",marginTop:"10px"}} onClick={()=>setEvEditor(false)}>X</button>
+                <button className="save-btn-sm magenta-gradient"  onClick={()=>setEvEditor(false)}><i class="fas fa-times"></i></button>
               </form>
               {multi &&
               <div>
@@ -437,8 +443,8 @@ function clickRange(value, event){
             </div>
             <div className="container-xl">
           
-            <div className="row border-top">
-            <div className="col-2 time-col centered">
+            <div className="row border-top no-margin no-border-right">
+            <div className="col-2 time-col centered periwinkle-gradient">
             <div className="timestamp">12:00a</div>
               <div className="timestamp">1:00a</div>
               <div className="timestamp">2:00a</div>

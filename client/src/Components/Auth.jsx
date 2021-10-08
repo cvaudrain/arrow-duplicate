@@ -173,7 +173,7 @@ nameError == "UserExistsError" && setUsernameTaken(true)
          {!authStatus2 ? console.log("not logged in yet") : <Redirect to="/" />}
          
         <div className="arrow-br">
-        <header className="auth-header">
+        <header className="auth-header theGoodShading">
         <img className="arrow" src="arrow.png"></img>
         
         </header>
@@ -245,7 +245,7 @@ nameError == "UserExistsError" && setUsernameTaken(true)
         }
         
 
-        <div className="about-arrow">
+        <div className="about-arrow footerShading">
         <div><h1 className="about-header">About Arrow...</h1></div>
             <h4 className="paragraph">Arrow is a productivity-focused web application to help organize your tasks as well as your thoughts. It's intended as a cohesive collection of productivity apps for personal organization and personal reflection, with a growing set of features to make it all a bit more fun.</h4>
                <h4 className="paragraph">If you'd like to give it a try, rest assured you'll get no email spam from this app and your email will be used solely to secure your account.</h4> 

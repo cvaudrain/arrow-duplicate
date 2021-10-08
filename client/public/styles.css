@@ -38,12 +38,18 @@ header h2, header h3 {
   padding-bottom:5px;
 }
 
-footer {
-  position: absolute;
-  bottom: 0;
+
+.footer {
+
+  margin-bottom:0;
   width: 100%;
-  padding-top:10vh
+  height: 3.5rem;   
+  /* margin-top:25vh; */
+ 
   /* height: 2.5rem;  */
+}
+.flex{
+  display:flex;
 }
 
 /* 
@@ -595,11 +601,11 @@ form button {
 }
 .pfp{
  
-  width:140px;
-  height:140px;
+  width:160px;
+  height:160px;
   box-shadow: 0 1px 3px black;
   border-radius:50%;
-
+  background-color: rgba(255, 255, 255, 0.664);;
 }
 
 .glowtext{
@@ -769,15 +775,19 @@ text-decoration: none;
     text-align:center;
     text-shadow: 2px 3px 5px rgba(0,0,0,0.5);
     color:#fff;
+    padding-bottom:5px;
     padding-left:4%;
     font-family:Karla;
     font-size:1rem;
-   box-shadow: 0 1px 9px rgb(75, 75, 75)
+   box-shadow: 0 1px 9px rgb(75, 75, 75);
+   overflow:hidden;
+   line-height: 95%;
 }
 
 .day-title{
   background-image: url("arrow-br.png");
-  padding: 70px auto
+  padding: 70px auto;
+  margin:0;
 }
 .title-card{
   position: relative;
@@ -856,7 +866,7 @@ text-shadow: 2px 1px 3px black;
   height: 8vh;
   border-bottom:1px dotted black;
   padding-left: 5px;
-  background-color:rgba(160, 159, 219);
+  /* background-color:rgba(160, 159, 219); */
 }
 
 .events{
@@ -886,6 +896,7 @@ background: rgba(112, 12, 62, 0.513);
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
+  scroll-behavior: smooth;
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   
@@ -896,11 +907,12 @@ background: rgba(112, 12, 62, 0.513);
   background-color: #274c6b;
   color:white;
  text-shadow: 2px 1px 3px black;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
+  margin: 15% auto;/* 15% from the top and centered*/
+  /* padding: 30px 10rem; */
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 90%; /* Could be more or less, depending on screen size */
   border-radius: 15px;
+  
 }
 
 .ev-modal-content-sm {
@@ -914,7 +926,24 @@ background: rgba(112, 12, 62, 0.513);
   height:auto;
   border-radius: 15px;
 }
-
+.ev-modal-text-padding{
+  text-align: left;
+  width:100%;
+  padding:30px;
+  padding-left:10px;
+  overflow:hidden;
+}
+.ev-modal-title{
+  font-size:1.5rem;
+  overflow:auto;
+}
+.ev-modal-text{
+  font-size:1rem;
+  overflow:auto;
+}
+.reader{
+  font-family: "Kalam",sursive;
+}
 .paper-br{
   background-image: url("/paper-br.jpg");
   background-attachment:local
@@ -965,10 +994,16 @@ margin-top:12vh;
   padding: 20px;;
   text-align: center;
 }
+.no-margin{
+  margin:0;
+}
 /* BACKROUNDS */
 
 .arrow-br{
   background-image: url("arrow-br.png")
+}
+.margin-all{
+  margin:20px;
 }
 
 /* BUTTONS */
@@ -996,6 +1031,14 @@ line-height: 0.9rem;
 }
 .theGoodShading{
   box-shadow: 1px 5px 12px black;
+  text-shadow: 0 1px 1px black;
+}
+.headerShading{
+  box-shadow: 1px 5px 16px black;
+  text-shadow: 0 1px 1px black;
+}
+.footerShading{
+  box-shadow: 1px 5px 32px black;
   text-shadow: 0 1px 1px black;
 }
 .to-register-btn{
@@ -1110,9 +1153,43 @@ background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60
   height: 50px;
   cursor: pointer;
   border:none;
-  box-shadow: 5px 5px 20px;
+  
+  box-shadow: 1px 1px 6px black;
   text-shadow: 0 1px 1px black;
   border-radius: 50%;
+}
+.ev-buttons{
+  font-family: 'Karla', sans-serif;
+  color: #fff;
+text-shadow: 0 0 1px black;
+padding: 7px;
+padding-bottom:28px;
+height: 30px;
+cursor: pointer;
+border:none;
+
+box-shadow: 1px 1px 6px black;
+text-shadow: 0 1px 1px black;
+border-radius: 5000px;
+margin:5px;
+}
+.icon-pad{
+ margin: auto;
+}
+.ev-buttons-circle{
+  font-family: 'Karla', sans-serif;
+  color: #fff;
+text-shadow: 0 0 1px black;
+padding: 5px;
+padding-bottom:12px;
+height: 30px;
+cursor: pointer;
+border:none;
+padding:8px;
+box-shadow: 1px 1px 6px black;
+text-shadow: 0 1px 1px black;
+border-radius: 50%;
+margin:5px;
 }
 
 /* TEXT */
@@ -1138,6 +1215,16 @@ background: linear-gradient(128deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60
   /* font-family: 'Indie Flower', cursive; */
   font-family: 'Kalam', cursive;
 }
+.bold{
+  font-weight: 600;
+}
+
+.evTitle{
+  font-size: 1.2rem;
+}
+.evContent{
+  font-size:1rem
+}
 
 /* Calendar button (days) text/style for showing events, matches colors used in day view */
 .hasEvent{
@@ -1153,6 +1240,7 @@ color:white;
    margin:1px;;
    padding:3px;
    font-family:"Karla",sans-serif;
+
 }
 .event-b{
   overflow:hidden;
@@ -1163,8 +1251,9 @@ background:#be771bb6;
 color:white;;
   text-shadow: 1px 1px 1px black;
    margin:1px;;
-   padding:3px;
+   padding:0 3px;
    font-family:"Karla",sans-serif;
+
 }
 
 .event-c{
@@ -1178,6 +1267,7 @@ color:white;;
    margin:1px;;
    padding:3px;
    font-family:"Karla",sans-serif;
+
 }
 .react-calendar__tile--active {
   background: #224663a4;
@@ -1212,6 +1302,18 @@ background: linear-gradient(166deg, rgba(68,102,130,1) 37%, rgba(54,88,116,1) 60
 .magenta-gradient{
   background: rgb(223,75,128);
 background: linear-gradient(166deg, rgba(223,75,128,1) 10%, rgba(193,48,102,1) 41%, rgba(154,27,81,1) 77%);
+}
+.periwinkle-gradient{
+  background: rgb(160,139,231);
+background: linear-gradient(176deg, rgba(160,139,231,1) 6%, rgba(142,119,227,1) 16%, rgba(123,99,198,1) 44%, rgba(112,91,177,1) 68%);
+}
+.steel-gradient{
+  background: rgb(221,218,231);
+background: linear-gradient(162deg, rgb(192, 192, 194) 6%, rgba(135,134,138,1) 33%, rgba(95,94,98,1) 57%, rgba(106,103,103,1) 87%);
+color:#d47b4e;
+color:white;
+font-weight: bold;
+text-shadow: 1px 1px 2px black;
 }
 /* UI Events/Messages */
 /* HTML for alert box: 

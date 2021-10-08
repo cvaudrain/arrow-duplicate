@@ -1,11 +1,14 @@
 import React from "react"
 
-function Footer(){
+function Footer(props){
     let currYear = new Date().getFullYear();
     return (
-    <footer>
-        <p></p>
-    </footer>
+   
+    <div className="footer centered glowText br-indigo glowtext">
+        <p className="">{new Date().getFullYear()}</p>
+        <p>Marzipan Digital</p>
+        </div>
+   
     )
 }
 

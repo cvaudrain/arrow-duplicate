@@ -84,23 +84,6 @@ axios.post("/journal/fetch",{
 },[]) //Only fetch ONCE. After initial re-render from this useEffect, we set state from sessionStorage
 //sessionStorage.setItem("sessionData",JSON.stringify(sessionData)) //resets sessionStorage to default; necessary to have accurate values if we nav to another date without a DB entry already.
 
-// if(sessionStorage.getItem("sessionData") != undefined){
-//  sessionData = sessionStorage.getItem("sessionData")
-//  sessionData = JSON.parse(sessionData)
-// }else{
-//  sessionData = {
-//         entry : {
-//             title: "",
-//             content: ""
-//         },
-//         stats: {
-//             mood: "5",
-//             motivation: "5",
-//             focus: "5",
-//             calm: "5"
-//         }
-//     }
-// }
 console.log("sessionData =")
 console.log(sessionData)
 console.log("sessionData.entry =")
@@ -122,6 +105,13 @@ function getStats(value){ //the stats values passed up from the Statlog componen
 }
 
 function saveJournal(){ //save function is TOP level ( <Journal />)
+    if(stats==""){stats={
+            mood: "5",
+            motivation: "5",
+            focus: "5",
+            calm: "5"
+        
+    }}
     const data = { //stats is passed via prop function from StatLog />, & entry is passed via prop function from JounralEntry />. 
         fullDate,
         stats,     
@@ -135,7 +125,7 @@ function saveJournal(){ //save function is TOP level ( <Journal />)
         console.log(res)
         let sessionData = JSON.stringify(data)
         sessionStorage.setItem(currDate,sessionData)
-        history.push("/scheduler")
+        history.push("/journal/reader")
 })
 .catch((err)=>console.log(err))
 }

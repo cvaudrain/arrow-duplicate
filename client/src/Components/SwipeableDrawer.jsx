@@ -13,6 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ProfileTray from "./ProfileTray"
 import {userContext} from "./App"
 import {credentialContext} from "./App"
+import clickDay from "../reuseableFunctions"
 function SwipeableDrawerCustom(props){
     const classes = makeStyles();
     const [state, setState] = React.useState({
@@ -44,7 +45,9 @@ function SwipeableDrawerCustom(props){
             return "/scheduler"
         } else if(string=="Settings"){
             return "/settings"
-        } 
+        } else if(string=="Journal"){
+          return "/journal/reader"
+        }
     }
    
     const list = (anchor) => (
@@ -60,7 +63,7 @@ function SwipeableDrawerCustom(props){
       <div className="mclaren">
       {anchor != globalUser &&
         <List >
-          {["Dashboard", "Scheduler" ].map((text, index) => (
+          {["Dashboard", "Scheduler","Journal"].map((text, index) => (
             <Link
             to={assignRoute(text)} 
             style={{textDecoration:"none",
@@ -96,7 +99,7 @@ function SwipeableDrawerCustom(props){
           
           <ListItem button={true} onClick={logout} key={"Logout"} >
               
-              <ListItemText primary={"Logout"} />
+              <ListItemText className="red" primary={"Logout"} />
             </ListItem>
           
         </List>

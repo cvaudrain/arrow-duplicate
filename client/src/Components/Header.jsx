@@ -11,7 +11,7 @@ function Header(props){
     
 
     return (
-    <header className="mclaren ">
+    <header className="mclaren headerShading">
     <SwipeableDrawerCustom
        drawerLogout={props.logout}
        drawerToCalendar={props.toCalendar}
