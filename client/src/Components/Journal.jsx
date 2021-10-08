@@ -152,7 +152,7 @@ function handleSlider(e){
 props.fromStatLog(sliderValues)
 return (
     <div >
-        <h1 className="journal-header card-div peach theGoodShading">Journal Entry Page for: {currDate}</h1>
+        <h2 className="journal-header card-div peach theGoodShading">Journal Entry: <div>{currDate}</div></h2>
         <div className="card-div theGoodShading">
         <ul className="plain-list">
         <h3 className="journal-header" style={{color: "#5185c9"}}>So, how's it going?</h3>
@@ -201,7 +201,7 @@ const [entryState,setEntryState] = useState(context.entry)
         
         return (
             <div className="centered">
-            <div className=" card-div journal-header theGoodShading" style={{width: "30vw"}}>
+            <div className=" card-div journal-header theGoodShading" style={{width: "40vw"}}>
             <h4 className="collect-thoughts"> Collect your thoughts...</h4>
             </div>
            
@@ -214,7 +214,7 @@ const [entryState,setEntryState] = useState(context.entry)
                     type="submit" onChange={handleChange}
                      name="content" value={entryState.content}
                       placeholder="Today's journal entry..."
-                       row="20"
+                       rows="14"
                         autoComplete="off"/>
                      
                 </form>

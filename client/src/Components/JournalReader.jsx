@@ -102,7 +102,7 @@ let journalDatesContext;
             sessionStorage.setItem("fullDate",fullDate)
             console.log("from local storage")
     console.log(sessionStorage.getItem("day"))
-            history.push("/scheduler/date") //nav to date view 
+            history.push("/scheduler/date/mm-dd-yyyy/journal") //nav to date view 
         
         }
         return(

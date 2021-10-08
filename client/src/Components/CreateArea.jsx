@@ -50,7 +50,7 @@ function CreateArea(props){
     
     return (
         <div>
-            <form>
+            <form className="create-area">
                 <input onChange={handleChange}
                  name="title" value={note.title}
                   placeholder="Title"
@@ -61,7 +61,7 @@ function CreateArea(props){
                   placeholder="Take a Note"
                    row="3"
                     autoComplete="off"/>
-                <button id="submitButton" onClick={submitNote}><i class="fas fa-plus"></i></button>
+                <button id="submitButton" className="save-btn-sm" onClick={submitNote}><i class="fas fa-plus"></i></button>
             </form>
         </div>
     )

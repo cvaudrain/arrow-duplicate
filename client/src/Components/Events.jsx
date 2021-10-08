@@ -17,7 +17,8 @@ console.log(queryParams)
   const [multi,setMulti] = useState(false)
   const [eventCard, setEventCard] = useState("") //the JSX for ev-modal hover box will be set as state to return value
   // const [selectedEvNum, setSelectedEvNum] = useState("")
-
+const [errorLength,setErrorLength] = useState(false)
+const [errorIncomplete, setErrorIncomplete] = useState(false)
   let currDate;
 let weekday;
 let fullDate;
@@ -69,6 +70,23 @@ const [value, onChange] = useState(new Date()); //per React Calendar Docs: curre
 const [form, setForm] = useState(formData)
 const [eventList,setEventList]  = useState(eventListData)
 const [fetchComplete,setFetchComplete] = useState(false)
+
+function closeEditor(){
+  
+  
+  // formData = {
+  //   evName: "",
+  //   evDescription: "",
+  //   startDate:fullDate,
+  //   endDate:fullDate,
+  //   timeStart: "",
+  //   timeEnd: "",
+  // }
+  //  sessionStorage.setItem("form",JSON.stringify(formData))
+  // setForm(formData)
+  // // sessionStorage.setItem("form",JSON.stringify(formData))
+  setEvEditor(false)
+}
 
 useEffect(()=>{
   let fetchData={
@@ -164,6 +182,8 @@ function clickRange(value, event){
   function addEvent(){
     console.log("add event")
   setEvEditor(true)
+  setErrorIncomplete(false)
+      setErrorLength(false)
   
   }
 
@@ -203,8 +223,15 @@ function clickRange(value, event){
       })
       setEvEditor(false)
       
-          } else{ console.log("Please complete form / too many events")}
+          } else if(eventList.length>2){
+            setErrorLength(true)
+            setErrorIncomplete(false)
+             console.log(" too many events")
+    } else{
+      setErrorLength(false)
+            setErrorIncomplete(true)
     }
+  }
 
     function editEvent(obj){ 
       //first, delete the selected event locally (updated eventList will be set when save() function fires after user edits and save)
@@ -223,6 +250,7 @@ function clickRange(value, event){
       eventListData = updated
       setEventList(updated)
       setEventCard("") //remove modal box & revert to default view
+      
       document.body.scrollTop = 25; //scroll top, Safari
       document.documentElement.scrollTop = 25; //scroll top, Chrome, FireFox, IE , Opera
       console.log("eventListData:")
@@ -416,9 +444,11 @@ function clickRange(value, event){
                 </div>
                 
                 
-                <button className="save-btn-sm magenta-gradient"  onClick={()=>setEvEditor(false)}><i class="fas fa-times"></i></button>
+                <button className="save-btn-sm magenta-gradient"  onClick={()=>closeEditor}><i class="fas fa-times"></i></button>
               </form>
-              {multi &&
+              {errorIncomplete && <div style={{margin:"10px 0 0 0",width:"100%"}}className="content-card red"><p>Please complete all fields & ensure valid start/end times.</p></div>}
+              {errorLength && <div style={{margin:"10px 0 0 0",width:"100%"}}className="content-card red"><p>You're doing alot huh? The current limit is 3 events per day & is being increased soon. Apologies!</p></div>}
+              {/* {multi &&
               <div>
               <div>
               <h3 name="startDate" id="startDate" name="startDate">Start Date: {form.startDate} </h3><button onClick={toggleStartEnd} id="startDate" name="toggleStart">Select</button>
@@ -434,7 +464,7 @@ function clickRange(value, event){
               
                  />
                  </div>
-                }
+                } */}
             </div>
 
            }

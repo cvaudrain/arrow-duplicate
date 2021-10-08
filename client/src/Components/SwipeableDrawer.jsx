@@ -47,6 +47,8 @@ function SwipeableDrawerCustom(props){
             return "/settings"
         } else if(string=="Journal"){
           return "/journal/reader"
+        }else if(string=="About"){
+          return "/about"
         }
     }
    
@@ -63,7 +65,7 @@ function SwipeableDrawerCustom(props){
       <div className="mclaren">
       {anchor != globalUser &&
         <List >
-          {["Dashboard", "Scheduler","Journal"].map((text, index) => (
+          {["Dashboard", "Scheduler","Journal","About"].map((text, index) => (
             <Link
             to={assignRoute(text)} 
             style={{textDecoration:"none",

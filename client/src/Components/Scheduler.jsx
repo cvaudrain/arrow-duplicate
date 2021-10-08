@@ -18,6 +18,16 @@ function Scheduler(props){
  const [datesWithEv,setDatesWithEv] = useState([])
  const allDates=[]
 
+ //viewport state var compared to window.innerWidth if 600px threshhold crossed in either direction.
+const [viewport,setViewport] = useState(window.innerWidth)
+window.addEventListener("resize",handleViewport)
+function handleViewport(){
+    if(window.innerWidth <600 && viewport >600){ setViewport(window.innerWidth)}
+    if(window.innerWidth >=600 && viewport <600){ setViewport(window.innerWidth)}
+}
+
+
+
  let eventDatesContext = React.createContext(datesWithEv)
  let credentials = useContext(credentialContext)
  console.log("userObj is")
@@ -63,14 +73,20 @@ function Scheduler(props){
                 //console.log(n[0].startDate) //n[i] represents an array with up to 3 event objects, n[0], n[1] n[2]
                 //console.log(formatDate)
                 console.log("day with event found")
-               
+               if(viewport<600){
+                   val=
+                   <div className="centered">
+                   <i class="fas fa-calendar-day"></i>
+                   </div>
+               }else{
                  val = 
-                 <div className="centered">
+                
+                 <div className="centered ">
                  <div><p className="event-a">{n[0].evName}</p></div> 
                  {n.length>1 && <div><p className="event-b">{n[1].evName}</p></div>} 
                 {n.length>2 && <div><p className="event-c">{n[2].evName}</p></div> }
                  </div>
-                 
+               }
             }else{
                 console.log("NONE")
                 //console.log(n)
@@ -113,7 +129,7 @@ function Scheduler(props){
         sessionStorage.setItem("fullDate",fullDate)
         console.log("from local storage")
 console.log(sessionStorage.getItem("day"))
-        history.push("/scheduler/date") //nav to date view 
+        history.push("/scheduler/date/mm-dd-yyyy/events") //nav to date view 
     
     }
     return(

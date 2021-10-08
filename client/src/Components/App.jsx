@@ -14,6 +14,7 @@ import Auth from "./Auth"
 import Settings from "./Settings"
 import PasswordRecovery from "./PasswordRecovery"
 import Hud from "./Hud"
+import About from "./About"
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -199,9 +200,9 @@ history.push("/scheduler")
 <Header
 headerText="Scheduler"
   logout={logout}
-    userNameGreeting={usernameFromAuth}
+    // userNameGreeting={usernameFromAuth}
     toCalendar={toCalendar}
-   
+   greeting="Staying on Target"
 />
 
 <Scheduler/>
@@ -220,9 +221,9 @@ headerText="Scheduler"
 </Route>
 <Route exact path ="/journal/reader">
 <Header
-headerText="Journal History"
+headerText="Journal"
   logout={logout}
-    userNameGreeting={usernameFromAuth}
+    greeting="All Entries"
     toCalendar={toCalendar}
    
 />
@@ -233,7 +234,7 @@ headerText="Journal History"
 <Header
 headerText="Settings"
   logout={logout}
-    userNameGreeting={usernameFromAuth}
+    
     toCalendar={toCalendar}
    
 />
@@ -260,9 +261,10 @@ headerText="Settings"
   <Header
     headerText="Edit Note"
     logout={logout}
-    userNameGreeting={usernameFromAuth}
+    // greeting="Welcome,"
+    // userNameGreeting={usernameFromAuth}
     toCalendar={toCalendar}
-    user={usernameFromAuth}
+    // user={usernameFromAuth}
   />
  
   <NoteEditor 
@@ -280,6 +282,7 @@ headerText="Settings"
 
 <Header 
 headerText="Dashboard"
+greeting="Welcome,"
 userNameGreeting={usernameFromAuth}
 logout={logout}
 />
@@ -307,7 +310,13 @@ onEdit={editNote}
 }
 
 </Route>
-
+<Route exact path="/about">
+<Header
+headerText="About"
+// greeting="See What You Can Do"
+logout={logout} />
+<About/>
+</Route>
 </Switch>
 
 

@@ -507,7 +507,7 @@ app.post("/journal/fetch",(req,res)=>{
             }
             })
             .then((doc)=>{
-               // console.log("returning stats...")
+               console.log("returning stats...")
                let journalEntries = doc.journalArray.slice(0) //no mutating here...
 
                const stats = {
@@ -528,10 +528,10 @@ app.post("/journal/fetch",(req,res)=>{
                }
                //iterate through stats
                journalEntries.forEach((entry)=>{
-                statsAggregate.moodAgg = statsAggregate.moodAgg + parseInt(entry.stats.mood)
-                statsAggregate.motivationAgg = statsAggregate.motivationAgg + parseInt(entry.stats.motivation)
-                statsAggregate.focusAgg = statsAggregate.focusAgg + parseInt(entry.stats.focus)
-                statsAggregate.calmAgg = statsAggregate.calmAgg + parseInt(entry.stats.calm)
+                entry.stats.mood != undefined ? statsAggregate.moodAgg = statsAggregate.moodAgg + parseInt(entry.stats.mood) : null
+                entry.stats.motivation != undefined ? statsAggregate.motivationAgg = statsAggregate.motivationAgg + parseInt(entry.stats.motivation) : null
+                entry.stats.focus != undefined ? statsAggregate.focusAgg = statsAggregate.focusAgg + parseInt(entry.stats.focus) : null
+                entry.stats.calm != undefined ? statsAggregate.calmAgg = statsAggregate.calmAgg + parseInt(entry.stats.calm) : null
                 entry.entry.content.length > 50 ? statsAggregate.kaioken+=5 : null
                 console.log("statsAgg currently:")
                 console.log(statsAggregate)
