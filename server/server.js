@@ -45,22 +45,22 @@ app.use(passport.session())
  
 // Establish DB connection////////////////////////////////
 
-// mongoose.connect(process.env.DATABASE_URL + DB, {
-//    useUnifiedTopology: true,
-//    useNewUrlParser: true,
-//    useCreateIndex: true,
-//    useFindAndModify: false,
-//    connectTimeoutMS: 10000
-// });
-
-//local ONLY testing connection to Mongo
-mongoose.connect("mongodb://localhost:27017/"+DB,{
+mongoose.connect(process.env.DATABASE_URL + DB, {
    useUnifiedTopology: true,
    useNewUrlParser: true,
    useCreateIndex: true,
    useFindAndModify: false,
    connectTimeoutMS: 10000
 });
+
+//local ONLY testing connection to Mongo
+// mongoose.connect("mongodb://localhost:27017/"+DB,{
+//    useUnifiedTopology: true,
+//    useNewUrlParser: true,
+//    useCreateIndex: true,
+//    useFindAndModify: false,
+//    connectTimeoutMS: 10000
+// });
  
 const db = mongoose.connection; 
  db.on("error",(error)=>{console.log(error)})
