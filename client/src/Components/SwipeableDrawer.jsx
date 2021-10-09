@@ -43,7 +43,7 @@ function SwipeableDrawerCustom(props){
             return "/"
         } else if(string=="Scheduler"){
             return "/scheduler"
-        } else if(string=="Settings"){
+        } else if(string=="Profile/Settings"){
             return "/settings"
         } else if(string=="Journal"){
           return "/journal/reader"
@@ -86,7 +86,7 @@ function SwipeableDrawerCustom(props){
         <div>
         <Divider />
         <List>
-          {[/*useContext(userContext),*/"Settings"].map((text, index) => (
+          {[/*useContext(userContext),*/"Profile/Settings"].map((text, index) => (
             <Link
             to={assignRoute(text)} 
             style={{textDecoration:"none",

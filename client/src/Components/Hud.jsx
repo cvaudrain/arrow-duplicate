@@ -66,17 +66,17 @@ history.push("/scheduler/date/mm-dd-yyyy/journal")
    <div className="row theGoodShading indigo-gradient rounded centered">
    <div className="col-sm-12"><h3 className="italic orange" >{new Date().toString().split(" ").slice(0,4).join(" ")}</h3></div>
    <div className="col-sm-12"><h3 className="" >Today's Agenda</h3></div>
- <div class="col cloud-gradient dash-event theGoodShading">
+ <div onClick={()=>history.push("scheduler")} className="pointer col cloud-gradient dash-event theGoodShading">
      <p name={"evTitle1"} className="evTitle">{fetchedEvents[0].evName}</p>
     <p name={"evContent1"} className="evContent">{fetchedEvents[0].evDescription}</p>
     </div>
     {fetchedEvents.length>1 && 
-    <div className="col cloud-gradient dash-event theGoodShading">
+    <div onClick={()=>history.push("scheduler")} className="pointer col cloud-gradient dash-event theGoodShading">
     <p className ="evTitle">{fetchedEvents[1].evName}</p>
     <p className="evContent">{fetchedEvents[1].evDescription}</p>
     </div>}
     {fetchedEvents.length>2 && 
-    <div className="col cloud-gradient dash-event theGoodShading">
+    <div onClick={()=>history.push("scheduler")} className="pointer col cloud-gradient dash-event theGoodShading">
     <p className ="evTitle">{fetchedEvents[2].evName}</p>
     <p className="evContent">{fetchedEvents[2].evDescription}</p>
     </div>}

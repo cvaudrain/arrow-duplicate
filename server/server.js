@@ -108,34 +108,80 @@ app.post("/api/registerUser", (req,res)=>{
    let posted = req.body
    console.log("received new user credentials: ")
 console.log(posted)
-UserModel.register(
-   {
-   username: posted.username,
-   email:posted.email,
-   notesArray:[]
-}, posted.password,function(err,user){
+UserModel.findOne({email:req.body.email},(err,doc)=>{
    if(err){
+      console.log("Check EMAIL before passport query error:")
       console.log(err)
-      res.json({
-         authStatus: false,
+   } else if(doc){ //if doc exists, email in use already and reg fails
+      console.log(
+         "email check failed- email found "
+      )
+      console.log(doc)
+      res.json(
+         {authStatus: false,
          username: "nameless user",
          email: "no email",
          notes: [],
-         error:err
-      })  
-   }else{
-      passport.authenticate("local")(req,res,function(){
-         res.json({
-            authStatus: true,
-            username: posted.username,
-            email: posted.email,
-            notes: []
-         }) 
+         error:"emailExistsError"}
+      )
+   } else{ //if !doc, proceed to passport registration
+      UserModel.register(
+         {
+         username: posted.username,
+         email:posted.email,
+         notesArray:[]
+      }, posted.password,function(err,user){
+         if(err){
+            console.log(err)
+            res.json({
+               authStatus: false,
+               username: "nameless user",
+               email: "no email",
+               notes: [],
+               error:err
+            })  
+         }else{
+            passport.authenticate("local")(req,res,function(){
+               res.json({
+                  authStatus: true,
+                  username: posted.username,
+                  email: posted.email,
+                  notes: []
+               }) 
+            })
+         }
       })
    }
 })
-
 })
+// UserModel.register(
+//    {
+//    username: posted.username,
+//    email:posted.email,
+//    notesArray:[]
+// }, posted.password,function(err,user){
+//    if(err){
+//       console.log(err)
+//       res.json({
+//          authStatus: false,
+//          username: "nameless user",
+//          email: "no email",
+//          notes: [],
+//          error:err
+//       })  
+//    }else{
+//       passport.authenticate("local")(req,res,function(){
+//          res.json({
+//             authStatus: true,
+//             username: posted.username,
+//             email: posted.email,
+//             notes: []
+//          }) 
+//       })
+//    }
+// })
+
+// })
 //
 //For LOGIN/////////////////
 app.post("/api/authenticate", (req,res,next)=>{
@@ -591,8 +637,37 @@ else{stats.rank="Unranked"}
                         }
                      })
                   })
-            }
-            
+            } else if(req.body.editType==="email"){ //regardless of form data, editType is specific to the submission functions for each respective type of edit
+               UserModel.findOne({email:req.body.email},(err,user)=>{
+                  if(err){
+                     console.log(err)
+                  } else if(!user){
+                     UserModel.findOne({username:req.body.queryParams.username},(err,user)=>{
+                        if(err){
+                           console.log(err)
+                           response = "Error"
+                           res.json("Error")
+                        } else if(!user){
+                           console.log("User not found.. Please debug.")
+                          res.json("Error")
+                        }else{
+                           return user
+                        }
+                        })
+                        .then((user)=>{
+                           user.email = req.body.email
+                           user.save()
+                           res.json("Email Reset Successfully")
+                  })
+                  }else{
+                     console.log("EMAIL IN USE")
+                     res.json("Email in use")
+                    
+                  }
+                  
+            })
+         }
+         
          })
 
             //PASSWORD RECOVERY//   

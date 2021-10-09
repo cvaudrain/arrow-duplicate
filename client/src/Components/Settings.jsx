@@ -32,7 +32,10 @@ const [emailVisible,setEmailVisible] = useState(false)
 const [emailEditor,setEmailEditor] = useState("")
 const [passwordEditor,setPasswordEditor] = useState("")
 const queryParams = useContext(credentialContext)
-
+const [passwordSuccess,setPasswordSuccess] = useState("")
+const [emailSuccess,setEmailSuccess] = useState("")
+const [emailErrorText,setEmailErrorText] = useState("invalid email")
+const [passReq,setPassReq] = useState(false)
 const [edits,setEdits] = useState({ //handles all input changes for submission to server
     userName: "",
     email: "",
@@ -70,9 +73,9 @@ e.preventDefault()
 localStorage.setItem("profilePicture",urlTracker.url) //sets PFP to localstorage, where stateful pulls it's value from on refresh
 setPfpLink(urlTracker.url)
 
-
 setPfpEditor(false)
-
+setPasswordSuccess("")
+    setEmailSuccess("")
 
 }
 function alertImage(){
@@ -103,7 +106,7 @@ let submitEmail=(e)=>{
         queryParams:queryParams,
         editType:"email" //use same path for any pf edit by specifying name of user doc obj key to change
     }
-    if(validate.validateEmail(data.email)){
+    if(validate.validateEmail(data.email) && edits.email == edits.confirmEmail){
     axios.post("/settings/edit",data)
     .then((res)=>{
         console.log(res.data)
@@ -115,8 +118,22 @@ let submitEmail=(e)=>{
             confirmEmail: "",
             confirmPassword: ""
         })
+        if(res.data == "Email Reset Successfully"){
+            setEmailSuccess(true)
+    setPasswordSuccess("")
+        }else{
+            setEmailErrorText("Email in Use")
+            setEmailSuccess(false) //if sent but not reset successfully
+            setPasswordSuccess("")
+
+        }
     })
-}else alert("not a valid email!")
+    
+}else{ //if invalid validation
+    setEmailErrorText("Invalid Email / Emails Do Not Match")
+   setEmailSuccess(false)
+   setPasswordSuccess("")
+} 
 }
 
 let submitPassword = (e)=>{
@@ -143,12 +160,18 @@ let submitPassword = (e)=>{
         confirmEmail: "",
         confirmPassword: ""
     })
+    setPasswordSuccess(true)
+    setEmailSuccess("")
+    setPassReq(false)
     })
 }else {
-    return(alert("Ensure password contains at least 1 uppercase, 1 lowercase,a number, and is 6 characters or more in length"))
+    setPasswordSuccess(false)
+    setEmailSuccess("")
+    // return(alert("Ensure password contains at least 1 uppercase, 1 lowercase,a number, and is 6 characters or more in length"))
 }
 }else {
-    return(alert("Passwords do not match- please review."))
+    setPasswordSuccess(false)
+    setEmailSuccess("")
 }
 }
 
@@ -204,6 +227,27 @@ let submitPassword = (e)=>{
                                     <h4 className="text-muted f-w-400 h6">{userStats.rank}</h4>
                                 </div>
                             </div>
+                            {/*  */}
+                            <h4 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600 h6">Stats</h4>
+                            <div className="row rm-mg-row">
+                                <div className="col-sm-6">
+                                    <p className="m-b-10 f-w-600">Focus</p>
+                                    <h4 className="text-muted f-w-400 h6">{userStats.focus}</h4>
+                                </div>
+                                <div className="col-sm-6">
+                                    <p className="m-b-10 f-w-600">Motivation</p>
+                                    <h4 className="text-muted f-w-400 h6">{userStats.motivation}</h4>
+                                </div>
+                                <div className="col-sm-6">
+                                    <p className="m-b-10 f-w-600">Vibe</p>
+                                    <h4 className="text-muted f-w-400 h6">{userStats.mood}</h4>
+                                </div>
+                                <div className="col-sm-6">
+                                    <p className="m-b-10 f-w-600">Calm</p>
+                                    <h4 className="text-muted f-w-400 h6">{userStats.calm}</h4>
+                                </div>
+                            </div>
+                            {/*  */}
                             
                         </div>
                        </div>
@@ -226,20 +270,22 @@ let submitPassword = (e)=>{
         <div>
           <label for="email">New Email </label>
         </div>  <div>
-          <input style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="email" name="email" type="text" onChange={handleChange}></input>
+          <input onClick={()=>setPassReq(false)} style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="email" name="email" type="text" onChange={handleChange}></input>
         </div>
           </div>
           <div className="centered">
         <div>
           <label for="confirmEmail">Confirm New Email</label>
         </div>  <div>
-          <input style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="confirmEmail" name="confirmEmail" type="text" onChange={handleChange}></input>
+          <input onClick={()=>setPassReq(false)} style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="confirmEmail" name="confirmEmail" type="text" onChange={handleChange}></input>
             </div>
           </div>
           <div className="centered">
-              <button className="save-btn" onClick={submitEmail}>Save</button>
+              <button className="pill peach-gradient " onClick={submitEmail}>Save</button>
               </div>
               </form>
+              {emailSuccess ===true && <div className="infoMessage-reset">Success!</div>}
+              {emailSuccess ===false && <div className="errMessage-reset">{emailErrorText}</div>}
           </div>
           
           </div>
@@ -252,12 +298,14 @@ let submitPassword = (e)=>{
     <h4 className="pad-t-sm">Change Password</h4>
 </div>
               <div className="col-xs-12 col-xl-12">
+              {passReq && 
+        <div className="infoMessage-reset "><i className="fas fa-2x fa-info-circle margin-all-sm"></i><p>Password must contain at least <strong>1 uppercase letter</strong>, <strong>1 lowercase letter</strong>, <strong>1 number</strong>, and be a minimum of <strong>6 characters</strong> in length.</p></div>}
               <form className="br-yt">
               <div className="centered">
             <div>
               <label for="password">New Password </label>
             </div>  <div>
-              <input style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="password" name="password" type="password" onChange={handleChange}></input>
+              <input onClick={()=>setPassReq(true)} style={{borderTop:"1px solid gray",borderBottom:"1px solid gray"}} id="password" name="password" type="password" onChange={handleChange}></input>
             </div>
               </div>
               <div className="centered">
@@ -268,9 +316,11 @@ let submitPassword = (e)=>{
                 </div>
               </div>
               <div className="centered">
-              <button className="save-btn br-yt" onClick={submitPassword}>Save</button>
+              <button className="pill peach-gradient" onClick={submitPassword}>Save</button>
               </div>
               </form>
+              {passwordSuccess ===true && <div className="infoMessage-reset">Success!</div>}
+              {passwordSuccess ===false && <div className="errMessage-reset">Invalid Password/Password Do Not Match</div>}
               </div>
               
               </div>

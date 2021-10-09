@@ -17,6 +17,8 @@ function Auth(props){
     const [alreadyRegistered, setAlreadyRegistered] = useState(false)
     const [failedReg, setFailedReg] = useState(false) 
     const [usernameTaken, setUsernameTaken] = useState(false)
+    const [emailTaken,setEmailTaken] = useState(false)
+    const [passReq,setPassReq] = useState(false)
     let history = useHistory();
 const [credentials, setCredentials] = useState({
     name:"",
@@ -94,7 +96,17 @@ if(res.data.error != null && res.data.error.name != undefined){
 }else{
     nameError="none"
 }
-nameError == "UserExistsError" && setUsernameTaken(true)
+if(nameError == "UserExistsError") {
+     setUsernameTaken(true)
+     setEmailTaken(false)
+     setFailedReg(false)
+}else if(res.data.error == "emailExistsError"){
+    setEmailTaken(true)
+    setUsernameTaken(false)
+    setPassReq(false)
+    setFailedReg(false)
+} 
+
 })
 
         } else if(isValid === false){
@@ -166,6 +178,9 @@ nameError == "UserExistsError" && setUsernameTaken(true)
         event.keyCode === 13 && document.getElementById("submitButton").click()
     }
 
+    function showPassReq(){
+       !isRegistered && setPassReq(true)
+    }
     return (
         
         <Route path="/authenticate">
@@ -179,7 +194,7 @@ nameError == "UserExistsError" && setUsernameTaken(true)
         </header>
         
         <form method="post" className="auth-form" id="authForm">
-        <h2 className = "auth-sub-heading">{isRegistered ? "-Login-" : "-Register-"}</h2>
+        <h2 className = "auth-sub-heading">{isRegistered ? "-Login-" : "Register"}</h2>
             {!isRegistered && //extra field for name if unregistered
             <input onChange={handleChange}
             type="email"
@@ -207,6 +222,7 @@ nameError == "UserExistsError" && setUsernameTaken(true)
             autoComplete="off"
                 className = "auth-login-field"
                 required={true}
+                onClick={showPassReq}
             />
 
             
@@ -216,11 +232,13 @@ nameError == "UserExistsError" && setUsernameTaken(true)
             </button>
             
         </form>
-        
+        {passReq && 
+        <div className="infoMessage "><i className="fas fa-2x fa-info-circle margin-all-sm"></i><p>Password must contain at least <strong>1 uppercase letter</strong>, <strong>1 lowercase letter</strong>, <strong>1 number</strong>, and be a minimum of <strong>6 characters</strong> in length.</p></div>}
         
 {failedAttempt==true &&  <div className="errMessage centered"><h4>Incorrect login... Let's try again.</h4></div>}
-{usernameTaken && <div className="errMessage centered"><div><h2 className="br">Username taken!</h2> It must be pretty cool. Try another one.</div></div>}
-{failedReg==true &&  <div className="errMessage centered"><div><h2>Invalid credentials.</h2> <h3 className="br">Please confirm that:</h3> <h5 className="br">Password contains 1 uppercase letter</h5> <h5 className="br">Password contains 1 lowercase letter</h5> <h5 className="br">Password contains 1 number</h5> <h5 className="br">Password is at least 6 characters long</h5> <h5 className="br">Your email is not already registered</h5></div></div>}
+{usernameTaken && <div className="errMessage centered"><div><h4 className="br">Username taken!</h4> <h5>It must be pretty cool. Try another one.</h5> </div></div>}
+{emailTaken && <div className="errMessage centered"><div><h4 className="br">Email already in use.</h4> <h5>If you forgot your password, head over to login and select the "forgot password" option.</h5></div></div>}
+{failedReg==true &&  <div className="errMessage centered"><div><h4>Invalid credentials.</h4> <h5 className="br">Please confirm that:</h5> <h5 className="br">Password contains 1 uppercase letter</h5> <h5 className="br">Password contains 1 lowercase letter</h5> <h5 className="br">Password contains 1 number</h5> <h5 className="br">Password is at least 6 characters long</h5> <h5 className="br">Confirm that your email is not already registered.</h5> <br/><h4>If you have an account under that email, head to the login page and select <strong>"forgot password"</strong>. </h4></div></div>}
         
         {isRegistered ? 
             <div >
