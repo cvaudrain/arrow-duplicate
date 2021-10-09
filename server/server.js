@@ -51,8 +51,8 @@ mongoose.connect(process.env.DATABASE_URL + DB, {
    connectTimeoutMS: 10000
 });
 
-//local ONLY testing connection to Mongo
-// mongoose.connect(process.env.URI_CONNECTION + DB, {
+////local ONLY testing connection to Mongo
+// mongoose.connect("mongodb://localhost:27017/"+DB,{
 //    useUnifiedTopology: true,
 //    useNewUrlParser: true,
 //    useCreateIndex: true,
