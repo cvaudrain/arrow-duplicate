@@ -554,7 +554,7 @@ app.post("/journal/fetch",(req,res)=>{
                 entry.stats.motivation != undefined ? statsAggregate.motivationAgg = statsAggregate.motivationAgg + parseInt(entry.stats.motivation) : null
                 entry.stats.focus != undefined ? statsAggregate.focusAgg = statsAggregate.focusAgg + parseInt(entry.stats.focus) : null
                 entry.stats.calm != undefined ? statsAggregate.calmAgg = statsAggregate.calmAgg + parseInt(entry.stats.calm) : null
-                entry.entry.content.length > 50 ? statsAggregate.kaioken+=5 : null
+                entry.entry.content != undefined ? statsAggregate.kaioken+=2 : null
                 console.log("statsAgg currently:")
                 console.log(statsAggregate)
                })
@@ -583,6 +583,7 @@ console.log("Res.JSON:")
                console.log(stats)
                res.json(stats)
             })
+            .catch((err)=>console.log(err))
          })
 
 
