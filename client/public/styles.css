@@ -196,6 +196,10 @@ form button {
 .centered{
   text-align: center;
 }
+.center-div{
+  width:50%;
+  margin: auto;
+}
 .align-l{
   text-align:left;
 }
@@ -579,13 +583,19 @@ form button {
 
 /* Profile Tray */
 
-
+.profile-dimensions{
+  max-height: 100vh;
+}
+.MuiDrawer-modal{
+  max-height:100vh;
+}
 .padding {
   padding: 3rem !important
 }
 
 .user-card-full {
-  overflow: hidden
+  overflow: hidden;
+  margin:auto;
 }
 
 .card {
@@ -610,7 +620,14 @@ form button {
 .m-l-0 {
   margin-left: 0px
 }
+.m-b-0 {
+  margin-bottom: 0px
+}
 
+/* .MuiPaper-root{
+  background: rgb(255,255,255);
+  background: linear-gradient(150deg, rgb(160, 160, 160) 6%, rgba(226,226,226,1) 33%, rgba(218,218,218,1) 57%, rgba(205,205,205,1) 87%);
+} */
 .user-card-full .user-profile {
   border-radius: 3px 
 }
@@ -622,13 +639,16 @@ form button {
 
 
 .user-profile {
-  padding: 20px 0
+  padding: 0 
 }
 
 .card-block {
-  padding: 1.25rem
+  padding: 1.25rem;
+  width:100%
 }
-
+.m-t-15{
+  margin-top:15px;
+}
 .m-b-25 {
   margin-bottom: 25px
 }
@@ -638,12 +658,25 @@ form button {
 }
 .pfp{
  
-  width:160px;
-  height:160px;
+  width:180px;
+  height:180px;
   box-shadow: 0 1px 3px black;
   border-radius:50%;
   background-color: rgba(255, 255, 255, 0.664);;
+  margin:50px;
 }
+.pfp-swipe{
+  position:relative;
+  right:5%;
+   width:180px;
+   height:180px;
+   box-shadow: 0 1px 3px black;
+   border-radius:50%;
+   background-color: rgba(255, 255, 255, 0.664);;
+   
+   margin:50px;
+   margin-top:10px;
+ }
 
 .glowtext{
   text-shadow:0 1px 3px white;
@@ -724,7 +757,7 @@ form button {
 
 .user-card-full .social-link li a {
   font-size: 20px;
-  margin: 0 10px 0 0;
+  margin: auto;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out
 }
@@ -1441,7 +1474,7 @@ text-shadow: 1px 1px 2px black;
 }
 .cloud-gradient{
   background: rgb(255,255,255);
-/* background: linear-gradient(150deg, rgba(255,255,255,1) 6%, rgba(226,226,226,1) 33%, rgba(218,218,218,1) 57%, rgba(205,205,205,1) 87%); */
+background: linear-gradient(150deg, rgba(255,255,255,1) 6%, rgba(226,226,226,1) 33%, rgba(218,218,218,1) 57%, rgba(205,205,205,1) 87%);
 }
 /* UI Events/Messages */
 /* HTML for alert box: 

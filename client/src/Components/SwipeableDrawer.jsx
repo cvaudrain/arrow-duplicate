@@ -115,6 +115,7 @@ function SwipeableDrawerCustom(props){
         <ProfileTray
           username={globalUser.username}
           email={credentialContext.email}
+          
         />
         
         </div>
@@ -137,6 +138,7 @@ function SwipeableDrawerCustom(props){
               open={state[anchor]}
               onClose={toggleDrawer(anchor, false)}
               onOpen={toggleDrawer(anchor, true)}
+              
             >
               {list(anchor)}
             </SwipeableDrawer>

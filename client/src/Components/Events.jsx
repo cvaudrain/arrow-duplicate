@@ -446,8 +446,8 @@ function clickRange(value, event){
                 
                 <button className="save-btn-sm magenta-gradient"  onClick={()=>closeEditor}><i class="fas fa-times"></i></button>
               </form>
-              {errorIncomplete && <div style={{margin:"10px 0 0 0",width:"100%"}}className="content-card red"><p>Please complete all fields & ensure valid start/end times.</p></div>}
-              {errorLength && <div style={{margin:"10px 0 0 0",width:"100%"}}className="content-card red"><p>You're doing alot huh? The current limit is 3 events per day & is being increased soon. Apologies!</p></div>}
+              {errorIncomplete && <div className="errMessage"><p>Please complete all fields & ensure valid start/end times.</p></div>}
+              {errorLength && <div className="errMessage"><p>You're doing alot huh? The current limit is 3 events per day & is being increased soon. Apologies!</p></div>}
               {/* {multi &&
               <div>
               <div>

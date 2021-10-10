@@ -21,6 +21,7 @@ const [data,setData] = useState({
 })
 const [successMessage,setSuccessMessage] = useState(false)
 const [messageState, setMessageState] = useState("")
+let history = useHistory()
 //Functions
 function handleChange(event){
     console.log(data)
@@ -84,21 +85,23 @@ function submitCode(e){
             <input onChange={handleChange} name="email" type="email" placeholder="yourEmail@mail.com">
 
             </input>
-            <button className="save-btn " ><p style={{paddingTop:"8px",fontSize:"1.2rem"}}onClick={submitEmail}>Send</p></button>
+            <button type="submit" method="post" onClick={submitEmail} className="save-btn-sm pointer"><i class="fas fa-paper-plane"></i></button>
+            {/* <button className="save-btn " ><p style={{paddingTop:"8px",fontSize:"1.2rem"}}onClick={submitEmail}>Send</p></button> */}
         </form>
         :
         <form method="Post" name="codeForm">
             <input onChange={handleChange} name="recovery" type="text" placeholder="Enter Recovery Code">
 
             </input>
-            <button className="save-btn " style={{padding:"8px",fontSize:"1.2rem",marginTop:"10px"}} onClick={submitCode}>Send Code</button>
+            <button type="submit" method="post" onClick={submitCode} className="save-btn-sm pointer magenta-gradient"><i class="fas fa-check "></i></button>
+            {/* <button className="save-btn " style={{padding:"8px",fontSize:"1.2rem",marginTop:"10px"}} onClick={submitCode}>Send Code</button> */}
         </form>
         }
         {successMessage && 
         <div className=" successMessage centered">
             
             <h4>{messageState}</h4>
-
+            <button type="submit" method="post" onClick={()=>history.push("/")} className="save-btn-sm pointer magenta-gradient"><i class="fas fa-home"></i></button>
         </div>}
         </div>
     )
