@@ -27,9 +27,11 @@ useEffect(()=>{
 axios.post("/profile/stats",credentials)
 .then((res)=>{
 console.log("res.data:")
+console.log(res.data)
 res.data.powerLevel != undefined && setUserStats(res.data) //statefuls fill in values on profile 
 
 })
+.catch((err)=>console.log(err))
 },[])
 
 // function toSettings(){
@@ -38,7 +40,7 @@ res.data.powerLevel != undefined && setUserStats(res.data) //statefuls fill in v
 
 
     return(
-        <div className="page-content page-container mclaren 222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222" id="page-content">
+        <div className="page-content page-container mclaren" id="page-content">
 
     <div className="padding">
         <div className="row container d-flex justify-content-center ">
@@ -81,7 +83,7 @@ res.data.powerLevel != undefined && setUserStats(res.data) //statefuls fill in v
                                 <div className="row">
                                     <div className="col-sm-6">
                                         <p className="m-b-10 f-w-600">Member Type</p>
-                                        <h4 className="text-muted f-w-400 h6">{credentials.username=="7"|| credentials.username=="Blue Kirby"?"Admin" : "User"}</h4>
+                                        <h4 className="text-muted f-w-400 h6">{credentials.username=="chris creator"|| credentials.username=="Blue Kirby"?"Admin" : "User"}</h4>
                                     </div>
                                     <div className="col-sm-6">
                                         <p className="m-b-10 f-w-600">Rank</p>

@@ -13,7 +13,7 @@ function Hud(props){
     let queryParams = useContext(credentialContext)
     // console.log("CREDENTIALS")
     // console.log(queryParams)
-const [loadComplete,setLoadComplete] = useState(false)
+// const [loadComplete,setLoadComplete] = useState(false)
 const [fetchedEvents,setFetchedEvents] = useState([{title:"loading",content:"loading"},{title:"loading",content:"loading"},{title:"loading",content:"loading"}])
 let history = useHistory()
 
@@ -25,16 +25,17 @@ useEffect(()=>{
             // console.log("NONE")
             setFetchedEvents([{evName:new Date().toString().split(" ").slice(0,4).join(" "),evDescription:"No events scheduled today"}])
         }else{
+            console.log("DATA RETURNED:")
             console.log(res.data)
             setFetchedEvents(res.data)
-            setLoadComplete(true)
+            // setLoadComplete(true)
         }
     })
 },[])
-useEffect(()=>{
-// console.log("fetched event 0 =")
-// console.log(fetchedEvents[0])
-},[loadComplete])
+// useEffect(()=>{
+// // console.log("fetched event 0 =")
+// // console.log(fetchedEvents[0])
+// },[loadComplete])
        
 function quickJournal(){
     let value = new Date()

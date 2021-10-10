@@ -44,6 +44,7 @@ app.use(passport.session())
 // app.use(cors());
  
 // Establish DB connection////////////////////////////////
+//CLOUD//
 
 mongoose.connect(process.env.DATABASE_URL + DB, {
    useUnifiedTopology: true,
@@ -53,7 +54,8 @@ mongoose.connect(process.env.DATABASE_URL + DB, {
    connectTimeoutMS: 10000
 });
 
-//local ONLY testing connection to Mongo
+//LOCAL ONLY testing connection to Mongo//
+
 // mongoose.connect("mongodb://localhost:27017/"+DB,{
 //    useUnifiedTopology: true,
 //    useNewUrlParser: true,
@@ -154,35 +156,7 @@ UserModel.findOne({email:req.body.email},(err,doc)=>{
    }
 })
 })
-// UserModel.register(
-//    {
-//    username: posted.username,
-//    email:posted.email,
-//    notesArray:[]
-// }, posted.password,function(err,user){
-//    if(err){
-//       console.log(err)
-//       res.json({
-//          authStatus: false,
-//          username: "nameless user",
-//          email: "no email",
-//          notes: [],
-//          error:err
-//       })  
-//    }else{
-//       passport.authenticate("local")(req,res,function(){
-//          res.json({
-//             authStatus: true,
-//             username: posted.username,
-//             email: posted.email,
-//             notes: []
-//          }) 
-//       })
-//    }
-// })
 
-// })
-//
 //For LOGIN/////////////////
 app.post("/api/authenticate", (req,res,next)=>{
    console.log("posted recieved from client")
@@ -546,8 +520,10 @@ app.post("/journal/fetch",(req,res)=>{
          UserModel.findOne({username:credentials.username},(err,doc)=>{
             if(err){
                console.log(err)
+               res.json(err)
             } else if(!doc){
                console.log("User not found.. Please debug.")
+               res.json("User Not Found- query returns !doc")
             }else{
                return doc
             }
@@ -602,7 +578,8 @@ else if(stats.powerLevel<300){stats.rank="Adventurer"}
 else if(stats.powerLevel<500){stats.rank="Hero"}               
 else if(stats.powerLevel<1000){stats.rank="Champion"}
 else if(stats.powerLevel<2000){stats.rank="Paladin"}  
-else{stats.rank="Unranked"}             
+else{stats.rank="Unranked"}   
+console.log("Res.JSON:")         
                console.log(stats)
                res.json(stats)
             })

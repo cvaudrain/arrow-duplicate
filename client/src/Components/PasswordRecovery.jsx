@@ -74,7 +74,7 @@ function submitCode(e){
         
         </header>
         <div className = "centered">
-            <h1>
+            <h1 className="blue">
                 Recover Account
             </h1>
         </div>
@@ -84,14 +84,14 @@ function submitCode(e){
             <input onChange={handleChange} name="email" type="email" placeholder="yourEmail@mail.com">
 
             </input>
-            <button><p style={{paddingTop:"8px"}} onClick={submitEmail}>Send</p></button>
+            <button className="save-btn " ><p style={{paddingTop:"8px",fontSize:"1.2rem"}}onClick={submitEmail}>Send</p></button>
         </form>
         :
         <form method="Post" name="codeForm">
             <input onChange={handleChange} name="recovery" type="text" placeholder="Enter Recovery Code">
 
             </input>
-            <button onClick={submitCode}>Send Code</button>
+            <button className="save-btn " style={{padding:"8px",fontSize:"1.2rem",marginTop:"10px"}} onClick={submitCode}>Send Code</button>
         </form>
         }
         {successMessage && 
