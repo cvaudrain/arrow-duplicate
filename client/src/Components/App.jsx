@@ -286,9 +286,7 @@ greeting="Welcome,"
 userNameGreeting={usernameFromAuth}
 logout={logout}
 />
-<Hud
-// fetchedEvents = {fetchedEvents}
- />
+ <Hud /> 
 <CreateArea 
 onAdd={addNote} 
 

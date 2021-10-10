@@ -18,6 +18,9 @@ const [fetchedEvents,setFetchedEvents] = useState([{title:"loading",content:"loa
 let history = useHistory()
 
 useEffect(()=>{
+     /*Hud calls API. Do not render unless auth complete, confirmed by queryParams.username not equaling default value*/ 
+    if(queryParams.username != "nameless user"){
+        console.log("User Logged In, calling API to fetch dashboard.")
     axios.post("/api/setdashboard",queryParams)
     .then((res)=>{
         // console.log(res.data)
@@ -30,7 +33,7 @@ useEffect(()=>{
             setFetchedEvents(res.data)
             // setLoadComplete(true)
         }
-    })
+    })}
 },[])
 // useEffect(()=>{
 // // console.log("fetched event 0 =")
