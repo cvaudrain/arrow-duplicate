@@ -191,7 +191,7 @@ function clickRange(value, event){
     e && e.preventDefault()
       console.log("save event")
       console.log(form)
-      let validTime = form.timeStart.slice(0,2) + form.timeStart.slice(4) < form.timeEnd.slice(0,2) + form.timeEnd.slice(4)
+      let validTime = form.timeStart.slice(0,2) + form.timeStart.slice(4) <= form.timeEnd.slice(0,2) + form.timeEnd.slice(4) 
       console.log(validTime)
       if(form.evName.length > 0 && form.timeStart.length > 0 && form.timeEnd.length > 0 && validTime && eventList.length<3){ //auth complete form and valid time range
       eventListData.push(form)

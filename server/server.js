@@ -91,7 +91,8 @@ const UserSchema = new mongoose.Schema( //1st Schema
          }  
       */
       theme: String,
-      recoveryCode: String
+      recoveryCode: String,
+      profileUrl: String
    }, 
    {collection: "arrowUsers"} //custom collection name
 )
@@ -255,18 +256,23 @@ else{
 .then((doc)=>{
    let currDate = new Date()
    let array = doc.eventsArray
-   array = array.filter((n,i)=>{
+   resArray = []
+   array = array.forEach((n,i)=>{
+      console.log(n)
       if(n[0].startDate == currDate.toString().split(" ").slice(0,4).join(" ")){
-      return n} else{
+         console.log("MATCH #" + i)
+      resArray.push(n) //push the eventsArray into resArray (nested)
+   } else{
+      
          null
       }
    })
-   if(array.length == 0) {
+   if(resArray.length == 0) {
       console.log("None")
       res.json("None")
     } else{
        console.log("array found")
-        res.json(array[0])
+        res.json(resArray[0])
     }
    
 })
@@ -577,7 +583,8 @@ else if(stats.powerLevel<100){stats.rank="Acolyte"}
 else if(stats.powerLevel<300){stats.rank="Adventurer"}
 else if(stats.powerLevel<500){stats.rank="Hero"}               
 else if(stats.powerLevel<1000){stats.rank="Champion"}
-else if(stats.powerLevel<2000){stats.rank="Paladin"}  
+else if(stats.powerLevel<2000){stats.rank="Paladin"}
+else if(stats.powerLevel>2000){stats.rank="GodMode"}  
 else{stats.rank="Unranked"}   
 console.log("Res.JSON:")         
                console.log(stats)
@@ -588,6 +595,28 @@ console.log("Res.JSON:")
 
 
          //Profile Maintenance
+      //    app.post("/settings/pfp",(req,res)=>{
+      //       UserModel.findOne({username:req.body.queryParams.username},(err,user)=>{
+      //          if(err){
+      //             console.log(err)
+      //             res.json("unsuccessful pfp update")
+      //          } else if(!user){
+      //             console.log("User not found.. Please debug.")
+      //             res.json("unsuccessful pfp update")
+      //          }else{
+      //             return user
+      //          }
+      //          })
+      //          .then((user)=>{
+      //             user.profileUrl = req.body.url
+      //             user.save()
+      //             res.json("success")
+
+      //    })
+      //    .catch((err)=>console.log(err))
+      // })
+         
+
          app.post("/settings/edit",(req,res)=>{
             console.log("settings/edit")
             console.log(req.body)

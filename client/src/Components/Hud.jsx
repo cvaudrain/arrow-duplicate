@@ -68,8 +68,8 @@ history.push("/scheduler/date/mm-dd-yyyy/journal")
     <div className="col-sm-12 ">
 
    <div className="row theGoodShading indigo-gradient rounded centered">
-   <div className="col-sm-12"><h2 className="italic orange" >{new Date().toString().split(" ").slice(0,4).join(" ")}</h2></div>
-   <div className="col-sm-12"><h3 className="italic" >Today's Agenda:</h3></div>
+   {/* <div className="col-sm-12"><h2 className="italic orange" >{new Date().toString().split(" ").slice(0,4).join(" ")}</h2></div> */}
+   <div className="col-sm-12"><h3 className="italic" >Agenda:</h3></div>
  <div onClick={()=>history.push("scheduler")} className="pointer col cloud-gradient dash-event theGoodShading">
      <p name={"evTitle1"} className="evTitle">{fetchedEvents[0].evName}</p>
     <p name={"evContent1"} className="evContent">{fetchedEvents[0].evDescription}</p>

@@ -201,8 +201,8 @@ const [entryState,setEntryState] = useState(context.entry)
         
         return (
             <div className="centered">
-            <div className=" card-div journal-header theGoodShading" style={{width: "40vw"}}>
-            <h4 className="collect-thoughts"> Collect your thoughts...</h4>
+            <div className=" card-div journal-header theGoodShading" style={{width: "40vw",overflow:"hidden"}}>
+            <h4 className="collect-thoughts"> Collect your Thoughts</h4>
             </div>
            
                 <form className="theGoodShading paper-br" style={{width:"89vw", height:"75vh"}}>
